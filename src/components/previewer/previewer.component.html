@@ -1,0 +1,10 @@
+<modal [(visible)]="visible" fullHeight size="lg" [overflow]="true">
+  <modal-header>{{title}}</modal-header>
+  <modal-body styleClass="no-padding">
+    <iframe width="100%" height="100%" #iframe>
+    </iframe>
+  </modal-body>
+  <modal-footer>
+    <button class="btn btn-default btn-sm" (click)="close()">关闭</button>
+  </modal-footer>
+</modal>

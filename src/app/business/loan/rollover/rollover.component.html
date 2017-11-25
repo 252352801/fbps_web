@@ -1,0 +1,108 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">展期管理</a>
+  <a class="page-location-item">业务中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item">贷后管理<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">展期管理</a>
+</div>
+<div class="wrapper-md">
+  <div class="tab-container" >
+    <ul class="nav nav-tabs nav-tab-info">
+      <li *ngFor="let tab of tabs;let i=index" [ngClass]="{'active':tab.active}">
+        <a (click)="changeTab(i);paginator.reset();navigate();">{{tab.tabName}}</a>
+      </li>
+    </ul>
+    <div  class="tab-content">
+      <div  class="tab-pane active">
+        <p-dataTable #dt [value]="tableData"
+                     emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}"
+                     scrollable="true" scrollHeight="375px">
+          <p-column field="rolloverApplyId" header="展期单号" styleClass="text-center" [style]="{'width':'120px'}">
+
+          </p-column>
+          <p-column field="companyName" header="企业名称" [style]="{'width':'220px'}" >
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+              <div textMaxLength="220px" title="{{rollover.companyName}}">
+                {{rollover.companyName}}
+              </div>
+            </ng-template>
+          </p-column>
+         <!-- <p-column field="" header="来源渠道"></p-column>-->
+          <p-column field="borrowApplyId" header="贷款单号" styleClass="text-center" [style]="{'width':'130px'}"></p-column>
+          <p-column  styleClass="text-right text-gold" [style]="{'width':'120px'}">
+            <ng-template pTemplate="header">
+              展期金额(元)
+            </ng-template>
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+              {{rollover.repaymentPrinciple|currencyFormat|nullReplace}}
+            </ng-template>
+          </p-column>
+          <p-column styleClass="text-center" [style]="{'width':'100px'}">
+            <ng-template pTemplate="header">
+              还款期数
+            </ng-template>
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+              第{{rollover.repaymentPlan}}期
+            </ng-template>
+          </p-column>
+          <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+            <ng-template pTemplate="header">
+              申请日期
+            </ng-template>
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+               {{rollover.rolloverTime|date:'yyyy-MM-dd'}}
+            </ng-template>
+          </p-column>
+          <p-column field="" header="状态" styleClass="text-center" [style]="{'width':'120px'}">
+            <ng-template pTemplate="header">
+              状态
+            </ng-template>
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+              <span>{{rollover.statusName}}</span>
+            </ng-template>
+          </p-column>
+          <p-column [style]="{'width':'120px'}">
+            <ng-template pTemplate="header" >
+              操作
+            </ng-template>
+            <ng-template  let-rollover="rowData" pTemplate="body" >
+              <div class="table-btn-group">
+                <a  *ngIf="rollover.status==201&&oauth.roleIn(['003','010'])" class="table-btn"
+                    routerLink="/business/loan/rollover/accept/{{rollover.rolloverApplyId}}">受理</a>
+                <a  *ngIf="rollover.status==203" class="table-btn"
+                    routerLink="/business/loan/rollover/config/{{rollover.rolloverApplyId}}">配合同</a>
+                <a  class="table-btn"
+                    routerLink="/business/loan/rollover/details/{{rollover.rolloverApplyId}}">详情</a>
+              </div>
+            </ng-template>
+          </p-column>
+          <p-footer >
+            <div class="clearfix">
+              <div class="pull-right">
+                <paginator [(index)]="paginator.index"
+                           [count]="paginator.count"
+                           [changePageSizeAble]="true"
+                           [showTotal]="true"
+                           [(pageSize)]="paginator.size"
+                           (onChangePage)="navigate()" size="sm">
+                </paginator>
+              </div>
+            </div>
+          </p-footer>
+        </p-dataTable>
+<!--        <div class="pad-t-xs text-right">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [changePageSizeAble]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="navigate()" size="sm"
+                     styleClass="inline-block">
+          </paginator>
+        </div>-->
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

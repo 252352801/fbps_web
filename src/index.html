@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>金融业务处理系统</title>
+  <base href="/fbps">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script src="./assets/config/fbps.config.js" id="config"></script>
+  <script>
+    (function () {
+
+    })();
+  </script>
+  <style>
+    .loading-wrap{
+      position: fixed;
+      left: 0;
+      top:0;
+      right: 0;
+      bottom: 0;
+      background: #fafafa;
+    }
+    .root-logo{
+      display: block;
+      width:180px;
+      height:70px;
+      position: absolute;
+      left:50%;
+      top:50%;
+      margin-left:-90px;
+      margin-top:-35px;
+      background: url("./assets/img/logo/logo.png") no-repeat;
+      -webkit-background-size:100%;
+      background-size:100%;
+    }
+  </style>
+</head>
+<body class="dol">
+  <app-root>
+    <div class="loading-wrap">
+      <div class="root-logo"></div>
+    </div>
+  </app-root>
+</body>
+</html>

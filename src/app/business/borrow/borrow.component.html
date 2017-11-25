@@ -1,0 +1,150 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">贷前管理</a>
+  <a class="page-location-item">业务中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">贷前管理</a>
+</div>
+<div class="wrapper-md" >
+  <form class="form-inline">
+    <div class="form-group">
+      <label class="control-label">贷款单号：</label>
+      <input class="form-control " placeholder="贷款单号" [(ngModel)]="params.borrowApplyId" name="borrowApplyId"/>
+    </div>
+    <div class="form-group">
+      <label class="control-label">企业名称：</label>
+      <input class="form-control " placeholder="企业名称" [(ngModel)]="params.companyName" name="companyName"/>
+    </div>
+    <div class="form-group">
+      <button class="btn-def" (click)="paginator.reset();navigate()">搜索<i class="fa fa-search"></i></button>
+    </div>
+  </form>
+
+  <div class="tab-container" >
+    <ul  class="nav nav-tabs nav-tab-info">
+      <li  *ngFor="let tab of tabs;let i=index" [ngClass]="{'active':tab.active}" >
+        <a (click)="changeTab(i);paginator.reset();navigate()">{{tab.tabName}}</a>
+      </li>
+    </ul>
+    <div  class="tab-content">
+      <div  class="tab-pane active">
+        <p-dataTable #dt [value]="tableData" exportFilename=""
+                     emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}" [loading]="loading"
+                     scrollable="true" scrollHeight="375px">
+          <p-column field="borrowApplyId" header="贷款单号" [style]="{'width':'130px'}" styleClass="text-center">
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              <div textMaxLength="130px" title="{{borrow.borrowApplyId}}">
+                {{borrow.borrowApplyId}}
+              </div>
+            </ng-template>
+          </p-column>
+          <p-column field="companyName" header="企业名称" [style]="{'width':'160px'}">
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              <div textMaxLength="160px" title="{{borrow.companyName}}">
+                {{borrow.companyName}}
+              </div>
+            </ng-template>
+          </p-column>
+          <p-column field="productName" header="贷款产品"  [style]="{'width':'120px'}">
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              <div textMaxLength="120px" title="{{borrow.productName}}">
+                {{borrow.productName}}
+              </div>
+            </ng-template>
+          </p-column>
+          <p-column  styleClass="text-right text-gold" [style]="{'width':'110px'}">
+            <ng-template pTemplate="header">
+              申请金额(元)
+            </ng-template>
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              {{borrow.applyAmount|currencyFormat|nullReplace}}
+            </ng-template>
+          </p-column>
+          <p-column  *ngIf="tabs[1].active||tabs[2].active" styleClass="text-right text-gold" [style]="{'width':'110px'}">
+            <ng-template pTemplate="header">
+              审批金额(元)
+            </ng-template>
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              {{borrow.approveAmount|currencyFormat|nullReplace}}
+            </ng-template>
+          </p-column>
+          <p-column  styleClass="text-center" [style]="{'width':'160px'}">
+            <ng-template pTemplate="header">
+              申请时间
+            </ng-template>
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              {{borrow.createTime|date:'yyyy-MM-dd hh:mm:ss'}}
+            </ng-template>
+          </p-column>
+          <p-column   [style]="{'width':'120px'}" styleClass="text-center">
+            <ng-template pTemplate="header">
+              状态
+            </ng-template>
+            <ng-template  let-borrow="rowData" pTemplate="body" >
+              <span (click)="sysLog.open(borrow.borrowApplyId,0)" class="cur-poi text-info" title="点击查看操作记录" >
+                {{borrow.status|dictionary:'loanStatus'}}
+              </span>
+            </ng-template>
+          </p-column>
+          <p-column styleClass="over-visible" [style]="{'width':'150px'}">
+            <ng-template pTemplate="header">
+              操作
+            </ng-template>
+            <ng-template  let-loan="rowData" pTemplate="body">
+              <div class="table-btn-group">
+                <a *ngIf="loan.status===201&&oauth.roleIn(['003','010'])" class="table-btn" routerLink="/business/borrow/accept/{{loan.borrowApplyId}}">受理</a>
+                <a *ngIf="loan.status===203&&oauth.roleIn(['001','010'])" class="table-btn" routerLink="/business/borrow/configure/{{loan.borrowApplyId}}">配合同</a>
+                <a *ngIf="loan.status===205&&oauth.roleIn(['009','010'])" class="table-btn"
+                   routerLink="/business/borrow/loan/{{loan.borrowApplyId}}">放款</a>
+                <a class="table-btn" routerLink="/business/borrow/details/{{loan.borrowApplyId}}">详情</a>
+                <a *ngIf="loan.status!==201&&oauth.roleIn(['001','003','009'])" class="table-btn" (click)="openCancelModal(loan)"
+                >取消</a>
+              </div>
+            </ng-template>
+          </p-column>
+          <p-footer >
+            <div class="clearfix">
+              <div class="pull-right">
+                <paginator [(index)]="paginator.index"
+                           [count]="paginator.count"
+                           [changePageSizeAble]="true"
+                           [showTotal]="true"
+                           [(pageSize)]="paginator.size"
+                           (onChangePage)="navigate()" size="sm"></paginator>
+              </div>
+            </div>
+          </p-footer>
+        </p-dataTable>
+      </div>
+    </div>
+  </div>
+</div>
+<modal [(visible)]="modalCancel.visible" #cancelModal>
+  <form (submit)="cancel()" HTML5Validate>
+  <modal-header>取消贷款单</modal-header>
+  <modal-body>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label col-sm-3">贷款单号：</label>
+        <div class="form-control-static col-sm-8">{{modalCancel.borrowApplyId}}</div>
+      </div>
+      <div class="form-group no-b-margin">
+        <label class="control-label required col-sm-3"><i class="label-required text-danger ">*</i>备注：</label>
+        <div class="col-sm-8">
+          <textarea class="form-control" placeholder="备注" required
+                    [(ngModel)]="modalCancel.remarks" name="cancelRemarks" rows="3"
+                    [HTML5Validate]="[modalCancel.remarks==='','请输入备注']"></textarea>
+        </div>
+      </div>
+    </div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <div class="col-md-11 text-right no-padding">
+      <button type="submit" class="btn btn-primary" [disabled]="modalCancel.submitted">{{modalCancel.submitted?'正在提交...':'确定'}}</button>
+      <button type="button" class="btn btn-default" (click)="cancelModal.close()">取消</button>
+    </div>
+  </modal-footer>
+  </form>
+</modal>
+<system-logs  #sysLog [mode]="1" title="操作记录" [isShowType]="false" [isShowId]="false"></system-logs>
+
+
+

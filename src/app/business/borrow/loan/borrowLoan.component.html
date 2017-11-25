@@ -1,0 +1,436 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">放款</a>
+  <a class="page-location-item">业务中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item ">贷前管理<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">放款</a>
+</div>
+<div class="wrapper-md">
+  <div class="group mar-b-sm ">
+    <table class="table no-margin no-border">
+      <tr>
+        <td width="10%">
+          <label class="control-label">贷款单号：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.borrowApplyId|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">申请时间：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">状态：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.status|dictionary:'loanStatus'|nullReplace}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="group mar-b-sm ">
+    <table class="table no-margin no-border">
+      <tr>
+        <td width="10%">
+          <label class="control-label">企业名称：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.companyName|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">企业ID：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.memberId|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%" >
+          <label class="control-label">申请金额：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          <span >{{loan.applyAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+        </td>
+        <td width="10%">
+          <label class="control-label">贷款产品：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.productName|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">贷款周期：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.borrowHowlong|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">还款方式：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">利率：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.rate|percent|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">计息方式：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.rateType|dictionary:'interestType'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="5%">
+          <label class="control-label">审批金额：</label>
+        </td>
+        <td class="text-default" width="40%">
+          <span >{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="group mar-b-sm ">
+    <table class="table no-border no-margin form-label-5">
+      <tbody>
+      <tr>
+        <td class="td-label" width="10%">
+          <label class="control-label required">放款日期：</label>
+        </td>
+        <td width="90%" colspan="3">
+          <input class="form-control" placeholder="放款日期" datePicker [opt-ispicktime]="true"
+                 [(ngModel)]="loanTime" (complete)="createRepayPlanPreview($event);"
+                 style="max-width: 175px;"/>
+        </td>
+
+      </tr>
+      <tr *ngIf="repayPlanPreview.length">
+        <td class="td-label" width="10%" style="vertical-align: top">
+          <label class="control-label">还款计划：</label>
+        </td>
+        <td class="text-default" width="90%" colspan="3">
+          <table class="table table-bordered bg-white no-margin">
+            <thead>
+            <tr class="bg-default">
+              <th class="text-center">期数</th>
+              <th class="text-center">还款日期</th>
+              <th class="text-center">应还本金(元)</th>
+              <th class="text-center">应还利息(元)</th>
+              <th class="text-center">应还总额(元)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let rpp of repayPlanPreview;">
+              <td class="text-center">{{rpp.repaymentPlan+'/'+repayPlanPreview.length}}期</td>
+              <td class="text-center">{{rpp.repaymentPlanDate|date:'yyyy-MM-dd'}}</td>
+              <td class="text-right text-gold">{{rpp.repaymentPrinciple|currencyFormat|nullReplace}}</td>
+              <td class="text-right text-gold">{{rpp.repaymentInterest|currencyFormat|nullReplace}}</td>
+              <td class="text-right text-gold">{{rpp.repayRelAmount|currencyFormat|nullReplace}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="5%" style="vertical-align: top">
+          <label class="control-label">合同：</label>
+        </td>
+        <td  width="90%" colspan="3">
+          <span *ngIf="contracts.length==0" >{{''|nullReplace}}</span>
+          <table class="table table-bordered bg-white no-margin">
+            <thead class="bg-default"  *ngIf="contracts.length>0" >
+            <tr>
+            <th class="text-center">合同编号</th>
+            <th class="text-center">合同标题</th>
+            <th class="text-center">公司名称</th>
+            <th class="text-center">资方</th>
+            <th class="text-center">是否送签</th>
+            <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let contract of contracts">
+              <td >{{contract.docNum}}</td>
+              <td >{{contract.title}}</td>
+              <td >{{contract.companyName}}</td>
+              <td >{{matchResourceName(contract.capitalId)}}</td>
+              <td class="text-center">
+                <span *ngIf="contract.isSign==0">是</span>
+                <span *ngIf="contract.isSign==1">否</span>
+              </td>
+              <td class="text-center">
+                <a class="text-info" title="详情"
+                   routerLink="/data/contract/details/{{contract|json}}"
+                >详情</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="clearfix row">
+    <div class="mar-b-sm  col-md-6 no-r-padding">
+      <div class="group" >
+        <table class="table no-border no-margin">
+          <tbody>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">初审人员：</label>
+            </td>
+            <td class="text-default" width="90%">
+              {{loan.auditOneBy|nullReplace}}
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">初审时间：</label>
+            </td>
+            <td class="text-default" width="90%">
+              {{loan.auditOneTime|nullReplace}}
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">初审意见：</label>
+            </td>
+            <td class="text-default" width="90%" colspan="3">
+          <span class="form-control-static">
+            {{loan.remarks|nullReplace}}
+          </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mar-b-sm  col-md-6">
+      <div class="group" >
+        <table class="table no-border no-margin">
+          <tbody>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">复审人员：</label>
+            </td>
+            <td class="text-default" width="90%">
+              {{reviewInfo.operator|nullReplace}}
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">复审时间：</label>
+            </td>
+            <td class="text-default" width="90%">
+              {{reviewInfo.reviewTime|nullReplace}}
+            </td>
+          </tr>
+          <tr>
+            <td class="td-label" width="10%">
+              <label class="control-label">复审意见：</label>
+            </td>
+            <td class="text-default" width="90%" colspan="3">
+          <span class="form-control-static">
+            {{reviewInfo.opinion|nullReplace}}
+          </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="mar-b-sm group">
+    <table class="table no-border no-margin form-label-5">
+      <tbody>
+      <tr>
+        <td class="td-label" width="10%">
+          <label class="control-label required">审批结果：</label>
+        </td>
+        <td  width="90%">
+          <radio [(key)]="isPassed" [value]="true">通过</radio>
+          <radio [(key)]="isPassed" [value]="false" name="radio" customBackground="#ff0000" >不通过</radio>
+        </td>
+
+      </tr>
+      <tr *ngIf="isPassed===false">
+        <td class="td-label" width="10%" style="vertical-align: top">
+          <label class="control-label required">审批意见：</label>
+        </td>
+        <td  width="90%">
+          <textarea class="form-control form-textarea" placeholder="请输入审批意见" [(ngModel)]="opinion"></textarea>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center">
+    <button class="btn-def  mar-r-sm" (click)="submit()" [disabled]="submitted"
+    >{{submitted?'正在提交...':'提交'}}<i class="fa fa-check-circle-o"></i></button>
+    <button class="btn-def " btnBack>放弃<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+<modal [(visible)]="modalContract.visible" size="lg">
+  <modal-header>合同信息</modal-header>
+  <modal-body styleClass="bg-default">
+    <table class="table table-bordered table-fixed table-contract">
+      <tbody>
+      <tr>
+        <td class="table-contract-label">合同名称：</td>
+        <td>
+          合同名称
+        </td>
+        <td class="table-contract-label">客户单号：</td>
+        <td>
+          123456789
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">合同有效期：</td>
+        <td colspan="3">
+          2018-08-08
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">运费（元）：</td>
+        <td>
+          ￥1000
+        </td>
+        <td class="table-contract-label">运费结算日期：</td>
+        <td>
+          2018-08-08
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">是否有回单：</td>
+        <td>
+          是
+        </td >
+        <td class="table-contract-label">是否已对账：</td>
+        <td>
+          是
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">付款方式：</td>
+        <td>
+          你猜
+        </td>
+        <td colspan="2">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered table-fixed table-contract">
+      <tbody>
+      <tr>
+        <td class="table-contract-label">货物概述：</td>
+        <td>
+          货物概述货物概述货物概述
+        </td>
+        <td class="table-contract-label">运输方式：</td>
+        <td>
+          运输方式运输方式运输方式
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">托运方：</td>
+        <td>
+          托运方托运方
+        </td >
+        <td class="table-contract-label">托运方手机：</td>
+        <td>
+          18420019601
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">承运方：</td>
+        <td>
+          承运方
+        </td>
+        <td class="table-contract-label">承运方手机：</td>
+        <td>
+          18420019601
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">司机：</td>
+        <td>
+         老司机
+        </td>
+        <td class="table-contract-label">车牌号码：</td>
+        <td>
+         000000
+        </td>
+      </tr>
+      <tr>
+        <td class="table-contract-label">收货方：</td>
+        <td>
+          你妹
+        </td>
+        <td class="table-contract-label">收货方手机：</td>
+        <td>
+          18420019601
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered table-fixed table-contract">
+      <tr>
+        <td class="table-contract-label">合同附件：</td>
+        <td colspan="3"></td>
+      </tr>
+      </tbody>
+    </table>
+  </modal-body>
+  <modal-footer>
+    <button class="btn btn-default" (click)="closeContractModal()">
+      关闭
+    </button>
+  </modal-footer>
+</modal>
+<modal [(visible)]="modalConfirm.visible">
+  <modal-header>
+    <h4 class="h4">
+      放款确认
+    </h4>
+  </modal-header>
+  <modal-body>
+
+    <div class="form-inline form-label-5 bg-default pad-sm bor-def clearfix">
+      <div class="form-group col-xs-12">
+        <label class="control-label">收款账户：</label>
+        <span class="form-control-statics pad-l-def">{{bankCard.cardName}}</span>
+      </div>
+      <div class="form-group col-xs-12 ">
+        <label class="control-label">银  行：</label>
+        <span class="form-control-statics pad-l-def">{{bankCard.bankName}}</span>
+      </div>
+      <div class="form-group col-xs-12 no-b-margin">
+        <label class="control-label">收款帐号：</label>
+        <span class="form-control-statics pad-l-def">{{bankCard.cardNo}}</span>
+      </div>
+    </div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <button class="btn btn-info" (click)="submitPass()" [disabled]="modalConfirm.submitted||!bankCard.cardNo" >
+     {{modalConfirm.submitted?'正在提交...':'确定'}}
+    </button>
+    <button class="btn btn-default" (click)="closeConfirmModal()">
+      取消
+    </button>
+  </modal-footer>
+</modal>

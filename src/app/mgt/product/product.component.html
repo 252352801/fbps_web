@@ -1,0 +1,107 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">产品管理</a>
+  <a class="page-location-item">
+    管理中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">产品管理</a>
+</div>
+<div class="wrapper-list">
+  <div >
+    <form class="form-inline pad-b-sm">
+      <div class="form-group">
+        <label class="control-label">产品名称：</label>
+        <input class="form-control " placeholder="产品名称" [(ngModel)]="params.productName" name="productName"/>
+      </div>
+      <div class="form-group">
+        <button class="btn-def" (click)="search()">搜索<i class="fa fa-search"></i></button>
+      </div>
+    </form>
+    <p-dataTable #dt [value]="tableData" emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}"
+                 [loading]="loading" scrollable="true" scrollHeight="375px">
+      <p-column field="productId" header="产品ID" styleClass="text-center" [style]="{'width':'100px'}"></p-column>
+      <p-column field="productName" header="产品名称" [style]="{'width':'150px'}">
+        <ng-template  let-product="rowData" pTemplate="body">
+          <div textMaxLength="150px" title="{{product.productName}}">
+            {{product.productName}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          产品类别
+        </ng-template>
+        <ng-template  let-product="rowData" pTemplate="body">
+          {{product.productType|dictionary:'productType'}}
+        </ng-template>
+      </p-column>
+<!--      <p-column field="productCompany" header="发布公司" styleClass="text-center" [style]="{'width':'150px'}">
+        <ng-template  let-product="rowData" pTemplate="body">
+          <div textMaxLength="150px" title="{{product.productCompany}}">
+            {{product.productCompany}}
+          </div>
+        </ng-template>
+      </p-column>-->
+      <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          发布日期
+        </ng-template>
+        <ng-template  let-product="rowData" pTemplate="body">
+          {{product.beginDate|date:'yyyy-MM-dd'}}
+        </ng-template>
+      </p-column>
+      <p-column field="expiryDate" header="有效期"  [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          有效期
+        </ng-template>
+        <ng-template  let-product="rowData" pTemplate="body">
+          <span *ngIf="product.expiryDate==0">长期有效</span>
+          <span *ngIf="product.expiryDate==1">1年</span>
+          <span *ngIf="product.expiryDate==2">2年</span>
+        </ng-template>
+      </p-column>
+      <p-column header="状态" styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          状态
+        </ng-template>
+        <ng-template  let-product="rowData" pTemplate="body">
+          <div class="inline-block">
+            <div class="pull-left mar-r-xs">
+              <span class="" *ngIf="product.status==0">启用</span>
+              <span class="text-disabled" *ngIf="product.status==-1">禁用</span>
+            </div>
+            <toggle styClass="pull-left" [value]="product.status==0?true:false"
+                    (action)="toggleProductStatus(product)" [auto]="false"></toggle>
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column styleClass="over-visible" [style]="{'width':'180px'}">
+        <ng-template pTemplate="header">
+          操作
+        </ng-template>
+        <ng-template  let-product="rowData" pTemplate="body">
+                  <div class="table-btn-group">
+                    <span  class="table-btn"  routerLink="/mgt/product/details/{{product.productId}}">详情</span>
+                    <span  class="table-btn" routerLink="/mgt/product/modifyDetails/{{product.productId}}" *ngIf="oauth.roleIn(['010','013'])">编辑</span>
+                    <span  class="table-btn" routerLink="/mgt/product/modifyConf/{{product.productId}}" *ngIf="oauth.roleIn(['010','013'])">参数配置</span>
+                  </div>
+        </ng-template>
+      </p-column>
+      <p-footer >
+        <div class="clearfix">
+          <div class="pull-left">
+            <a class="btn btn-default-dk btn-sm" *ngIf="oauth.roleIn(['010','013'])"
+               routerLink="/mgt/product/publish"><i class="fa fa-plus"></i>新增</a>
+          </div>
+          <div class="pull-right">
+            <paginator [(index)]="paginator.index"
+                       [count]="paginator.count"
+                       [changePageSizeAble]="true"
+                       [showTotal]="true"
+                       [(pageSize)]="paginator.size"
+                       (onChangePage)="navigate()" size="sm"></paginator>
+          </div>
+        </div>
+      </p-footer>
+    </p-dataTable>
+  </div>
+</div>
+

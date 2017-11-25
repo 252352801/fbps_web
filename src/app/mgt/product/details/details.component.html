@@ -1,0 +1,163 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">产品详情</a>
+  <a class="page-location-item">
+    管理中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item ">产品管理<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">产品详情</a>
+</div>
+
+<div class="wrapper-md">
+  <div class="group mar-b-sm">
+
+    <table class="table no-border no-margin" >
+      <tbody>
+      <tr>
+        <td class="prod-label" >产品名称：</td>
+        <td class="text-default" width="38%">{{product.productName|nullReplace}}</td>
+<!--        <td class="prod-label" >状态：</td>
+        <td class="text-default" width="38%">
+          <span  *ngIf="product.status==0">启用中</span>
+          <span  *ngIf="product.status==1">已禁用</span>
+          <span  *ngIf="product.status!=0&&product.status!=1">{{''|nullReplace}}</span>
+        </td>-->
+        <td class="prod-label" width="12%">发布公司：</td>
+        <td class="text-default" width="38%">{{product.productCompany|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label"  >产品类别：</td>
+        <td class="text-default"  width="38%">{{product.productType|dictionary:'productType'|nullReplace}}</td>
+        <td class="prod-label">发布日期：</td>
+        <td class="text-default" >{{product.beginDate|date:'yyyy-MM-dd'|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label">额度范围：</td>
+        <td class="text-default" >{{product.valueLimit|nullReplace}}</td>
+        <td class="prod-label">有效期：</td>
+        <td class="text-default" >
+          <span *ngIf="product.expiryDate==0">长期有效</span>
+          <span *ngIf="product.expiryDate==1">1年</span>
+          <span *ngIf="product.expiryDate==2">2年</span>
+          <span *ngIf="product.expiryDate!=0&&product.expiryDate!=1&&product.expiryDate!=2">{{''|nullReplace}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="prod-label">贷款周期：</td>
+        <td class="text-default" >{{product.borrowHowlong|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label">条件要求：</td>
+        <td class="text-default" colspan="3">{{product.productRequirement|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label">产品简介：</td>
+        <td class="text-default" colspan="3">{{product.productRemark|nullReplace}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="group mar-b-sm">
+    <table class="table no-border mar-b-sm ">
+      <tbody>
+      <tr>
+        <td class="prod-label"  width="12%">展期日利率：</td>
+        <td class="text-default"  width="38%">
+          <!--<span class="full-width inline-block modify-text-only" [(contentModel)]="test" contentEditable="plaintext-only"></span>-->
+          <span>{{product.rolloverInterestValue|percent|nullReplace}}</span>
+        </td>
+        <td class="prod-label"  width="12%" >逾期日利率：</td>
+        <td class="text-default"  width="38%">{{product.overdueInterestValue|percent|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label">展期最长期限：</td>
+        <td class="text-default" >{{product.rolloverHowlong|currencyFormat:[0,0,'xx 天']|nullReplace}}</td>
+      </tr>
+      <tr>
+        <td class="prod-label">展期保证金：</td>
+        <td class="text-default" >{{product.rolloverDeposit|percent|nullReplace}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="group mar-b-sm">
+    <table class="table no-border mar-b-sm ">
+      <tbody>
+      <tr>
+        <td class="prod-label"   width="12%">适用渠道：</td>
+        <td class="text-default"   width="38%">
+          <span *ngIf="product.productAppScope==0">全渠道</span>
+          <span *ngIf="product.productAppScope==1">指定渠道</span>
+          <span *ngIf="product.productAppScope!=0&&product.productAppScope!=1">{{''|nullReplace}}</span>
+        </td>
+        <td class="prod-label" width="12%" >
+          地域范围：
+        </td>
+        <td  class="text-default"  width="38%" >
+          <span *ngIf="product.productAreaScope==0">全国范围</span>
+          <span *ngIf="product.productAreaScope!=0">{{''|nullReplace}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="prod-label" width="12%">
+          参数配置：
+        </td>
+        <td  colspan="3">
+          <table class="table table-bordered bg-white no-b-margin">
+            <tbody>
+            <tr>
+              <td class="no-padding" *ngIf="product.productAppScope===1" rowspan="2">
+                <p class="resource-item" *ngFor="let resource of selectedResources" (click)="activateResource(resource)"
+                   [ngClass]="{'active':activeResource==resource}">{{resource.resourceName}}</p>
+              </td>
+              <td rowspan="2" [ngClass]="{'no-padding':product.productAppScope===0}">
+                <table class="table table-bordered no-margin" >
+                  <thead class="bg-default">
+                  <tr>
+                    <th class="text-center">贷款周期</th>
+                    <th class="text-center">还款方式</th>
+                    <th class="text-center">计息方式</th>
+                    <th class="text-center">利率（%）</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="text-center" *ngFor="let conf of productConfigs"
+                      [hidden]="(product.productAppScope===0&&conf.appId!=-1)||
+                  (product.productAppScope===1&&!activeResource)||
+                (product.productAppScope===1&&activeResource&&conf.appId!=activeResource.resourceId)">
+                    <td>{{conf.rateCycle}}</td>
+                    <td>{{conf.paymentWay|dictionary:'repaymentWay'}}</td>
+                    <td>{{conf.interestType|dictionary:'interestType'}}</td>
+                    <td>{{conf.interestValue|percent}}</td>
+                  </tr>
+                  <tr *ngIf="productConfigs.length==0">
+                    <td colspan="4" class="text-center text-disabled">
+                      无配置
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="group mar-b-sm" *ngIf="proveData&&proveData.length">
+    <table class="table no-border no-margin">
+      <tr>
+        <td class="prod-label" width="12%">
+          融资证明：
+        </td>
+        <td width="88%" colspan="3" class="text-default">
+          <span *ngFor="let item of proveData" class="mar-r-sm">{{item.fileTypeName}}</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="text-center">
+    <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+<q-btn-group></q-btn-group>

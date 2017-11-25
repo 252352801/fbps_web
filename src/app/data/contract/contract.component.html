@@ -1,0 +1,119 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">融资合同库</a>
+  <a class="page-location-item"><i class="page-location-icon fa fa-database"></i>
+    数据中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">融资合同库</a>
+</div>
+<div class="wrapper-list">
+  <form class="form-inline" (submit)="paginator.reset();navigate();query()" >
+    <div class="form-group ">
+      <label class="control-label">签署时间：</label>
+      <div class="input-group" style="max-width: 280px">
+        <input class="form-control " placeholder="起始时间" [(ngModel)]="params.beginTime" name="beginTime"
+               datePicker
+               opt-max="{{params.endTime?params.endTime:currentTime}}"
+               />
+        <span class="input-group-addon">-</span>
+        <input class="form-control " placeholder="截止时间" [(ngModel)]="params.endTime" name="endTime"
+               datePicker
+               opt-min="{{params.beginTime}}"
+               opt-max="{{currentTime}}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label">合同编号：</label>
+      <input class="form-control" placeholder="合同编号" [(ngModel)]="params.docNum" name="docNum" />
+    </div>
+    <div class="form-group ">
+      <label class="control-label">状态：</label>
+      <select class="form-control" [(ngModel)]="params.status" name="status">
+        <option *ngFor="let opt of statusOptions" [value]="opt.value">{{opt.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <button  class="btn-def" type="submit">搜索<i class="fa fa-search"></i></button>
+    </div>
+  </form>
+  <p-dataTable #dt [value]="tableData" emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}"
+               [loading]="loading" scrollable="true" scrollHeight="375px">
+<!--    <p-column field="id" header="合同ID" styleClass="text-center"></p-column>
+    <p-column field="twId" header="天威合同ID" styleClass="text-center"></p-column>-->
+    <p-column field="docNum" header="合同编号" [style]="{'width':'140px'}">
+      <ng-template  let-contract="rowData" pTemplate="body">
+        <div textMaxLength="140px" title="{{contract.docNum}}">
+        {{contract.docNum}}
+          </div>
+      </ng-template>
+    </p-column>
+    <p-column field="title" header="合同标题" [style]="{'width':'150px'}">
+      <ng-template let-contract="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{contract.title}}">
+          {{contract.title}}
+        </div>
+      </ng-template>
+    </p-column>
+   <!-- <p-column field="borrowApplyId" header="贷款编号" [style]="{'width':'140px'}">
+      <ng-template let-contract="rowData" pTemplate="body">
+        <div textMaxLength="140px" title="{{contract.borrowApplyId}}">
+          {{contract.borrowApplyId}}
+        </div>
+      </ng-template>
+    </p-column>-->
+    <p-column field="companyName" header="甲方" [style]="{'width':'150px'}">
+      <ng-template let-contract="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{contract.companyName}}">
+          {{contract.companyName}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column field="capitalId" header="乙方" [style]="{'width':'150px'}">
+      <ng-template let-contract="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{matchCapitalName(contract.capitalId)}}">
+          {{matchCapitalName(contract.capitalId)}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column header="丙方" [style]="{'width':'150px'}">
+      <ng-template let-contract="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="芜湖海豚信息科技有限公司">
+          芜湖海豚信息科技有限公司
+        </div>
+      </ng-template>
+    </p-column>
+   <!-- <p-column field="companyName" header="公司名称" styleClass="text-center"></p-column>-->
+  <!--  <p-column field="updateTime" header="签署时间" styleClass="text-center"></p-column>-->
+    <p-column field="statusName" header="状态" styleClass="text-center" [style]="{'width':'120px'}"></p-column>
+    <p-column [style]="{'width':'80px'}" styleClass="text-center">
+      <ng-template pTemplate="header"  >
+        操作
+      </ng-template>
+      <ng-template  let-contract="rowData" pTemplate="body">
+        <div class="table-btn-group" >
+         <!-- <a class="table-btn" target="_blank" [href]="downloadFileAddr+'?fileId='+contract.fileId">详情</a>-->
+          <a class="table-btn"  routerLink="/data/contract/details/{{contract|json}}">详情</a>
+        </div>
+      </ng-template>
+    </p-column>
+    <p-footer>
+        <div class="clearfix">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [changePageSizeAble]="true"
+                     [showTotal]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="navigate();query();" size="sm"
+          styleClass="pull-right"></paginator>
+        </div>
+    </p-footer>
+  </p-dataTable>
+<!--  <div class="clearfix mar-t-sm">
+    <div class="pull-right">
+      <paginator [(index)]="paginator.index"
+                 [count]="paginator.count"
+                 [changePageSizeAble]="true"
+                 [(pageSize)]="paginator.size"
+                 (onChangePage)="navigate();query();" size="sm"></paginator>
+    </div>
+  </div>-->
+</div>
+

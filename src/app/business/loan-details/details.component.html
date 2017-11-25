@@ -1,0 +1,178 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">贷款详情</a>
+  <a class="page-location-item">业务中心<i
+    class="pad-l-min fa fa-angle-right"></i></a>
+<!--  <a class="page-location-item ">贷款管理<i class="pad-l-min fa fa-angle-right"></i></a>-->
+  <a class="page-location-item active ">贷款详情</a>
+</div>
+<div class="wrapper-md">
+
+  <div class="group mar-b-sm pad-sm">
+    <table class="table no-margin no-border">
+      <tr>
+        <td width="10%">
+          <label class="control-label">贷款单号：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.borrowApplyId|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">申请时间：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">状态：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.status|dictionary:'loanStatus'|nullReplace}}
+        </td>
+        <td width="10%" *ngIf="isApproved">
+          <label class="control-label">放款时间：</label>
+        </td>
+        <td width="40%" class="text-gold-dk"  *ngIf="isApproved">
+          {{loan.loanTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="group mar-b-sm pad-sm">
+    <table class="table no-margin no-border">
+      <tr>
+        <td width="10%">
+          <label class="control-label">企业名称：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.companyName|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">企业ID：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.memberId|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%" >
+          <label class="control-label" *ngIf="!isApproved">申请金额：</label>
+          <label class="control-label" *ngIf="isApproved">贷款金额：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          <span *ngIf="!isApproved">{{loan.applyAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+          <span *ngIf="isApproved">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+        </td>
+        <td width="10%">
+          <label class="control-label">贷款产品：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.productName|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">贷款周期：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.borrowHowlong|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">还款方式：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td width="10%">
+          <label class="control-label">利率：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.rate|percent|nullReplace}}
+        </td>
+        <td width="10%">
+          <label class="control-label">计息方式：</label>
+        </td>
+        <td width="40%" class="text-gold-dk">
+          {{loan.rateType|dictionary:'interestType'|nullReplace}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="group mar-b-sm pad-sm" *ngIf="loan.loanTime||contracts.length">
+    <table class="table no-margin no-border">
+      <tr *ngIf="loan.loanTime&&!isApproved">
+        <td width="10%">
+          <label class="control-label">放款时间：</label>
+        </td>
+        <td width="90%" class="text-gold-dk" colspan="3">
+          {{loan.loanTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+      <tr *ngIf="repayPlanList.length>0">
+        <td width="10%">
+          <label class="control-label">还款计划：</label>
+        </td>
+        <td width="90%" colspan="3">
+          <table class="table table-bordered bg-white no-b-margin">
+            <thead class="bg-default">
+            <tr>
+              <th class="text-center">期数</th>
+              <th class="text-center">还款日</th>
+              <th class="text-center">应还本金(元)</th>
+              <th class="text-center">应还利息(元)</th>
+              <th class="text-center">罚息(元)</th>
+              <th class="text-center">应还总额(元)</th>
+              <th class="text-center">状态</th>
+              <th class="text-center">备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let repayPlan of repayPlanList">
+              <td class="text-center">{{repayPlan.repaymentPlan}}/{{repayPlanList.length}}期</td>
+              <td class="text-center">{{repayPlan.repaymentPlanDate|date:'yyyy-MM-dd'}}</td>
+              <td class="text-right text-gold">{{repayPlan.repaymentPrinciple|currencyFormat|nullReplace}}</td>
+              <td class="text-right text-gold">{{repayPlan.repaymentInterest|currencyFormat|nullReplace}}</td>
+              <td class="text-right text-gold">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
+              <td class="text-right text-gold">{{repayPlan.repayRelAmount|currencyFormat|nullReplace}}</td>
+              <td class="text-center">
+                {{repayPlan.statusName}}
+              </td>
+              <td class="text-center">
+                <a *ngIf="repayPlan.rolloverApplyId" class="text-info"
+                      routerLink="/business/loan/rollover/details/{{repayPlan.rolloverApplyId}}">有展期</a>
+                <span *ngIf="!repayPlan.rolloverApplyId" >--</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+
+      </tr>
+      <tr *ngIf="contracts.length>0" [hidden]="loan.status===303||loan.status===503||loan.status===505">
+        <td width="10%">
+          <label class="control-label">融资合同：</label>
+        </td>
+        <td width="90%" colspan="3">
+          <ul>
+            <li class="mar-b-xs">
+              <a class="text-info" *ngFor="let contract of contracts"
+                 routerLink="/data/contract/details/{{contract|json}}"
+              >
+                《{{contract.title}}》
+              </a>
+            </li>
+          </ul>
+        </td>
+
+      </tr>
+    </table>
+  </div>
+  <div class="col-sm-12 text-center pad-b-def">
+    <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+<q-btn-group></q-btn-group>

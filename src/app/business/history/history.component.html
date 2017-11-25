@@ -1,0 +1,111 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">贷款历史</a>
+  <a class="page-location-item">业务中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item">贷后管理<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">贷款历史</a>
+</div>
+<div class="wrapper-list">
+  <form class="form-inline">
+   <!-- <div class="form-group">
+      <label class="control-label">申请ID：</label>
+      <input class="form-control " placeholder="完整的申请ID" [(ngModel)]="params.borrowApplyId" name="borrowApplyId" />
+    </div>-->
+    <div class="form-group ">
+      <label class="control-label">创建时间：</label>
+ <!--     <input class="form-control" placeholder="时间区间"  style="min-width: 200px;"
+             datePicker opt-range="至" [(ngModel)]="datetimeRange" name="datetimeRange"/>-->
+      <div class="input-group" style="max-width: 280px">
+        <datetime-picker [(value)]="params.beginTime" [max]="params.endTime">
+          <input class="form-control " placeholder="起始时间" [(ngModel)]="params.beginTime" name="beginTime" />
+        </datetime-picker>
+
+        <span class="input-group-addon">-</span>
+        <datetime-picker [(value)]="params.endTime" [min]="params.beginTime">
+        <input class="form-control " placeholder="截止时间" [(ngModel)]="params.endTime" name="endTime" />
+        </datetime-picker>
+      </div>
+    </div>
+    <div class="form-group ">
+      <label class="control-label">公司名称：</label>
+      <input class="form-control " placeholder="公司名称关键字" [(ngModel)]="params.companyName" name="companyName" />
+    </div>
+    <div class="form-group ">
+      <label class="control-label">状态：</label>
+      <select class="form-control" [(ngModel)]="params.status" name="status">
+        <option *ngFor="let opt of statusOptions" [value]="opt.value">{{opt.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <a   class="btn-def"
+              (click)="paginator.reset();navigate();query();" >搜索<i class="fa fa-search"></i></a>
+    </div>
+  </form>
+
+  <p-dataTable #dt [value]="tableData"  emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}"
+               [loading]="loading" scrollable="true" scrollHeight="375px">
+    <p-column field="borrowApplyId" header="贷款单号"  styleClass="text-center" [style]="{'width':'130px'}"></p-column>
+    <p-column field="companyName" header="企业名称" [style]="{'width':'220px'}" >
+      <ng-template let-loan="rowData" pTemplate="body">
+        <div textMaxLength="220px" title="{{loan.companyName}}">{{loan.companyName}}</div>
+      </ng-template>
+    </p-column>
+    <p-column field="productName" header="贷款产品"  styleClass="text-center" [style]="{'width':'120px'}">
+      <ng-template let-loan="rowData" pTemplate="body">
+        <div textMaxLength="120px" title="{{loan.productName}}">{{loan.productName}}</div>
+      </ng-template>
+    </p-column>
+    <p-column  styleClass="text-right text-gold" [style]="{'width':'120px'}">
+      <ng-template pTemplate="header">
+        贷款金额
+      </ng-template>
+      <ng-template let-loan="rowData" pTemplate="body">
+        {{loan.applyAmount|currencyFormat|nullReplace}}
+      </ng-template>
+    </p-column>
+    <p-column  styleClass="text-center" [style]="{'width':'150px'}">
+      <ng-template pTemplate="header">
+        还款方式
+      </ng-template>
+      <ng-template let-loan="rowData" pTemplate="body">
+        {{loan.repaymentWay|dictionary:'repaymentWay'}}
+      </ng-template>
+    </p-column>
+    <p-column   [style]="{'width':'120px'}">
+      <ng-template pTemplate="header">
+        状态
+      </ng-template>
+      <ng-template let-loan="rowData" pTemplate="body">
+        <span class="cur-poi text-info" (click)="sysLog.open(loan.borrowApplyId)">{{loan.status|dictionary:'loanStatus'}}</span>
+      </ng-template>
+    </p-column>
+    <p-column field="remark" header="备注" [style]="{'width':'150px'}">
+      <ng-template let-loan="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{loan.remark}}">{{loan.remark}}</div>
+      </ng-template>
+    </p-column>
+    <p-column [style]="{'width':'70px'}">
+      <ng-template pTemplate="header">
+        操作
+      </ng-template>
+      <ng-template let-loan="rowData" pTemplate="body">
+        <div class="table-btn-group">
+          <a class="table-btn" routerLink="/business/history/details/{{loan.borrowApplyId}}">详情</a>
+        </div>
+      </ng-template>
+    </p-column>
+    <p-footer >
+      <div class="clearfix">
+        <div class="pull-right">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [changePageSizeAble]="true"
+                     [showTotal]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="navigate()" size="sm"></paginator>
+        </div>
+      </div>
+    </p-footer>
+  </p-dataTable>
+
+</div>
+<system-logs  #sysLog [mode]="1" title="操作记录" [isShowType]="false" [isShowId]="false"></system-logs>

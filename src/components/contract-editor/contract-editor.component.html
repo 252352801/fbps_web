@@ -1,0 +1,215 @@
+<modal [visible]="visible" (visibleChange)="close()"  size="lg" [outClickClose]="false" >
+    <modal-header>添加合同</modal-header>
+    <modal-body styleClass="bg-default">
+        <table class="table table-bordered mar-b-xs table-middle">
+            <thead>
+            <th colspan="4">合同信息</th>
+            </thead>
+            <tr>
+                <td class="table-label">贷款单号：</td>
+                <td>{{borrowApplyId}}</td>
+                <td class="table-label">公司名称：</td>
+                <td>{{loan.companyName}}</td>
+            </tr>
+            <tr>
+                <td class="table-label"><i class="text-danger label-required">*</i>合同标题：</td>
+                <td>
+                  <input class="form-control no-border" [(ngModel)]="contractTitle" name="contractTitle" placeholder="请输入合同标题" />
+                </td>
+                <td class="table-label"><i class="text-danger label-required">*</i>合同编号：</td>
+                <td>
+                  <input class="form-control no-border" [(ngModel)]="contractNum" name="contractNum" placeholder="请输入合同编号" />
+                </td>
+            </tr>
+            <tr>
+                <td class="table-label"><i class="text-danger label-required">*</i>资方：</td>
+                <td>
+                  <select class="form-control no-border" [(ngModel)]="resourceId" name="resourceId">
+                    <option *ngFor="let resource of resources" [value]="resource.resourceId">{{resource.resourceName}}</option>
+                  </select>
+                </td>
+                <td class="table-label"><i class="text-danger label-required">*</i>是否送签：</td>
+                <td >
+                    <radio [(key)]="wouldSign" [value]="true" >是</radio>
+                    <radio [(key)]="wouldSign" [value]="false">否</radio>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-label" ><i class="text-danger label-required">*</i>上传合同：</td>
+                <td colspan="3">
+                  <table class="table table-bordered no-margin" *ngIf="uploader.queue.length>0">
+                    <thead class="bg-default">
+                    <th>文件名</th>
+                    <th>文件大小</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let file of uploader.queue;let i=index">
+                      <td class="text-primary"> {{file.fileName}}</td>
+                      <td>{{(file.fileSize/1024).toFixed(2)}}kb</td>
+                      <td style="width: 180px;">
+                        <span  *ngIf="!file.uploaded&&file.progress===0">等待上传</span>
+                        <span class="text-success" *ngIf="file.uploaded&&file.success">上传成功</span>
+                        <span class="text-success" *ngIf="file.uploaded&&file.error">上传失败</span>
+                        <div class="progress no-margin" *ngIf="!file.success" style="height: 19px;">
+                          <div class="progress-bar progress-bar-success" [style.width.%]="file.progress"><b>{{file.progress}}%</b></div>
+                        </div>
+                      </td>
+                      <td>
+                        <a class="btn btn-xs btn-danger" (click)="removeUploadFile(i)"><i class="fa fa-remove"></i>删除</a>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <label class="btn-def-outline input-file-wrap" *ngIf="uploader.queue.length==0">
+                    <i class="fa fa-file"></i>选择合同
+                    <input type="file" accept="application/pdf" [uploader]="uploader"  />
+                  </label>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-bordered  mar-b-xs table-middle" *ngFor="let signature of signatures;let i=index">
+            <thead>
+            <th colspan="4" >
+                签章信息
+                <button class="btn btn-xs btn-danger pull-right" (click)="removeSignature(i)" *ngIf="signatures.length>1"><i class="fa fa-remove no-padding"></i>删除</button>
+            </th>
+            </thead>
+            <tr>
+                <td class="table-label"><i class="text-danger label-required">*</i>签章方：</td>
+                <td (click)="openPickSignatoryModal(i);close()">
+                    {{signature.name}}<button class="btn-def-outline pull-right no-padding"><i class="fa fa-user"></i>选择</button>
+                </td>
+                <td class="table-label"><i class="text-danger label-required">*</i>签章页码：</td>
+                <td>
+                  <input  class="form-control no-border" [(ngModel)]="signature.page" name="signaturePage" placeholder="请输入签章页码"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-label"><i class="text-danger label-required">*</i>X坐标：</td>
+                <td>
+                  <input class="form-control no-border" [(ngModel)]="signature.positionX" name="signaturePositionX" placeholder="请输入X坐标"/>
+                </td>
+                <td class="table-label"><i class="text-danger label-required">*</i>Y坐标：</td>
+                <td>
+                  <input class="form-control no-border" [(ngModel)]="signature.positionY" name="signaturePositionY" placeholder="请输入Y坐标" />
+                </td>
+            </tr>
+        </table>
+        <div>
+            <button class="btn-def-outline" (click)="addNewSignature()" ><i class="fa fa-plus"></i>添加签章方</button>
+            <button class="btn-def-outline" (click)="contractSignatoryPicker.open();close()"><i class="icon-docs"></i>选择已有签章信息</button>
+        </div>
+    </modal-body>
+    <modal-footer styleClass="no-t-padding">
+   <!--     <button class="btn btn-info" (click)="submit()" [disabled]="submitted">{{submitted?'正在提交...':'提交'}}</button>
+        <button class="btn btn-default" (click)="close()" >取消</button>-->
+
+      <button class="btn btn-primary btn-sm" (click)="submit()" [disabled]="submitted" >{{submitted?'正在提交...':'提交'}}</button>
+      <button class="btn btn-default btn-sm" (click)="close()">取 消</button>
+    </modal-footer>
+</modal>
+<modal [visible]="modalPickSignatory.visible" size="lg" (visibleChange)="closePickSignatoryModal();open()" >
+    <modal-header>选择用户</modal-header>
+    <modal-body>
+        <div class="bor-def mar-b-sm">
+            <form class="form-inline"  >
+                <div class="form-group">
+                    <label class="control-label">用户名：</label>
+                    <input class="form-control" placeholder="用户名"  [(ngModel)]="modalPickSignatory.params.name" name="signatoryName" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">用户类型：</label>
+                    <select class="form-control"[(ngModel)]="modalPickSignatory.params.type" name="signatoryType">
+                      <option *ngFor="let o of modalPickSignatory.signatoryTypes" [value]="o.value">{{o.label}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn-primary btn btn-sm" (click)="searchSignatories()">查询</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-bordered mar-b-xs bg-white">
+            <thead class="bg-default">
+            <th class="text-center">会员ID</th>
+            <th class="text-center">会员名称</th>
+            <th class="text-center">天威用户ID</th>
+            <th class="text-center">类型</th>
+            <th class="text-center">操作</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let signatory of modalPickSignatory.data">
+                <td class="text-center">{{signatory.memberId}}</td>
+                <td class="text-center">{{signatory.name}}</td>
+                <td class="text-center">{{signatory.twUserId}}</td>
+                <td class="text-center">{{signatory.type|dictionary:'signatoryType'}}</td>
+                <td class="text-center">
+                  <a class="text-primary cur-poi" (click)="selectSignatory(signatory)">选择</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-right">
+          <paginator [(index)]="modalPickSignatory.paginator.index"
+                     [count]="modalPickSignatory.paginator.count"
+                     [(pageSize)]="modalPickSignatory.paginator.size"
+                     size="sm" (onChangePage)="querySignatories()"
+                     styleClass="inline-block"></paginator>
+        </div>
+    </modal-body>
+    <modal-footer styleClass="no-t-padding">
+        <button class="btn btn-default" (click)="closePickSignatoryModal();open()">关闭</button>
+    </modal-footer>
+</modal>
+<modal [visible]="contractSignatoryPicker.visible" size="lg" (visibleChange)="contractSignatoryPicker.close();open()" >
+    <modal-header>选择已有签章用户</modal-header>
+    <modal-body>
+        <div class="  mar-b-sm">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="control-label">公司名称：</label>
+                    <input class="form-control" placeholder="公司名称" [(ngModel)]="contractSignatoryPicker.params.companyName" name="companyName" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">状态：</label>
+                  <input class="form-control" placeholder="贷款编号" [(ngModel)]="contractSignatoryPicker.params.borrowApplyId" name="borrowApplyId" />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm" (click)="contractSignatoryPicker.searchContracts()">查询</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-bordered bg-white">
+            <thead class="bg-default">
+            <th class="text-center">贷款单号</th>
+            <th class="text-center">贷款公司</th>
+            <th class="text-center">合同编号</th>
+            <th class="text-center">合同标题</th>
+            <th class="text-center">操作</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of contractSignatoryPicker.data">
+                <td class="text-center">{{item.borrowApplyId}}</td>
+                <td class="text-center">{{item.companyName}}</td>
+                <td class="text-center">{{item.docNum}}</td>
+                <td class="text-center">{{item.title}}</td>
+                <td class="text-center">
+                  <a class="btn btn-xs btn-primary" (click)="contractSignatoryPicker.pick(item.id);">选择</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+      <div class="text-right">
+        <paginator [(index)]="contractSignatoryPicker.paginator.index"
+                   [count]="contractSignatoryPicker.paginator.count"
+                   [(pageSize)]="contractSignatoryPicker.paginator.size"
+                   size="sm"
+                   styleClass="inline-block" (onChangePage)="contractSignatoryPicker.queryContracts()"></paginator>
+      </div>
+    </modal-body>
+    <modal-footer>
+        <button class="btn btn-default" (click)="contractSignatoryPicker.close();open()">关闭</button>
+    </modal-footer>
+</modal>

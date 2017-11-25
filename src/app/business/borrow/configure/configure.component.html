@@ -1,0 +1,192 @@
+<div class="page-location">
+  <a class="h4 pad-r-xs font-bold">配合同</a>
+  <a class="page-location-item">业务中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item ">贷前管理<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">配合同</a>
+</div>
+
+<div class="wrapper-md">
+  <div class="group mar-b-sm  clearfix">
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">贷款单号：</div>
+        <div class="v-table-cell text-default">
+          {{loan.borrowApplyId|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">申请时间：</div>
+        <div class="v-table-cell text-default">
+          {{loan.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">状态：</div>
+        <div class="v-table-cell text-default">
+          {{loan.status|dictionary:'loanStatus'|nullReplace}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm  clearfix">
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">企业名称：</div>
+        <div class="v-table-cell text-default">
+          {{loan.companyName|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">企业ID：</div>
+        <div class="v-table-cell text-default">
+          {{loan.memberId|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">申请金额：</div>
+        <div class="v-table-cell text-default">
+          <span >{{loan.applyAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">贷款产品：</div>
+        <div class="v-table-cell text-default">
+          {{loan.productName|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">贷款周期：</div>
+        <div class="v-table-cell text-default">
+          {{loan.borrowHowlong|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">还款方式：</div>
+        <div class="v-table-cell text-default">
+          {{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">利率：</div>
+        <div class="v-table-cell text-default">
+          {{loan.rate|percent|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">计息方式：</div>
+        <div class="v-table-cell text-default">
+          {{loan.rateType|dictionary:'interestType'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">最终确认金额：</div>
+        <div class="v-table-cell text-default">
+          <span >{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm  clearfix">
+    <div class="col-md-6 mar-b-sm" *ngFor="let pd of proveData">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">{{pd.fileTypeName}}：</div>
+        <div class="v-table-cell">
+          <preview-or-download-button [fileId]="pd.fileLoadId" [loadFile]="true"
+
+                                      (preview)="previewer.open($event,pd.fileTypeName+'-预览')"
+                                      (previewImage)="gallery.open($event)"
+          ></preview-or-download-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm  clearfix">
+    <div class="col-md-12 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold" style="vertical-align: top">
+          <label class="control-label required">合同：</label>
+        </div>
+        <div class="v-table-cell">
+          <button class="btn-def-outline no-padding text-primary"  (click)="openContractEditor()" *ngIf="contracts.length===0">
+            上传
+          </button>
+          <table class="table table-bordered no-margin bg-white">
+            <thead  *ngIf="contracts.length>0" class="bg-default">
+            <tr>
+              <th class="text-center">合同编号</th>
+              <th class="text-center">合同标题</th>
+              <th class="text-center">公司名称</th>
+              <th class="text-center">资方</th>
+              <th class="text-center">是否送签</th>
+              <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let contract of contracts">
+              <td >{{contract.docNum}}</td>
+              <td >{{contract.title}}</td>
+              <td >{{contract.companyName}}</td>
+              <td >{{matchResourceName(contract.capitalId)}}</td>
+              <td class="text-center">
+                <span *ngIf="contract.isSign==0">是</span>
+                <span *ngIf="contract.isSign==1">否</span>
+              </td>
+              <td class="text-center" style="width:10em" >
+                <div class="table-btn-group">
+                  <a class="table-btn"
+                     (click)="navigateDetails(contract)">详情</a>
+                  <a class="table-btn" (click)="removeContract(contract.id)">删除</a>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="contracts.length>0">
+              <td colspan="6" class="text-right" style="padding:8px;">
+                <a class="btn-def-outline text-primary pull-left" (click)="openContractEditor()">添加合同<i class="fa fa-plus" ></i></a>
+                <paginator [(index)]="contractsPaginator.index" styleClass="pull-right"
+                           [count]="contractsPaginator.count" size="sm" [inputAble]="false"
+                           [(pageSize)]="contractsPaginator.size" (onChangePage)="loadContracts()"></paginator>
+              </td>
+            </tr>
+            <!--      <tr>
+                    <td colspan="6">
+                      <div class="text-center cur-poi" (click)="openContractEditor()"><i class="fa fa-plus pad-r-xs" ></i>添加合同</div>
+                    </td>
+                  </tr>-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="btn-def  mar-r-sm" (click)="testData()" >提交<i class="fa fa-check-circle-o"></i></button>
+    <button class="btn-def " btnBack>放弃<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+
+<contract-editor [(visible)]="contractEditor.visible"
+                 [borrowApplyId]="contractEditor.borrowApplyId"
+(complete)="loadContracts()"></contract-editor>
+
+<previewer #previewer></previewer>
+<gallery #gallery size="md"></gallery>

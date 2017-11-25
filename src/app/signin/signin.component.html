@@ -1,0 +1,109 @@
+<!--<div class="app ng-scope app-header-fixed" id="app">&lt;!&ndash; uiView:  &ndash;&gt;
+  <div class="fade-in-right-big smooth ng-scope">
+    <div class="container w-xxl w-auto-xs ng-scope">
+      <div class="logo-wrap">
+        <div class="logo"></div>
+      </div>
+      <a href="/about/explanation" class="navbar-brand block">金融业务处理系统</a>
+      <div class="m-b-lg">
+        <form name="form" (submit)="signIn()">
+          <div class="text-danger wrapper text-center">
+            {{msg}}
+          </div>
+          <div class="list-group list-group-sm">
+            <div class="list-group-item">
+              <input type="text" placeholder="用户名" class="form-control no-border" autocomplete="off"
+                     [(ngModel)]="username" name="username" required/>
+            </div>
+            <div class="list-group-item">
+              <input type="password" placeholder="密码" class="form-control no-border" autocomplete="off"
+                     [(ngModel)]="password" name="password" required/>
+            </div>
+          </div>
+          <div>
+            <input type="submit" class="btn btn-lg btn-primary btn-block"
+                   [disabled]="username===''||password===''||submitted"
+                   value="{{submitted?'正在登录...':'登 录'}}"
+            />
+          </div>
+          <div class="clearfix mar-t-def">
+            &lt;!&ndash;    <div class="pull-left"><a  class="text-disabled">注册</a></div>&ndash;&gt;
+            &lt;!&ndash; <div class="pull-right"><a class="text-disabled">忘记密码?</a></div>&ndash;&gt;
+          </div>
+        </form>
+      </div>
+      <div class="text-center hidden-xs">
+        <p>
+
+          <small class="text-muted">海豚信息科技<br>© 2017</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+
+<div class="signin org">
+  <div class="signin-header">
+    <h1>金融服务管理平台</h1>
+    <small>Financial Service Management Platform</small>
+
+  </div>
+  <div class="signin-body">
+    <div class="signin-content">
+
+      <div class="signin-baneners">
+        <a>
+          <img src="assets/img/banner/banner.png"/>
+        </a>
+        <div class="signin-banener-nav">
+          <a class="signin-banener-nav-item"
+             *ngFor="let sys of systems"
+             [href]="sys.link"
+             [title]="sys.name"
+             [ngClass]="{'active':sys.active}"
+          ></a>
+        </div>
+      </div>
+      <div class="signin-form">
+        <form class="form-horizontal" (submit)="signIn()">
+          <fieldset class="h3">金融业务处理系统</fieldset>
+          <div class="signin-form-lines">
+          </div>
+          <div class="signin-form-msg">
+            <div class="text-warning wrapper text-center pad-def" >
+              {{msg}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-4">UserId:</label>
+            <div class="col-md-6">
+              <input type="text" placeholder="" class="form-control no-border" autocomplete="off"
+                     [(ngModel)]="username" name="username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-4">Password:</label>
+            <div class="col-md-6">
+              <input type="password" placeholder="" class="form-control no-border" autocomplete="off"
+                     [(ngModel)]="password" name="password" required />
+            </div>
+          </div>
+          <div class="form-group mar-t-md">
+            <div class="col-md-6 col-md-offset-4 text-right">
+              <button class="btn btn-default btn-sm" type="submit"
+                     [disabled]="submitted"
+                    >{{submitted?'Login...':'Login'}}</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="signin-footer">
+    <small class="copyright">
+      Copyright © 2017 HaiTun56. All rights reserved
+    </small>
+  </div>
+</div>

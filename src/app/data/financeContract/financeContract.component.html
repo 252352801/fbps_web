@@ -1,0 +1,54 @@
+<div class="page-location">
+  <a class="page-location-item"><i class="page-location-icon fa fa-database"></i>
+    数据中心<i class="pad-l-min fa fa-angle-right"></i></a>
+  <a class="page-location-item active ">融资合同库<i class="pad-l-min fa fa-angle-right"></i></a>
+</div>
+<div class="wrapper-md">
+  <form class="form-inline form-search pad-sm bor-def bg-white mar-b-def" (submit)="search()" >
+    <div class="form-group">
+      <label class="control-label">贷款编号：</label>
+      <input class="form-control" placeholder="贷款单号" [(ngModel)]="params.borrowApplyId" name="borrowApplyId" />
+    </div>
+    <div class="form-group">
+      <label class="control-label">公司名称：</label>
+      <input class="form-control" placeholder="公司名称关键字" [(ngModel)]="params.companyName" name="companyName" />
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>搜索</button>
+      <button type="button" class="btn btn-default" (click)="resetParams()"><i class="fa fa-minus-circle"></i>重置</button>
+    </div>
+  </form>
+  <p-dataTable #dt [value]="tableData" exportFilename=""  tableStyleClass="table-layout-auto"
+               emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}" [loading]="loading">
+    <p-column field="id" header="合同ID" styleClass="text-center"></p-column>
+    <p-column field="twId" header="天威合同ID" styleClass="text-center"></p-column>
+    <p-column field="borrowApplyId" header="贷款编号" styleClass="text-center"></p-column>
+    <p-column field="docNum" header="合同编号" styleClass="text-center"></p-column>
+    <p-column field="title" header="合同标题" styleClass="text-center"></p-column>
+    <p-column field="companyName" header="公司名称" styleClass="text-center"></p-column>
+    <p-column field="createTime" header="创建时间" styleClass="text-center"></p-column>
+    <p-column field="updateTime" header="签署时间" styleClass="text-center"></p-column>
+    <p-column styleClass="text-center">
+      <ng-template pTemplate="header">
+        操作
+      </ng-template>
+      <ng-template  let-loan="rowData" pTemplate="body">
+        <div class="table-btn-group">
+          <span class="table-btn text-info" >查看</span>
+        </div>
+      </ng-template>
+    </p-column>
+    <p-footer >
+      <div class="clearfix">
+        <div class="pull-right">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [changePageSizeAble]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="query()" size="sm"></paginator>
+        </div>
+      </div>
+    </p-footer>
+  </p-dataTable>
+</div>
+
