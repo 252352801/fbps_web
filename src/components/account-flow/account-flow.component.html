@@ -1,0 +1,118 @@
+<modal  size="lg" *ngIf="mode==1" fullHeight #contentModal>
+  <modal-header>电子账户流水</modal-header>
+  <modal-body [delayShow]="true">
+    <div *ngTemplateOutlet="content"></div>
+  </modal-body>
+  <modal-footer >
+    <button class="btn btn-primary" (click)="sure()">确定</button>
+    <button class="btn btn-default" (click)="contentModal.close()">关闭</button>
+  </modal-footer>
+</modal>
+<div *ngIf="mode==0" class="wrapper">
+  <ng-container *ngTemplateOutlet="content">
+  </ng-container>
+  <div class="text-center">
+    <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+<ng-template #content>
+  <div class="clearfix">
+    <div class="col-md-12 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-6">账户名：</div>
+        <div class="v-table-cell">
+          {{bankAccount.accountName|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-6">账户号：</div>
+        <div class="v-table-cell">
+          {{bankAccount.bankAccount|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table pull-right">
+        <div class="v-table-cell bold w-em-6">账户余额：</div>
+        <div class="v-table-cell text-gold">
+          {{bankAccount.availableBalance|currencyFormat:'xx 元'|nullReplace}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix">
+    <div class="col-md-12 mar-b-xs">
+      最近
+      <select class="form-control" [(ngModel)]="duration" (change)="query()" style="width: 100px;display: inline-block">
+        <option value="0">一星期</option>
+        <option value="1">一个月</option>
+      </select>
+      流水
+    </div>
+  </div>
+  <p-dataTable #dt [value]="data" *ngIf="tableReady"
+               emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}" [loading]="loading" #table
+               scrollable="true" scrollHeight="375px">
+
+    <p-column   styleClass="text-center no-padding"[style]="{'width':'40px'}">
+      <ng-template  let-item="rowData" pTemplate="body">
+        <checkbox styleClass="no-padding" [value]="item.selected"
+                  (valueChange)="item.bankAccountFlow.isSelected=$event;setSelectedItems($event,item.bankAccountFlow)"></checkbox>
+      </ng-template>
+    </p-column>
+    <p-column field="bankAccountFlow.dealTime" header="交易时间" styleClass="text-center"[style]="{'width':'170px'}">
+    </p-column>
+    <p-column field="bankAccountFlow.amount" header="发生金额(元)"  styleClass="text-right text-gold" [style]="{'width':'120px'}" >
+      <ng-template  let-item="rowData" pTemplate="body">
+        <div textMaxLength="120px" title="{{item.bankAccountFlow.amount}}">
+          {{item.bankAccountFlow.amount|currencyFormat}}
+        </div>
+      </ng-template>
+    </p-column>
+
+    <p-column field="bankAccountFlow.oppoAcctName" header="对方账户" [style]="{'width':'140px'}">
+      <ng-template  let-item="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{item.bankAccountFlow.oppoAcctName}}">
+          {{item.bankAccountFlow.oppoAcctName}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column field="bankAccountFlow.oppoAcctNo" header="对方账号" [style]="{'width':'140px'}">
+      <ng-template  let-item="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{item.bankAccountFlow.oppoAcctNo}}">
+          {{item.bankAccountFlow.oppoAcctNo}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column field="bankAccountFlow.availableBalance" styleClass="text-right text-gold"
+              header="可用余额(元)" [style]="{'width':'120px'}" >
+      <ng-template  let-item="rowData" pTemplate="body">
+        <div textMaxLength="120px" title="{{item.bankAccountFlow.availableBalance}}">
+          {{item.bankAccountFlow.availableBalance|currencyFormat}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column  header="交易类型" [style]="{'width':'100px'}" >
+      <ng-template  let-item="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{tradeTypeName(item.bankAccountFlow.tradeType)}}">
+          {{tradeTypeName(item.bankAccountFlow.tradeType)}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-footer>
+      <div class="clearfix">
+        <div class="pull-right">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [showTotal]="true"
+                     [changePageSizeAble]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="query()" size="sm"></paginator>
+        </div>
+      </div>
+    </p-footer>
+  </p-dataTable>
+</ng-template>
+

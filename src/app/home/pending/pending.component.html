@@ -91,16 +91,18 @@
         </ng-template>
         <ng-template  let-loan="rowData" pTemplate="body" >
           <div class="table-btn-group">
-            {{loan.status|dictionary:'loanStatus'}}
+            {{loan.status|dictionary:'loan_status'}}
           </div>
         </ng-template>
       </p-column>
-      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['003','010'])">
+      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['009','010'])">
         <ng-template pTemplate="header" >
           操作
         </ng-template>
         <ng-template  let-loan="rowData" pTemplate="body" >
-            <span  class="cur-poi table-btn text-info" routerLink="/business/borrow/accept/{{loan.borrowApplyId}}">受理</span>
+          <div class="table-btn-group">
+            <a  class="table-btn"  routerLink="/business/borrow/accept/{{loan.borrowApplyId}}">审核</a>
+          </div>
         </ng-template>
       </p-column>
     </p-dataTable>
@@ -173,7 +175,7 @@
           <span >{{repayment.statusName}}</span>
         </ng-template>
       </p-column>
-      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['003','010'])">
+      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['001','010'])">
         <ng-template pTemplate="header" >
           操作
         </ng-template>
@@ -229,7 +231,7 @@
         <ng-template  let-rollover="rowData" pTemplate="body" >{{rollover.createTime|date:'yyyy-MM-dd'}}</ng-template>
       </p-column>
       <p-column field="statusName" header="状态" [style]="{'width':'120px'}"></p-column>
-      <p-column *ngIf="oauth.roleIn(['003','010'])" [style]="{'width':'100px'}">
+      <p-column *ngIf="oauth.roleIn(['001','003','010'])" [style]="{'width':'100px'}">
         <ng-template pTemplate="header">
           操作
         </ng-template>

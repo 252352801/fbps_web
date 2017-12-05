@@ -33,7 +33,7 @@ export class SystemLogsComponent implements OnInit {
     private sysLogSvc: SystemLogsService,
     private dictionarySvc: DictionaryService
   ) {
-    this.dictionarySvc.loadSystemLogType()
+    this.dictionarySvc.load('log_type')
     .then((res)=>{
       let dic=new Dictionary();
       dic.label='全部';

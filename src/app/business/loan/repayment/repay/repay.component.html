@@ -15,7 +15,7 @@
         <td class="text-default" width="40%">{{loan.borrowApplyId|nullReplace}}</td>
         <td class="table-label" width="10%">贷款周期：</td>
         <td class="text-default" width="40%">
-          {{loan.borrowHowlong|nullReplace}}
+          {{loan.ratedCycle|nullReplace}}
         </td>
       </tr>
       <tr>
@@ -23,7 +23,7 @@
         <td class="text-default" width="40%">{{loan.companyName|nullReplace}}</td>
         <td class="table-label">还款方式：</td>
         <td class="text-default">
-          {{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}
+          {{loan.paymentWay|dictionary:'payment_way'|nullReplace}}
         </td>
       </tr>
       <tr>
@@ -35,7 +35,7 @@
         </td>
         <td class="table-label">还款期数：</td>
         <td class="text-default">
-          {{repayPlan.repaymentPlan|currencyFormat:[0,0,'xx/'+repayPlans.length+' 期']|nullReplace}}
+          {{repayPlan.currentPeriod|currencyFormat:[0,0,'xx/'+repayPlans.length+' 期']|nullReplace}}
         </td>
       </tr>
 
@@ -58,29 +58,28 @@
       <tbody>
       <tr>
         <td class="text-center">本期计划</td>
-        <td class="text-center">{{repayPlan.repaymentPlanDate|date:'yyyy-MM-dd hh:mm:ss'}}</td>
-        <td class="text-right text-gold">{{repayPlan.repaymentPrinciple|currencyFormat|nullReplace}}</td>
+        <td class="text-center">{{repayPlan.repaymentDate|date:'yyyy-MM-dd hh:mm:ss'}}</td>
+        <td class="text-right text-gold">{{repayPlan.repaymentCapital|currencyFormat|nullReplace}}</td>
         <td class="text-right text-gold">{{repayPlan.repaymentInterest|currencyFormat|nullReplace}}</td>
         <td class="text-right">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
-        <td class="text-right">{{repayPlan.repayRelAmount|currencyFormat|nullReplace}}</td>
+        <td class="text-right">{{repayPlan.repaymentAmount|currencyFormat|nullReplace}}</td>
       </tr>
       <tr>
         <td class="text-center ver-mid">本期实际</td>
         <td class="text-center ver-mid" >
-          <input placeholder="实际还款日" class="full-width form-control text-center " datePicker="" [opt-ispicktime]="true"
-                 [(ngModel)]="submitData.repaymentDate" name="repaymentDate" />
+          {{submitData.repaymentRelDate|date:'yyyy-MM-dd hh:mm:ss'}}
         </td>
-        <td class="text-right ver-mid" >
-          <input placeholder="本金" class="full-width form-control text-right"  [(ngModel)]="submitData.repaymentPrinciple" name="repaymentAmount"/>
+        <td class="text-right ver-mid text-gold" >
+          {{repayPlan.repaymentCapital|currencyFormat|nullReplace}}
         </td>
-        <td class="text-right ver-mid" >
-          <input placeholder="利息" class="full-width form-control text-right" [(ngModel)]="submitData.repaymentInterest" name="repaymentAmount"/>
+        <td class="text-right ver-mid text-gold" >
+          {{repayPlan.repaymentInterest|currencyFormat|nullReplace}}
         </td>
-        <td class="text-right ver-mid" >
+        <td class="text-right ver-mid text-gold" >
           <span >{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</span>
         </td>
-        <td class="text-right ver-mid" >
-          {{sum([submitData.repaymentPrinciple,submitData.repaymentInterest,repayPlan.overdueInterest])|currencyFormat|nullReplace}}
+        <td class="text-right ver-mid text-gold" >
+          {{repayPlan.repaymentAmount|currencyFormat|nullReplace}}
         </td>
       </tr>
       </tbody>

@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 import {Loan} from '../../../services/entity/Loan.entity';
 import {Paginator} from '../../../services/entity/Paginator.entity';
-import {HistoryService,QueryLoanBody} from './history.service';
+import {BusinessService} from '../business.service';
+import {HistoryService} from './history.service';
 import {ActivatedRoute,Params,Router} from '@angular/router';
+import {QueryLoansBody} from '../shared/QueryLoansBody';
 @Component({
   selector: 'loan-history',
   templateUrl: './history.component.html',
@@ -17,10 +19,10 @@ export class HistoryComponent {
     name:string,
     value:string
   }[];
-  params:QueryLoanBody;// 搜索参数
-  datetimeRange:string;//时间区间
+  params:QueryLoansBody;// 搜索参数
   path:string='';
   constructor(
+    private businessSvc: BusinessService,
     private historySvc: HistoryService,
     private actRoute:ActivatedRoute,
     private router:Router
@@ -38,19 +40,19 @@ export class HistoryComponent {
     this.loading = false;
     this.statusOptions=[{
       name: '全部',
-      value:'303,500,503,505'
+      value:'-2,-3,-6,-7,10'
     }, {
       name: '审批不通过',
-      value: '503'
+      value: '-2,-3'
     }, {
-      name: '拒绝合同',
-      value: '505'
+      name: '放弃确认合同',
+      value: '-6'
     }, {
       name: '取消',
-      value: '500'
+      value: '-7'
     },{
       name: '已结清',
-      value: '303'
+      value: '10'
     }];
     this.params = {
       companyName: '',
@@ -104,7 +106,7 @@ export class HistoryComponent {
     if (this.loading) {
       return;
     }
-    let query:QueryLoanBody = {
+    let query:QueryLoansBody = {
       status: this.params.status,
       page: this.paginator.index + 1,
       rows: this.paginator.size
@@ -122,7 +124,7 @@ export class HistoryComponent {
       query.endTime=this.params.endTime;
     }
     this.loading = true;
-    this.historySvc.queryLoans(query)
+    this.businessSvc.queryLoans(query)
       .then((res)=> {
         this.loading = false;
         this.paginator.count = res.count;
@@ -137,7 +139,7 @@ export class HistoryComponent {
   }
 
   navigate(){
-    let params:QueryLoanBody={
+    let params:QueryLoansBody={
       page:this.paginator.index,
       rows:this.paginator.size,
       status:this.params.status

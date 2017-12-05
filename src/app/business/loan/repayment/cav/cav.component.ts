@@ -8,16 +8,17 @@ import {fadeInAnimation} from '../../../../../animations/index';
 import {OauthService} from '../../../../../services/oauth/oauth.service';
 import {ParameterService} from "services/parameter/parameter.service";
 import {RepaymentNotify} from "services/entity/RepaymentNotify.entity";
-import {BankAccount} from "services/entity/BankAccount.entity";
+import {CommonService} from '../../../../../services/common/common.service';
 import {RepaymentService} from '../repayment.service';
-
-
+import {BusinessService} from "../../../business.service";
+import {RepaymentFlow} from "../../../../../services/entity/RepaymentFlow.entity";
+import {ConfirmCheckModal} from './shared/ConfirmCheckModal'
+import {CheckRepaymentBody} from './shared/CheckRepaymentBody.interface'
 
 interface ToAccount{
   toAccountId:string;
   toAccountName:string;
 }
-
 
 @Component({
   selector: 'repayment-cav',
@@ -31,76 +32,61 @@ interface ToAccount{
 export class CAVComponent implements OnInit{
   id:string;
   borrowApplyId:string;
-  isPassed:boolean=false;
   loan:Loan=new Loan();//贷款详情
   repaymentNotify:RepaymentNotify=new RepaymentNotify();
-  checkedCertificate:boolean=false;//勾选凭证
-  submitted:boolean=false;//是否在提交
+  totalRelAmount:number=null;//实际还款金额
   repaymentPlans:RepayPlan[]=[];//还款计划列表
-  repaymentPlan:number|string;//还款期数
-  resultStatus:number;//结果状态 3成功  -1失败
+  currentPeriod:number|string;//还款期数
   operator:string=this.oauthSvc.user.employeeName||this.oauthSvc.user.mobile;//操作者
-  modalConfirm={
-    visible:false,
-    data:null,
-    submitted:false
-  };
-
-  curRepayment:RepayPlan;//当前还款计划
-  bankAccount:BankAccount=new BankAccount();
-
-  toAccountId:string;//资金汇集账户Id;
-  toAccountOptions:ToAccount[]=[{
-    toAccountId:'',
-    toAccountName:'请选择',
-  },{
-    toAccountId:'9550880200931712433',
-    toAccountName:'芜湖海豚信息科技有限公司',
-  }];
+  repayPlan:RepayPlan=new RepayPlan();//当前还款计划
+  repaymentFlows:RepaymentFlow[]=[];
+  fileId:string='';//还款凭证文件ID
+  confirmCheckModal:ConfirmCheckModal;
   constructor(
     private oauthSvc:OauthService,
+    private commonSvc:CommonService,
+    private businessSvc:BusinessService,
     private pop:PopService,
     private CAVSvc:CAVService,
     private repaymentSvc:RepaymentService,
     private actRoute:ActivatedRoute,
     private paramSvc:ParameterService
   ){
-    this.toAccountId=this.toAccountOptions[0].toAccountId;
+    this.confirmCheckModal=new ConfirmCheckModal();
   }
 
   ngOnInit(){
-
     this.id = this.actRoute.snapshot.params['id'];
     let notify=this.paramSvc.get('/business/loan/repayment/cav');
     if(notify.repaymentNotifyId==this.id){
-      this.repaymentNotify=this.repaymentNotify.initByObj(notify);
+      this.repaymentNotify=this.repaymentNotify.init(notify);
       this.borrowApplyId =this.repaymentNotify.borrowApplyId;
-      this.repaymentPlan = this.repaymentNotify.repaymentPlan;
-      this.CAVSvc.getLoanById(this.borrowApplyId)
+      this.currentPeriod = this.repaymentNotify.currentPeriod;
+      this.businessSvc.getLoanById(this.borrowApplyId)
         .then((res)=> {
           this.loan = res;
-       //   this.loan.memberId='000010000000001';
-          return  this.repaymentSvc.accountInfo({
-            memberId:this.loan.memberId
-          });
-        })
-        .then((res)=>{
-          this.bankAccount=res;
         })
         .catch((err)=>{
         });
-      this.CAVSvc.getRepayPlans(this.borrowApplyId)
+      this.businessSvc.getRepayPlans(this.borrowApplyId)
         .then((res)=> {
           this.repaymentPlans = res;
           for (let o of this.repaymentPlans) {
-            if (o.repaymentPlan === this.repaymentPlan) {
-              this.curRepayment = o;
+            if (o.currentPeriod === this.currentPeriod) {
+              this.repayPlan = o;
               break;
             }
           }
         })
         .catch((err)=>{
         });
+
+      this.loadRepaymentFlows()
+        .then((data)=>{
+          if(data&&data.length){
+            this.fileId=data[0].fileLoadId;
+          }
+        });
     }else{
 
     }
@@ -108,108 +94,60 @@ export class CAVComponent implements OnInit{
 
   }
 
-  openConfirmModal(){
-    this.modalConfirm.submitted=false;
-    this.modalConfirm.visible=true;
-  }
-  closeConfirmModal(){
-    this.modalConfirm.visible=false;
-  }
-  testData(){
-    //校验
+  loadRepaymentFlows():Promise<RepaymentFlow[]>{
+    return this.commonSvc.repaymentFlows({
+      borrowApplyId:this.repaymentNotify.borrowApplyId,
+      repaymentPlan:this.repaymentNotify.currentPeriod
+    })
+      .then((res)=>{
+        this.repaymentFlows=res;
+        return Promise.resolve(this.repaymentFlows);
+      })
+      .catch((err)=>{
 
+      })
   }
-  successNavigate(){
-    history.back();
+
+
+  openConfirmModal(type?:number){
+    let submitData:CheckRepaymentBody={
+      repaymentNotifyId:this.repaymentNotify.repaymentNotifyId,
+      borrowApplyId:this.repaymentNotify.borrowApplyId,
+      currentPeriod:this.repaymentNotify.currentPeriod,
+      operator:this.operator,
+      auditPwd:''
+    };
+    this.confirmCheckModal.setSubmitData(submitData);
+    if(this.repaymentNotify.memberId){
+      this.confirmCheckModal.memberId=this.repaymentNotify.memberId;
+      this.confirmCheckModal.open(type);
+    }else{
+      this.pop.info({
+        text:'会员ID为空，无法加载帐号信息！'
+      });
+    }
   }
-  submit(){
-    if(!this.curRepayment){
+  validate(){
+    if(!this.repayPlan){
       this.pop.info({
         text:'还款通知与还款计划不匹配！'
-      });
-    }else if(this.repaymentNotify.accountRepaymentWay==0&&((!this.bankAccount.accountId)||(!this.bankAccount.accountName))){
-      this.pop.info({
-        text:'未找到有效的银行账户！'
       });
     }else if(!this.repaymentNotify){
       this.pop.info({
         text:'还款信息加载失败，请重试！'
       });
-    }else if(this.repaymentNotify.accountRepaymentWay==0&&this.toAccountId==''){
-      this.pop.info({
-        text:'请选择资金汇集账户！'
-      });
-    }else if(!this.resultStatus){
-      this.pop.info({
-        text:'请选择核销结果！'
-      });
     }else{
-      let toAccount:ToAccount;
-      for(let o of this.toAccountOptions){
-        if(o.toAccountId==this.toAccountId){
-          toAccount=o;
-          break;
-        }
-      }
-      let body={
-        status:this.resultStatus,
-        repaymentNotifyId:this.id,
-        repaymentId:this.curRepayment.repaymentId,
-        accountRepaymentWay:this.repaymentNotify.accountRepaymentWay+'',
-        toAccountId:toAccount.toAccountId,
-        toAccountName:toAccount.toAccountName,
-        operator:this.operator
-      };
-      this.submitted=true;
-      this.CAVSvc.checkRepayment(body)
-        .then((res)=>{
-          this.submitted=false;
-          if(res.status){
-            this.pop.info({
-              text:'核销成功！'
-            }).onConfirm(()=>{
-              this.successNavigate();
-            }).onClose(()=>{
-              this.successNavigate();
-            });
-          }else{
-            this.pop.error({
-              text:res.message||'提交失败！'
-            });
-          }
-        })
-        .catch((err)=>{
-          this.submitted=false;
-          this.pop.error({
-            text:'请求失败，请重试！'
-          });
-        });
+      this.openConfirmModal(this.repaymentNotify.accountRepaymentWay);
     }
   }
-
   /**
-   * 获取当期还款计划
+   * 获取误差金额
    */
-  getCurrentRepayPlan(){
-    if(this.repaymentNotify&&this.repaymentNotify.repaymentPlan){
-      if(this.repaymentPlans.length){
-        for(let o of this.repaymentPlans){
-          if(this.repaymentNotify.repaymentPlan==o.repaymentPlan){
-            return o;
-          }
-        }
+  getErrorAmount(){
+    if(this.repayPlan&&this.repayPlan.repaymentAmount){
+      if(this.totalRelAmount||this.totalRelAmount===0){
+        return this.totalRelAmount-this.repayPlan.repaymentAmount;
       }
     }
-  }
-
-  /**
-   * 获取应还总额
-   */
-  getRepayAmount(){
-    if(this.curRepayment){
-      let overdueInterest=this.curRepayment.overdueInterest||0;
-      return this.curRepayment.repaymentInterest+this.curRepayment.repaymentPrinciple+overdueInterest;
-    }
-    return null;
   }
 }

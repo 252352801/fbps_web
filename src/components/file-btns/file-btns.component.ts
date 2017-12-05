@@ -1,25 +1,32 @@
 import {Component, Input, Output, EventEmitter, OnInit,ElementRef,OnChanges,SimpleChanges} from '@angular/core';
-import {PreviewOrDownloadButtonService} from './preview-or-download-button.service';
+import {FileButtonsService} from './file-btns.service';
 import {api_file} from '../../services/config/app.config';
 import {SharedService} from '../../app/shared/shared.service';
+import {CommonService} from '../../services/common/common.service';
 @Component({
-  selector: 'preview-or-download-button',
-  templateUrl: './preview-or-download-button.component.html',
-  styleUrls: ['./preview-or-download-button.component.less'],
-  providers: [PreviewOrDownloadButtonService]
+  selector: 'file-buttons',
+  templateUrl: './file-btns.component.html',
+  styleUrls: ['./file-btns.component.less'],
+  providers: [FileButtonsService]
 })
-export class PreviewOrDownloadButtonComponent implements OnInit,OnChanges{
+export class FileButtonsComponent implements OnInit,OnChanges{
 
   @Output() preview:EventEmitter<any>=new EventEmitter();
   @Output() previewImage:EventEmitter<any>=new EventEmitter();
   @Input() fileId:string;
   @Input() fileName:string;
-  @Input() loadFile:any;
   @Input() styleClass:string;
+
+  @Input() isPreview:boolean=true;
+  @Input() isDownload:boolean=true;
+  @Input() isDelete:boolean=false;
+  @Input() isLoadFile:any;
+
   canPreview:boolean=false;
   downloadUrl:string='';
   constructor(
-    private PODBSvc: PreviewOrDownloadButtonService,
+    private commonSvc: CommonService,
+    private fileBtnsSvc: FileButtonsService,
     private sharedSvc: SharedService,
     private elemRef: ElementRef
   ) {
@@ -42,15 +49,15 @@ export class PreviewOrDownloadButtonComponent implements OnInit,OnChanges{
     let fileIdChg=changes['fileId'];
     if(fileIdChg&&fileIdChg.currentValue&&fileIdChg.currentValue!=fileIdChg.previousValue){
       this.downloadUrl=api_file.download+'?fileId='+fileIdChg.currentValue;
-      if(this.loadFile){
+      if(this.isLoadFile){
         //this.PODBSvc.
-        this.sharedSvc.getFileInfo(fileIdChg.currentValue)
+        this.commonSvc.getFileInfo(fileIdChg.currentValue)
           .then((res)=>{
             if(res.ok){
               this.fileName=res.data.fileName;
               this.canPreview = !!(this.isImg(this.fileName) || this.fileType(this.fileName) == 'pdf');
             }
-          });
+          }).catch((res)=>{});
       }
     }
   }

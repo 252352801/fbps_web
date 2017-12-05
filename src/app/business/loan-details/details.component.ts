@@ -1,11 +1,16 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute,Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {DetailsService} from './details.service';
+import {BusinessService} from '../business.service';
 import {Loan} from '../../../services/entity/Loan.entity';
 import {RepayPlan} from '../../../services/entity/RepayPlan.entity';
+import {ProveData} from '../../../services/entity/ProveData.entity';
+import {LoanFlow} from '../../../services/entity/LoanFlow.entity';
 import {Contract} from '../../../services/entity/Contract.entity';
 import {fadeInAnimation} from '../../../animations/index';
-import {api_file} from '../../../services/config/app.config';
+import {ReviewInfo} from "../../../services/entity/ReviewInfo.entity";
+import {CommonService} from "../../../services/common/common.service";
+import {SharedService} from "../../shared/shared.service";
 @Component({
   selector: 'loan-details',
   templateUrl: './details.component.html',
@@ -20,40 +25,85 @@ export class LoanDetailsComponent {
   loan: Loan = new Loan();//贷款详情
   repayPlanList: RepayPlan[] = [];//还款计划列表
   contracts: Contract[] = [];//合同列表
+  proveData: ProveData[] = [];//证明材料
+  firstReviewInfo: ReviewInfo = new ReviewInfo();//一审信息
+  secondReviewInfo: ReviewInfo = new ReviewInfo();//二审信息
+  isApproved: boolean = false;//是否已经审批（放款）
+  loanFlows: LoanFlow[] = [];//账户流水
 
 
-  isApproved:boolean=false;//是否已经审批（放款）
+  isPlanList:boolean=false;
+  isContracts:boolean=false;
+  isProveData:boolean=false;
+  isFirstReviewInfo:boolean=false;
+  isSecondReviewInfo:boolean=false;
+  isLoanFlows:boolean=false;
+  constructor(private commonSvc: CommonService,
+              private sharedSvc: SharedService,
+              private businessSvc: BusinessService,
+              private detailsSvc: DetailsService,
+              private actRoute: ActivatedRoute) {
+    this.getLoanById(this.borrowApplyId)
+      .then((loan)=> {
+        if([8,9,10].indexOf(parseInt(loan.status+''))>=0){
+          this.isApproved=true;
+          this.isPlanList=true;
+          this.loadRepayPlanList(this.borrowApplyId);
+        }
+        if([5,6,-6,7,8,9,10].indexOf(parseInt(loan.status+''))>=0){
+          this.isContracts=true;
+          this.loadContracts();
+        }
+        if([0,1].indexOf(parseInt(loan.status+''))==-1){
+          this.isProveData=true;
+          this.isFirstReviewInfo=true;
+          this.loadProveData();
+          this.loadFirstReviewInfo();
+        }
+        if([8,9,10].indexOf(parseInt(loan.status+''))>=0){
+          this.isLoanFlows=true;
+          this.loadLoanFlows();
+        }
+        if([0,1,2,-2].indexOf(parseInt(loan.status+''))==-1){
+          this.isSecondReviewInfo=true;
+          this.loadSecondReviewInfo();
+        }
+      })
+      .catch((err)=> {
 
-  constructor(
-    private detailsSvc: DetailsService,
-    private router: Router,
-    private actRoute: ActivatedRoute
-  ) {
-    this.getLoanById(this.borrowApplyId);
-    this.loadRepayPlanList(this.borrowApplyId);
-    this.loadProducts();
-    this.loadContracts();
+      });
   }
 
-  getLoanById(id: string) {
-    this.detailsSvc.getLoanById(id)
+  /**
+   * 通过id加载贷款单
+   * @param id
+   * @returns {Promise<Loan>}
+   */
+  getLoanById(id: string): Promise<Loan> {
+    return this.businessSvc.getLoanById(id)
       .then((data: Loan)=> {
         this.loan = data;
-        let lostApproveStatuses=[207,211,300,301,302,401,303];//[201,203,204,205,500,503,505];
-        if(lostApproveStatuses.indexOf(this.loan.status)>=0){
-          this.isApproved=true;
-        }
+        return Promise.resolve(this.loan);
       });
   }
 
-  loadProducts() {
-    this.detailsSvc.loadProducts()
+
+  /**
+   * 加载还款计划
+   * @param borrowApplyId
+   */
+  loadRepayPlanList(borrowApplyId: string) {
+    this.businessSvc.getRepayPlans(borrowApplyId)
       .then((res)=> {
+        this.repayPlanList = res;
       });
   }
 
+  /**
+   * 加载合同
+   */
   loadContracts() {
-    this.detailsSvc.loadContracts({
+    this.sharedSvc.queryContracts({
       borrowApplyId: this.borrowApplyId,
       page: 1,
       rows: 100000
@@ -63,11 +113,82 @@ export class LoanDetailsComponent {
       });
   }
 
-  loadRepayPlanList(borrowApplyId: string) {
-    this.detailsSvc.getRepayPlanList(borrowApplyId)
+  /**
+   * 加载证明材料
+   */
+  loadProveData() {
+    this.businessSvc.getLoanProveData(this.borrowApplyId)
       .then((res)=> {
-        this.repayPlanList = res;
+        this.proveData = res;
+      })
+      .catch((err)=> {
       });
   }
 
+  /**
+   * 获取一审审核信息
+   */
+  loadFirstReviewInfo() {
+    let borrowApplyId = this.actRoute.snapshot.params['id'];
+    let body1 = {//一审
+      type: 0,
+      id: borrowApplyId,
+      status2: 2
+    };
+    this.commonSvc.querySystemLog(body1)
+      .then((res)=> {
+        console.log(res);
+        for (let o of res.items) {
+          if (o.status == body1.status2) {
+            this.firstReviewInfo.operator = o.createBy;
+            this.firstReviewInfo.reviewTime = o.createTime;
+            this.firstReviewInfo.opinion = o.remarks;
+            break;
+          }
+        }
+      })
+      .catch((err)=> {
+      });
+  }
+
+  /**
+   * 获取二审审核信息
+   */
+  loadSecondReviewInfo() {
+    let borrowApplyId = this.actRoute.snapshot.params['id'];
+    let body2 = {//二审
+      type: 0,
+      id: borrowApplyId,
+      status2: 3
+    };
+    this.commonSvc.querySystemLog(body2)
+      .then((res)=> {
+        console.log(res);
+        for (let o of res.items) {
+          if (o.status == body2.status2) {
+            this.secondReviewInfo.operator = o.createBy;
+            this.secondReviewInfo.reviewTime = o.createTime;
+            this.secondReviewInfo.opinion = o.remarks;
+            break;
+          }
+        }
+      })
+      .catch((err)=> {
+      });
+
+  }
+
+  /**
+   * 加载放款选择的电子账户流水
+   */
+  loadLoanFlows(){
+      this.commonSvc.loanFlows({
+        borrowApplyId:this.loan.borrowApplyId
+      })
+        .then((res)=>{
+          this.loanFlows=res;
+        })
+        .catch((err)=>{
+        })
+  }
 }

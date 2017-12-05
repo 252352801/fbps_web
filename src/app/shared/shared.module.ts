@@ -32,8 +32,12 @@ import {MySrcDirective} from '../../directives/mySrc/mySrc.directive';
 import {AreaPickerDirective} from '../../directives/areaPicker/areaPicker.directive';
 import {ContractEditorComponent}   from '../../components/contract-editor/contract-editor.component';
 import {SystemLogsComponent}   from '../../components/system-logs/system-logs.component';
-import {PreviewOrDownloadButtonComponent}   from '../../components/preview-or-download-button/preview-or-download-button.component';
+import {FileButtonsComponent}   from '../../components/file-btns/file-btns.component';
 import {PreviewerComponent}   from '../../components/previewer/previewer.component';
+import {ContractDetailsComponent}   from '../../components/contract-details/details.component';
+import {FlowDetailsComponent}   from '../../components/flow-details/details.component';
+import {RepayPlansComponent}   from '../../components/repay-plans/repay-plans.component';
+import { AccountFlowComponent} from '../../components/account-flow/account-flow.component';
 @NgModule({
   imports:[
     //ng
@@ -67,8 +71,12 @@ import {PreviewerComponent}   from '../../components/previewer/previewer.compone
     MySrcDirective,
     ContractEditorComponent,
     SystemLogsComponent,
-    PreviewOrDownloadButtonComponent,
-    PreviewerComponent
+    FileButtonsComponent,
+    PreviewerComponent,
+    ContractDetailsComponent,
+    FlowDetailsComponent,
+    RepayPlansComponent,
+    AccountFlowComponent
   ],
   exports:      [
     //ng
@@ -101,9 +109,12 @@ import {PreviewerComponent}   from '../../components/previewer/previewer.compone
     MySrcDirective,
     ContractEditorComponent,
     SystemLogsComponent,
-    PreviewOrDownloadButtonComponent,
-    PreviewerComponent
-
+    FileButtonsComponent,
+    PreviewerComponent,
+    ContractDetailsComponent,
+    FlowDetailsComponent,
+    RepayPlansComponent,
+    AccountFlowComponent
   ]
 })
 export class SharedModule { }

@@ -20,7 +20,7 @@ export class ContractDetailsService {
         let result=res;
         if(result.status===200){
           for(let o of result.body.records){
-            let signature=new Signature().initByObj(o);
+            let signature=new Signature().init(o);
             data.push(signature);
           }
         }

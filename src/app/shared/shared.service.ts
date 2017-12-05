@@ -2,8 +2,11 @@ import {Injectable} from '@angular/core';
 import {AsideMenu} from '../../services/entity/AsideMenu.entity';
 import {Resource} from '../../services/entity/Resource.entity';
 import {MyHttpClient} from '../../services/myHttp/myhttpClient.service';
-import {FileInfo} from '../../services/entity/FileInfo.entity';
+import {QueryContractBody} from './shared.interfaces';
+import {ProveData} from '../../services/entity/ProveData.entity';
 import {host_oauth,api_file} from '../../services/config/app.config';
+import {BankAccount} from '../../services/entity/BankAccount.entity';
+import {Contract} from '../../services/entity/Contract.entity';
 @Injectable()
 export class SharedService{
   asideMenus:AsideMenu[]=[];//左侧菜单
@@ -12,23 +15,6 @@ export class SharedService{
     private myHttp:MyHttpClient
   ){
 
-  }
-
-  replace(str:string,subStr:string,targetStr?:string):string{
-    let target=(targetStr===undefined?'':targetStr);
-    return (str+'').replace(new RegExp(subStr),target);
-  }
-
-  /**
-   * 字符串替换
-   * @param str
-   * @param subStr
-   * @param targetStr
-   * @returns {string}
-   */
-  replaceAll(str:string,subStr:string,targetStr?:string):string{
-    let target=(targetStr===undefined?'':targetStr);
-      return (str+'').replace(new RegExp(subStr,'g'),target);
   }
 
   /**
@@ -50,7 +36,7 @@ export class SharedService{
           let result = res;
           if (result.status === 200) {
             for (let o of result.body.records) {
-              let resource = new Resource().initByObj(o);
+              let resource = new Resource().init(o);
               resources.push(resource);
             }
           }
@@ -83,55 +69,80 @@ export class SharedService{
       });
   }
 
-
   /**
-   * 根据文件ID获取文件信息
-   * @param fileId
-   * @returns {any}
+   * 银行账户信息
+   * @param query
+   * @returns Promise<BankAccount>
    */
-  getFileInfo(fileId:string):Promise<{ok:boolean,data:FileInfo}>{
-    return this.myHttp.post({
-      url:api_file.info,
-      body:{
-        fileId:fileId
-      }
+  bankAccount(query:{
+    memberId:string
+  }):Promise<{ok:boolean,data:BankAccount}>{
+    return this.myHttp.get({
+      api:this.myHttp.api.accountInfo,
+      query:query
     }).toPromise()
-      .then((res)=> {
-        let data = {
+      .then((res)=>{
+        let result={
           ok:false,
           data:null
         };
-        let result = res;
-        if (result.status === 200) {
-          data.ok=true;
-          data.data=new FileInfo().initByObj(result.body);
+        if(res.status===200){
+          if(res.body&&res.body.records&&res.body.records[0]){
+            result.ok=true;
+            result.data=new BankAccount().init(res.body.records[0]);
+          }
         }
-        return Promise.resolve(data);
+        return Promise.resolve(result);
       });
   }
 
   /**
-   * 删除文件
-   * @param fileId
-   * @returns Promise<{status:boolean,message:string}
+   * 获取产品融资证明材料列表
+   * @param productId
+   * @returns Promise<ProveData[]>
    */
-  deleteFile(fileId:string):Promise<{status:boolean,message:string}>{
+  prodProveData(productId:string):Promise<ProveData[]>{
     return this.myHttp.post({
-      url:api_file.delete,
-      body:{
-        fileId:fileId
+      api: this.myHttp.api.getProveData,
+      body: {
+        productId:productId
       }
     }).toPromise()
       .then((res)=> {
-        let data = {
-          status:false,
-          message:''
-        };
-        let result = res;
-        if (result.status === 200) {
+        let proveData = [];
+        if (res.status === 200) {
+          for(let o of res.body.records){
+            let pd = ProveData.create(o);
+            proveData.push(pd);
+          }
         }
-        data.status=(result.status==200);
-        data.message=result.message||'';
+        return Promise.resolve(proveData);
+      });
+  }
+
+  /**
+   * 查询合同
+   * @param query
+   * @returns {PromiseLike<{items: Array, count: number}>|IPromise<{items: Array, count: number}>|Promise<{items: Array, count: number}>|wdpromise.Promise<any>|promise.Promise<Promise<{items: Array, count: number}>>|promise.Promise<any>|any}
+   */
+  queryContracts(query?:QueryContractBody):Promise<{items:Contract[],count:number}>{
+    return this.myHttp.post({
+      api:this.myHttp.api.contractList,
+      query:query
+    }).toPromise()
+      .then((res)=>{
+        let data={
+          items:[],
+          count:0
+        };
+        let result= res;
+        if(result.status==200){
+          data.count=result.body.paginator.totalCount;
+          for(let o of result.body.records){
+            let contract=new Contract().init(o);
+            data.items.push(contract);
+          }
+        }
         return Promise.resolve(data);
       });
   }

@@ -1,9 +1,9 @@
 import {Routes, RouterModule} from '@angular/router';
 import {RolloverComponent}   from './rollover.component';
-import {AcceptComponent}   from './accept/accept.component';
 import {RolloverDetailsComponent}   from './details/details.component';
 import { ConfigComponent }   from './config/config.component';
 import {OauthGuard} from '../../../../services/guard/oauth.guard';
+import {RolloverUploadVoucherComponent}   from './upload-voucher/upload-voucher.component';
 const routes: Routes = <Routes>[
   {
     path: '',
@@ -14,14 +14,14 @@ const routes: Routes = <Routes>[
     data: {title: '展期详情',fnRequire:'07'},
     canActivate: [OauthGuard]
   },{
-    path: 'accept/:id',
-    component: AcceptComponent,
-    data: {title: '展期受理',roleIn:['003','010']},
+    path: 'uploadVoucher/:id',
+    component: RolloverUploadVoucherComponent,
+    data: {title: '上传凭证',roleIn:['001','003','010']},
     canActivate: [OauthGuard]
-  }, {
+  },{
     path: 'config/:id',
     component: ConfigComponent,
-    data: {title: '配置展期合同',roleIn:['003','010']},
+    data: {title: '配置展期合同',roleIn:['001','010']},
     canActivate: [OauthGuard]
   }
 ];

@@ -2,7 +2,8 @@ import {Routes, RouterModule} from '@angular/router';
 import {BorrowComponent}   from './borrow.component';
 import {AcceptComponent}   from './accept/accept.component';
 import {BorrowConfigureComponent}   from './configure/configure.component';
-import { BorrowLoanComponent }   from './loan/borrowLoan.component';
+import { ApplyLoanComponent }   from './applyLoan/applyLoan.component';
+import {LoanComponent}   from './loan/loan.component';
 import {OauthGuard} from '../../../services/guard/oauth.guard';
 const routes: Routes = <Routes>[
   {
@@ -22,9 +23,15 @@ const routes: Routes = <Routes>[
     canActivate: [OauthGuard]
   },
   {
+    path: 'applyLoan/:type/:id',
+    component: ApplyLoanComponent,
+    data: {title: '申请放款',roleIn:['001','010']},
+    canActivate: [OauthGuard]
+  },
+  {
     path: 'loan/:id',
-    component: BorrowLoanComponent,
-    data: {title: '放款',roleIn:['009','010']},
+    component: LoanComponent,
+    data: {title: '放款审批',roleIn:['009','010']},
     canActivate: [OauthGuard]
   }
 ];

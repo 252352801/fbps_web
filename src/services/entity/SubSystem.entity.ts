@@ -6,13 +6,18 @@ export class SubSystem {
   name:string;//子系统名
   serverIp:string;//子系统IP
   interfaceProtocol:string;//接口协议
-  initByObj(obj:any):SubSystem{
-    if(typeof obj==='object'){
-      this.subsystemCode=obj.subsystemCode;
-      this.name=obj.name;
-      this.serverIp=obj.serverIp;
-      this.interfaceProtocol=obj.interfaceProtocal;
+
+  init(obj?:any):SubSystem{
+    let instance=this;
+    if(obj&&typeof obj==='object'){
+      instance.subsystemCode=obj.subsystemCode;
+      instance.name=obj.name;
+      instance.serverIp=obj.serverIp;
+      instance.interfaceProtocol=obj.interfaceProtocal;
     }
-    return this;
+    return instance;
+  }
+  static create(obj?:any):SubSystem{
+    return new SubSystem().init(obj);
   }
 }

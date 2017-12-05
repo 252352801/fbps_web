@@ -4,7 +4,7 @@ import {SignInComponent} from './signin/signin.component';
 import {IndexComponent} from './index/index.component';
 import {DemoComponent} from './demo/demo.component';
 import {ModifyPasswordComponent} from './modifyPassword/modifyPassword.component';
-import {ContractDetailsComponent} from './data/contract/details/details.component';
+import {ContractDetailsPageComponent} from './data/contract/details/details.component';
 
 import {LoginGuard} from '../services/guard/login.guard';
 import {OauthGuard} from '../services/guard/oauth.guard';
@@ -41,11 +41,7 @@ const routes: Routes = [
       //融资合同详情
      {
       path:'data/contract/details/:data',
-      component: ContractDetailsComponent,
-      data: {title: '合同详情'}
-    },{
-      path:'business/borrow/review/contractDetails/:data',
-      component: ContractDetailsComponent,
+      component: ContractDetailsPageComponent,
       data: {title: '合同详情'}
     }]
   }

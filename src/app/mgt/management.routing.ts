@@ -7,7 +7,7 @@ const routes: Routes = <Routes>[{
 },{
   path: 'product',
   loadChildren: './product/product.module#ProductModule',
-  data: {title: '产品管理',fnRequire:'11'},
+  data: {title: '产品管理',fnRequire:'11',roleIn:['010','013']},
   canActivate: [OauthGuard]
 },{
   path: 'capitalContractTmpl',

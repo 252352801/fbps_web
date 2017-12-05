@@ -19,32 +19,37 @@ export class Product{
   rolloverDeposit:number;//展期保证金  （百分比）
   rolloverInterestValue:number;//展期利率  （百分比）
   overdueInterestValue:number;//逾期日罚息利率  (百分比)
+  penaltyRate:number;//罚息利率  (百分比)
   status:number;//状态
   isNewRecord:boolean;//
 
-
-  initByObj(obj:any):Product{
+  init(obj:any):Product{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.productId=obj.productId;
-      this.productName=obj.productName;
-      this.productCompany=obj.productCompany;
-      this.productRemark=obj.productRemark;
-      this.beginDate=obj.beginDate;
-      this.expiryDate=parseFloat(obj.expiryDate);
-      this.productRequirement=obj.productRequirement;
-      this.productAppScope=parseInt(obj.productAppScope);
-      this.productAreaScope=parseInt(obj.productAreaScope);
-      this.productType=parseInt(obj.productType);
-      this.valueLimit=obj.valueLimit;
-      this.interestType=obj.interestType;
-      this.borrowHowlong=obj.borrowHowlong;
-      this.rolloverHowlong=parseFloat(obj.rolloverHowlong);
-      this.rolloverDeposit=parseFloat(obj.rolloverDeposit);
-      this.rolloverInterestValue=parseFloat(obj.rolloverInterestValue);
-      this.overdueInterestValue=parseFloat(obj.overdueInterestValue);
-      this.status=parseInt(obj.status);
-      this.isNewRecord=obj.isNewRecord;
+      instance.productId=obj.productId;
+      instance.productName=obj.productName;
+      instance.productCompany=obj.productCompany;
+      instance.productRemark=obj.productRemark;
+      instance.beginDate=obj.beginDate;
+      instance.expiryDate=parseFloat(obj.expiryDate);
+      instance.productRequirement=obj.productRequirement;
+      instance.productAppScope=parseInt(obj.productAppScope);
+      instance.productAreaScope=parseInt(obj.productAreaScope);
+      instance.productType=parseInt(obj.productType);
+      instance.valueLimit=obj.valueLimit;
+      instance.interestType=obj.interestType;
+      instance.borrowHowlong=obj.borrowHowlong;
+      instance.rolloverHowlong=parseFloat(obj.rolloverHowlong);
+      instance.rolloverDeposit=parseFloat(obj.rolloverDeposit);
+      instance.rolloverInterestValue=parseFloat(obj.rolloverInterestValue);
+      instance.overdueInterestValue=parseFloat(obj.overdueInterestValue);
+      instance.penaltyRate=parseFloat(obj.penaltyRate);
+      instance.status=parseInt(obj.status);
+      instance.isNewRecord=obj.isNewRecord;
     }
-    return this;
+    return instance;
+  }
+  static create(obj:any):Product{
+    return new Product().init(obj);
   }
 }

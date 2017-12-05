@@ -52,19 +52,19 @@ export class RepaymentComponent {
     this.loading = false;
     this.tabs = [{
       tabName: '新通知',
-      status: 0,
+      status: 1,
       active: false
     }, {
       tabName: '待核销',
-      status: 1,
+      status: 2,
       active: false
     }/*, {
       tabName: '还款成功',
-      status: 2,
+      status: 3,
       active: false
     }, {
-      tabName: '还款失败',
-      status: -1,
+      tabName: '还款不通过',
+      status: -2,
       active: false
     }*/];
     this.params = {

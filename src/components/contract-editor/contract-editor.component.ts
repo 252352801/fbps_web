@@ -11,6 +11,7 @@ import {Uploader,UploadFile} from 'dolphinng';
 import {api_file} from '../../services/config/app.config';
 import {Contract} from '../../services/entity/Contract.entity';
 import {Toaster} from 'dolphinng';
+import {CreateContractBody} from './shared/CreateContractBody';
 @Component({
   selector: 'contract-editor',
   templateUrl: './contract-editor.component.html',
@@ -20,7 +21,7 @@ import {Toaster} from 'dolphinng';
 export class ContractEditorComponent implements OnInit{
   @Input() visible: boolean;
   @Input() associateId: string;//关联ID
-  @Input() businessType: string='0406';//业务类型 0406融资合同  0407展期合同
+  @Input() contractType: string|number=0;//合同类型  0融资合同  1展期
   private _borrowApplyId: string;
   resourceId: string;
   @Output() visibleChange: EventEmitter<any> = new EventEmitter();
@@ -35,6 +36,10 @@ export class ContractEditorComponent implements OnInit{
   resources: Resource[];
   submitted: boolean = false;
 
+  private businessType={
+    loan:'0406',
+    rollover:'0407'
+  };
   modalPickSignatory = {
     visible: false,
     data: [],
@@ -99,7 +104,13 @@ export class ContractEditorComponent implements OnInit{
   initUploader(){
     this.uploader.url=api_file.upload;
     this.uploader.onQueue((uploadFile:UploadFile)=>{
-      uploadFile.addSubmitData('businessType',this.businessType);
+      let businessType='';
+      if(this.contractType==0){
+        businessType=this.businessType.loan;
+      }else if(this.contractType==1){
+        businessType=this.businessType.rollover;
+      }
+      uploadFile.addSubmitData('businessType',businessType);
       uploadFile.addSubmitData('fileName',uploadFile.fileName);
       uploadFile.addSubmitData('fileType',uploadFile.fileExtension);
       uploadFile.addSubmitData('fileSize',uploadFile.fileSize);
@@ -150,6 +161,9 @@ export class ContractEditorComponent implements OnInit{
           }
         })
     }else{
+      if(!this.uploader.queue[index].uploaded&&this.uploader.queue[index].progress>0){
+        this.uploader.queue[index].xhr.abort();
+      }
       this.uploader.queue.splice(index,1);
       this.fileId='';
       this.fileName='';
@@ -164,7 +178,7 @@ export class ContractEditorComponent implements OnInit{
   }
 
   loadSignatoryType() {
-    return this.dictionarySvc.loadSignatoryType()
+    return this.dictionarySvc.load('signatory_type')
       .then((data)=> {
         this.modalPickSignatory.signatoryTypes = data;
         this.modalPickSignatory.params.type = data[0].value;
@@ -312,17 +326,28 @@ export class ContractEditorComponent implements OnInit{
       }
       if (valid) {
         this.submitted = true;
-        let body = {
+        let businessType='';
+        if(this.contractType==0){
+          businessType=this.businessType.loan;
+        }else if(this.contractType==1){
+          businessType=this.businessType.rollover;
+        }
+        let body:CreateContractBody= {
           borrowApplyId: this.associateId||this.loan.borrowApplyId,
           companyName: this.loan.companyName,
-          title: this.contractTitle,
-          docNum: this.contractNum,
-          capitalId: this.resourceId,
+          contractType: businessType,
+          contractTitle: this.contractTitle,
+          contractNum: this.contractNum,
+          resourceId: this.resourceId,
           isSign: this.wouldSign ? 0 : 1,
-          fileId:this.fileId,
+          fileLoadId:this.fileId,
           fileName: this.fileName,
-          signature: this.wouldSign ? signatures : null
+          memberId: this.loan.memberId,
+          signature: signatures
         };
+        if(this.contractType==1){
+          body.rolloverApplyId=this.associateId;
+        }
         this.contractEditorSvc.createContract(body)
           .then((res)=> {
             this.submitted=false;

@@ -6,15 +6,21 @@ export class SubSystemFunction {
   subsystemName:string;//子系统名称
   functionPoint:string;//功能节点代码
   label:string;//功能节点名称
-  initByObj(obj:any):SubSystemFunction{
-    if(typeof obj==='object'){
-      this.subsystemCode=obj.subsystemCode;
-      this.functionPoint=obj.functionPoint;
-      this.label=obj.label||'';
+
+  init(obj?:any):SubSystemFunction{
+    let instance=this;
+    if(obj&&typeof obj==='object'){
+      instance.subsystemCode=obj.subsystemCode;
+      instance.functionPoint=obj.functionPoint;
+      instance.label=obj.label||'';
       if(obj['subsystem']&&typeof obj['subsystem']==='object'){
-        this.subsystemName=obj['subsystem']['name'];
+        instance.subsystemName=obj['subsystem']['name'];
       }
     }
-    return this;
+    return instance;
   }
+  static create(obj?:any):SubSystemFunction{
+    return new SubSystemFunction().init(obj);
+  }
+
 }

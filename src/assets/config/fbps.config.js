@@ -8,7 +8,7 @@ var config={
    测试环境 test
    测试环境 dev development
    */
-  env:'',
+  env:'test',
   host:{
     //开发访问地址
     dev:{

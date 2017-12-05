@@ -6,6 +6,7 @@ import {Signature} from '../../services/entity/Signature.entity';
 import {Resource} from '../../services/entity/Resource.entity';
 import {api_file} from '../../services/config/app.config';
 import {Contract} from '../../services/entity/Contract.entity';
+import {CreateContractBody} from './shared/CreateContractBody';
 @Injectable()
 export class ContractEditorService {
 
@@ -25,7 +26,7 @@ export class ContractEditorService {
         let result = res;
         if (result.status === 200) {
           for (let o of result.body.records) {
-            let resource = new Resource().initByObj(o);
+            let resource = new Resource().init(o);
             resources.push(resource);
           }
         }
@@ -70,22 +71,7 @@ export class ContractEditorService {
         let loan = new Loan();
         let result = res;
         if (result.status === 200) {
-          loan.borrowApplyId = result.body.borrowApplyId;
-          loan.memberId = result.body.memberId;
-          loan.companyName = result.body.companyName;
-          loan.applyAmount = parseFloat(result.body.applyAmount);
-          loan.approveAmount = parseFloat(result.body.approveAmount);
-          loan.productId = result.body.productId;
-          loan.borrowHowlong = result.body.borrowHowlong;
-          loan.repaymentWay = result.body.repaymentWay;
-          loan.cardId = result.body.cardId;
-          loan.cardNo = result.body.cardNo;
-          loan.isContract = !!parseFloat(result.body.isContract);
-          loan.status = parseFloat(result.body.status);
-          loan.createTime = result.body.createTime;
-          loan.auditOneTime = result.body.auditOneTime;
-          loan.auditOneBy = result.body.auditOneBy;
-          loan.remarks = result.body.remarks;
+          loan=loan.init(result.body);
         }
         return Promise.resolve(loan);
       });
@@ -94,7 +80,7 @@ export class ContractEditorService {
 
 
   /*合同添加*/
-  createContract(body:any):Promise<{status:boolean,message:string}>{
+  createContract(body:CreateContractBody):Promise<{status:boolean,message:string}>{
     return this.myHttp.post({
       api: this.myHttp.api.createContract,
       body:body
@@ -149,11 +135,10 @@ export class ContractEditorService {
           count:0,
           items:[]
         };
-        let result=res;
-        if(result.status===200){
-          data.count=result.body.paginator.totalCount;
-          for(let o of result.body.records){
-            let contract=new Contract().initByObj(o);
+        if(res.status===200){
+          data.count=res.body.paginator.totalCount;
+          for(let o of res.body.records){
+            let contract=new Contract().init(o);
             data.items.push(contract);
           }
         }
@@ -173,7 +158,7 @@ export class ContractEditorService {
         let result=res;
         if(result.status===200){
           for(let o of result.body.records){
-            let signature=new Signature().initByObj(o);
+            let signature=new Signature().init(o);
             data.push(signature);
           }
         }

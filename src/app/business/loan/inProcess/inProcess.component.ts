@@ -3,6 +3,8 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Loan} from '../../../../services/entity/Loan.entity';
 import {Paginator} from '../../../../services/entity/Paginator.entity';
 import {OauthService} from '../../../../services/oauth/oauth.service';
+import {BusinessService} from '../../business.service';
+import {QueryLoansBody} from '../../shared/QueryLoansBody';
 import {InProcessService} from './inProcess.service';
 import {RepayPlan} from '../../../../services/entity/RepayPlan.entity';
 import {fadeInAnimation} from '../../../../animations/index';
@@ -29,16 +31,10 @@ export class InProcessComponent {
     companyName: string,
     borrowApplyId: string
   };
-  modalRepaymentPlan = {
-    visible: false,
-    loading:false,
-    data: [],
-    submitted: false
-  };
-
   path: string = '';
 
   constructor(private inProcessSvc: InProcessService,
+              private businessSvc: BusinessService,
               private actRoute: ActivatedRoute,
               public oauth: OauthService,
               private router: Router) {
@@ -56,15 +52,15 @@ export class InProcessComponent {
     this.limitDay = 7;
     this.tabs = [{
       tabName: '全部',
-      status: [207,211,300,301,302,401],
+      status: [8,9],
       active: false
     }, {
       tabName: '即将到期',
-      status: 207,
+      status: [8,9],
       active: false
     }, {
       tabName: '已逾期',
-      status: 401,
+      status: [8,9],
       active: false
     }];
     this.params = {
@@ -130,20 +126,26 @@ export class InProcessComponent {
     if (this.loading) {
       return;
     }
-    let query = {
+    let body:QueryLoansBody= {
       status: this.getStatus(),
-      limitDay: this.tabs[1].active ? this.limitDay : null,
-      companyName: this.params.companyName || null,
-      borrowApplyId: this.params.borrowApplyId || null,
       page: this.paginator.index + 1,
       rows: this.paginator.size
     };
+    this.tabs[1].active&&(body.limitDay=this.limitDay);
+    this.params.companyName&&(body.companyName=this.params.companyName );
+    this.params.borrowApplyId&&(body.borrowApplyId=this.params.borrowApplyId );
+    this.tabs[2].active&&(body.isOver=1);
     this.loading = true;
-    this.inProcessSvc.queryLoans(query)
+    this.businessSvc.queryLoans(body)
       .then((res)=> {
         this.loading = false;
         this.paginator.count = res.count;
         this.tableData = res.items;
+      })
+      .catch((err)=>{
+        this.paginator.count =0;
+        this.tableData = [];
+        this.loading = false;
       });
   }
 
@@ -151,20 +153,6 @@ export class InProcessComponent {
     this.paginator.reset();
     this.tableData = [];
     this.query();
-  }
-
-  openRepaymentPlanModal(borrowApplyId:string) {
-    this.modalRepaymentPlan.loading=true;
-    this.inProcessSvc.getRepayPlanList(borrowApplyId)
-      .then((res)=>{
-        this.modalRepaymentPlan.data=res;
-        this.modalRepaymentPlan.loading=false;
-      });
-    this.modalRepaymentPlan.visible = true;
-  }
-
-  closeRepaymentPlanModal() {
-    this.modalRepaymentPlan.visible = false;
   }
 
 

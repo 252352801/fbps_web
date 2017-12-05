@@ -6,13 +6,17 @@ export class Signatory{
   twUserId:string;//天威用户ID
   type:number;//类型
 
-  initByObj(obj:any):Signatory{
+   init(obj?:any):Signatory{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.memberId=obj.memberId;
-      this.name=obj.name;
-      this.twUserId=obj.twUserId;
-      this.type=parseInt(obj.type);
+      instance.memberId=obj.memberId;
+      instance.name=obj.name;
+      instance.twUserId=obj.twUserId;
+      instance.type=parseInt(obj.type);
     }
-    return this;
+    return instance;
+  }
+  static create(obj?:any):Signatory{
+    return new Signatory().init(obj);
   }
 }

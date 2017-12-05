@@ -3,23 +3,23 @@
  */
 export class RepayPlanPreview {
 
-  repaymentPlan: number;//还款期数
-  repaymentPrinciple: number;//还款本金
+  currentPeriod: number;//还款期数
+  repaymentCapital: number;//还款本金
   repaymentInterest: number;//还款利息
-  repayRelAmount:number;//应还总额
-  repaymentPlanDate: string;//还款日期
-  status: number;//状态      （0未还、1已还）
-  visible:boolean;
+  repaymentDate: string;//还款日期
 
-  initByObj(obj: any): RepayPlanPreview {
-    if (obj&&typeof obj === 'object') {
-      this.repaymentPlan = parseFloat(obj.repaymentPlan);
-      this.repaymentPrinciple = parseFloat(obj.repaymentPrinciple);
-      this.repayRelAmount = parseFloat(obj.repayRelAmount);
-      this.repaymentInterest = parseFloat(obj.repaymentInterest);
-      this.repaymentPlanDate = obj.repaymentPlanDate;
-      this.status = parseInt(obj.status);
+  init(obj?:any):RepayPlanPreview{
+    let instance=this;
+    if(obj&&typeof obj==='object'){
+      instance.currentPeriod = parseInt(obj.currentPeriod);
+      instance.repaymentCapital = parseFloat(obj.repaymentCapital);
+      instance.repaymentInterest = parseFloat(obj.repaymentInterest);
+      instance.repaymentDate =obj.repaymentDate;
     }
-    return this;
+    return instance;
   }
+  static create(obj?:any):RepayPlanPreview{
+    return new RepayPlanPreview().init(obj);
+  }
+
 }

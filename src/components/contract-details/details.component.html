@@ -1,0 +1,129 @@
+<modal  size="lg" *ngIf="mode==1" #contentModal>
+  <modal-header>合同详情</modal-header>
+  <modal-body>
+    <div *ngTemplateOutlet="content"></div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <button class="btn btn-default" (click)="contentModal.close()">关闭</button>
+  </modal-footer>
+</modal>
+<div *ngIf="mode==0" class="wrapper">
+  <ng-container *ngTemplateOutlet="content">
+  </ng-container>
+  <div class="text-center">
+    <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>
+  </div>
+</div>
+<ng-template #content>
+  <div class="group mar-b-sm">
+    <div class="group-title">合同信息</div>
+    <table class="table no-border no-margin">
+      <tr>
+        <td class="td-label" width="10%">合同编号：</td>
+        <td class="text-default" width="40%">
+          {{contract.contractNum|nullReplace}}
+        </td>
+        <td class="td-label" width="10%">状态：</td>
+        <td class="text-default" width="40%">
+          {{contract.eSignatureStatus|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="10%">合同标题：</td>
+        <td class="text-default" width="40%">
+          {{contract.contractTitle|nullReplace}}
+        </td>
+        <td class="td-label" width="10%">是否送签：</td>
+        <td class="text-default" width="40%">
+          <span *ngIf="contract.isSign">是</span>
+          <span *ngIf="contract.isSign===false">否</span>
+          <span *ngIf="contract.isSign!==true&&contract.isSign!==false">{{''|nullReplace}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="10%">公司名称：</td>
+        <td class="text-default" width="40%">
+          {{contract.companyName|nullReplace}}
+        </td>
+        <td class="td-label" width="10%">创建时间：</td>
+        <td class="text-default" width="40%">
+          {{contract.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="10%">资方：</td>
+        <td class="text-default" width="40%">
+          {{matchCapitalName(contract.resourceId)|nullReplace}}
+        </td>
+        <td class="td-label" width="10%">签署时间：</td>
+        <td class="text-default" width="40%">
+          {{contract.eSignatureTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </td>
+      </tr>
+      <tr>
+        <td class="td-label" width="10%">贷款编号：</td>
+        <td class="text-default" width="40%">
+          {{contract.borrowApplyId|nullReplace}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="group mar-b-sm">
+    <div class="group-title">签章信息</div>
+    <table class="table table-bordered mar-b-xs mar-t-xs bg-white">
+      <thead class="bg-default">
+      <tr>
+        <th class="text-center">签章用户</th>
+        <th class="text-center">签章页码</th>
+        <th class="text-center">X坐标</th>
+        <th class="text-center">Y坐标</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of signatures">
+        <td>{{item.name}}</td>
+        <td class="text-center">{{item.page}}</td>
+        <td class="text-center">{{item.positionX}}</td>
+        <td class="text-center">{{item.positionY}}</td>
+      </tr>
+      <tr *ngIf="loadingSignatures">
+        <td colspan="4" class="text-center text-disabled">正在加载...</td>
+      </tr>
+      <tr *ngIf="!loadingSignatures&&signatures.length==0">
+        <td colspan="4" class="text-center text-disabled">无签章信息</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="group mar-b-sm">
+    <div class="group-title">合同附件</div>
+    <table class="table no-border mar-b-xs mar-t-xs" >
+      <tbody>
+      <tr *ngIf="fileInfo&&contract.fileLoadId">
+        <td>
+          <span class="mar-r-xs">{{fileInfo.fileName}}</span>
+          <file-buttons
+            [fileName]="fileInfo.fileName"
+            [fileId]="contract.fileLoadId"
+            (preview)="contentModal.close();previewer.open($event);"
+            (previewImage)="gallery.open($event);"
+          >
+          </file-buttons>
+        </td>
+      </tr>
+      <tr *ngIf="!fileInfo&&contract.fileLoadId&&!loadingFileInfo">
+        <td colspan="5" class="text-center text-disabled">无法获取附件信息</td>
+      </tr>
+      <tr *ngIf="contract.fileLoadId&&loadingFileInfo">
+        <td colspan="5" class="text-center text-disabled">正在加载...</td>
+      </tr>
+      <tr *ngIf="!contract.fileLoadId">
+        <td colspan="5" class="text-center text-disabled">无附件</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+
+<previewer #previewer (onClose)="contentModal.open()"></previewer>
+<gallery #gallery size="md"></gallery>

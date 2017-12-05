@@ -29,17 +29,20 @@ const routes: Routes = <Routes>[
   //贷款详情-----
   {
     path: 'borrow/details/:id',
-    component: LoanDetailsComponent,
+    loadChildren: './loan-details/details.module#LoanDetailsModule',
+    //component: LoanDetailsComponent,
     data: {title: '贷款详情'}
   },
   {
     path: 'loan/inProcess/details/:id',
-    component: LoanDetailsComponent,
+    loadChildren: './loan-details/details.module#LoanDetailsModule',
+    //component: LoanDetailsComponent,
     data: {title: '贷款详情'}
   },
   {
     path: 'history/details/:id',
-    component: LoanDetailsComponent,
+    loadChildren: './loan-details/details.module#LoanDetailsModule',
+    //component: LoanDetailsComponent,
     data: {title: '贷款详情'}
   }
 

@@ -3,7 +3,8 @@ import {SharedModule} from '../../shared/shared.module';
 import {BorrowComponent}   from './borrow.component';
 import {AcceptComponent}   from './accept/accept.component';
 import {BorrowConfigureComponent}   from './configure/configure.component';
-import {BorrowLoanComponent}   from './loan/borrowLoan.component';
+import {ApplyLoanComponent}   from './applyLoan/applyLoan.component';
+import {LoanComponent}   from './loan/loan.component';
 import { BorrowService} from './borrow.service';
 import {routing} from './borrow.routing';
 @NgModule({
@@ -12,7 +13,8 @@ import {routing} from './borrow.routing';
     BorrowComponent,
     AcceptComponent,
     BorrowConfigureComponent,
-    BorrowLoanComponent
+    ApplyLoanComponent,
+    LoanComponent
   ],
   providers: [BorrowService]
 })

@@ -1,132 +1,73 @@
 <div class="page-location">
-  <a class="h4 pad-r-xs font-bold">编辑产品参数</a>
+  <a class="h4 pad-r-xs font-bold">产品利率配置</a>
   <a class="page-location-item">
     管理中心<i class="pad-l-min fa fa-angle-right"></i></a>
   <a class="page-location-item ">产品管理<i class="pad-l-min fa fa-angle-right"></i></a>
-  <a class="page-location-item active ">编辑产品参数</a>
+  <a class="page-location-item active ">产品利率配置</a>
 </div>
 <div class="wrapper-md">
-<!--  <div class="group mar-b-sm">
-    <div class="group-title">参数信息</div>
-    <table class="table no-border no-margin">
-
-      <tbody>
-      <tr>
-        <td class="prod-config-label">展期日利率：</td>
-        <td class="text-default">
-          {{product.rolloverInterestValue|percent|nullReplace}}
-        </td>
-        <td class="prod-config-label" >逾期日罚息利率：</td>
-        <td class="text-default">
-          {{product.overdueInterestValue|percent|nullReplace}}
-        </td>
-      </tr>
-      <tr>
-        <td class="prod-config-label">押金比例：</td>
-        <td class="text-default">
-          {{product.rolloverDeposit|percent|nullReplace}}
-        </td>
-        <td class="prod-config-label">展期最长期限：</td>
-        <td class="text-default">
-          {{product.rolloverHowlong|currencyFormat:[0,0,'xx 天']|nullReplace}}
-        </td>
-      </tr>
-
-      </tbody>
-    </table>
-  </div>-->
-  <div class="group mar-b-sm" style="padding-bottom: 10px;">
-    <div class="group-title">配置</div>
-    <table class="table table-bordered bg-white no-margin">
-      <tbody>
-      <tr>
-        <td  style="vertical-align: middle;width: 120px;">
-          <span class="bold">适用渠道：</span>
-        </td>
-        <td colspan="3">
-          <div style="padding-top:5px;">
-            <radio [(key)]="product.productAppScope" [value]="0" [disabled]="true" *ngIf="product.productAppScope==0">全渠道</radio>
-            <radio [(key)]="product.productAppScope" [value]="1" [disabled]="true" *ngIf="product.productAppScope==1">指定渠道</radio>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="no-padding" *ngIf="product.productAppScope===1" rowspan="2">
-          <p class="resource-item" *ngFor="let resource of selectedResources" (click)="activateResource(resource)"
-             [ngClass]="{'active':activeResource==resource}">{{resource.resourceName}}</p>
-        </td>
-        <td rowspan="2" colspan="3">
-          <table class="table table-bordered no-margin"  >
-            <thead>
-            <th class="text-center">贷款周期</th>
+  <table class="table table-bordered bg-white no-margin">
+    <tbody>
+    <tr>
+      <td  style="vertical-align: middle;width: 120px;">
+        <span class="bold">适用渠道：</span>
+      </td>
+      <td colspan="3">
+        <div style="padding-top:5px;">
+          <radio [(key)]="product.productAppScope" [value]="0" [disabled]="true" *ngIf="product.productAppScope==0">全渠道</radio>
+          <radio [(key)]="product.productAppScope" [value]="1" [disabled]="true" *ngIf="product.productAppScope==1">指定渠道</radio>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="no-padding" *ngIf="product.productAppScope===1" rowspan="2">
+        <p class="resource-item" *ngFor="let resource of selectedResources" (click)="activateResource(resource)"
+           [ngClass]="{'active':activeResource==resource}">{{resource.resourceName}}</p>
+      </td>
+      <td rowspan="2" colspan="3">
+        <table class="table table-bordered no-margin"  >
+          <thead class="bg-default">
+          <tr>
             <th class="text-center">还款方式</th>
             <th class="text-center">计息方式</th>
             <th class="text-center">利率（%）</th>
+            <th class="text-center">贷款周期</th>
             <th class="text-center">操作</th>
-            </thead>
-            <tbody>
-            <tr class="text-center" *ngFor="let conf of productConfigs"
-                [hidden]="(product.productAppScope===0&&conf.appId!=-1)||
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="text-center" *ngFor="let conf of productConfigs"
+              [hidden]="(product.productAppScope===0&&conf.appId!=-1)||
                   (product.productAppScope===1&&!activeResource)||
                 (product.productAppScope===1&&activeResource&&conf.appId!=activeResource.resourceId)">
-              <td>{{conf.rateCycle}}</td>
-              <td>{{conf.paymentWay|dictionary:'repaymentWay'}}</td>
-              <td>{{conf.interestType|dictionary:'interestType'}}</td>
-              <td>{{conf.interestValue|percent}}</td>
-              <td>
-                <button class="btn btn-xs btn-danger" (click)="removeProdConf(conf.id)"><i class="fa fa-minus-circle"></i>删除</button>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="5">
-                <button class="btn btn-sm btn-default" (click)="openConfModal()" *ngIf="activeResource||product.productAppScope===0"><i
-                  class="glyphicon glyphicon-plus"></i>添加配置
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div *ngIf="product.productAppScope===1" style="margin-top:5px">
-      <button class="btn-def-outline" (click)="openSelectResourceModal()" ><i
-        class="glyphicon glyphicon-plus"></i>添加渠道
-      </button>
-    </div>
+            <td>{{conf.paymentWay|dictionary:'payment_way'}}</td>
+            <td>{{conf.interestType|dictionary:'interest_type'}}</td>
+            <td>{{conf.interestValue|percent}}</td>
+            <td>{{conf.rateCycle}}</td>
+            <td>
+
+              <button class="btn btn-xs btn-danger" (click)="removeProdConf(conf.id)"><i class="fa fa-minus-circle"></i>删除</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <button class="btn btn-sm btn-default" (click)="openConfModal()" *ngIf="activeResource||product.productAppScope===0"><i
+                class="glyphicon glyphicon-plus"></i>添加配置
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div *ngIf="product.productAppScope===1" style="margin-top:5px">
+    <button class="btn-def-outline" (click)="openSelectResourceModal()" ><i
+      class="glyphicon glyphicon-plus"></i>添加渠道
+    </button>
   </div>
-  <!--<div class="group mar-b-sm">
-    <div class="group-title">地域范围</div>
-    <table class="table no-border  no-margin">
-      <tbody>
-      <tr>
-        <td colspan="2">
-          <radio [(key)]="product.productAreaScope" [value]="0" [disabled]="true" *ngIf="product.productAreaScope==0">全国范围</radio>
-          <radio [(key)]="product.productAreaScope" [value]="1" [disabled]="true" *ngIf="product.productAreaScope==1">指定城市</radio>
-        </td>
-      </tr>
-      &lt;!&ndash; <tr *ngIf="product.productAreaScope==1">
-         <td class="area-scope-wrap">
-           <delete-wrap size="xs">
-             <label class="label label-primary label-area-scope">广州</label>
-           </delete-wrap>
-           <delete-wrap size="xs">
-             <label class="label label-primary label-area-scope">长沙</label>
-           </delete-wrap>
-           <delete-wrap size="xs">
-             <label class="label label-primary label-area-scope">邯郸</label>
-           </delete-wrap>
-           <delete-wrap size="xs">
-             <label class="label label-primary label-area-scope">北京</label>
-           </delete-wrap>
-           <label class="label btn-default label-area-scope cur-poi"><i class="fa fa-plus"></i>添加</label>
-         </td>
-       </tr>&ndash;&gt;
-      </tbody>
-    </table>
-  </div>-->
-  <div class="text-center">
+  <div class="text-center mar-t-sm">
     <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>
   </div>
 </div>
@@ -167,14 +108,6 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="control-label col-sm-3"><i class="label-required text-danger">*</i>贷款周期：</label>
-        <div class="col-sm-8">
-          <select class="form-control" [(ngModel)]="modalConf.data.rateCycle" name="rateCycle">
-            <option *ngFor="let rateCycle of modalConf.rateCycleOptions" [value]="rateCycle.label">{{rateCycle.label}}</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
         <label class="control-label col-sm-3"><i class="label-required text-danger">*</i>还款方式：</label>
         <div class="col-sm-8">
           <select class="form-control" [(ngModel)]="modalConf.data.repaymentWay" name="repaymentWay">
@@ -190,13 +123,21 @@
           </select>
         </div>
       </div>
-      <div class="form-group no-b-margin">
+      <div class="form-group">
         <label class="control-label col-sm-3"><i class="label-required text-danger">*</i>利率：</label>
         <div class="col-sm-8">
           <div class="input-group">
             <input class="form-control" placeholder="利率" [(ngModel)]="modalConf.data.interestValue" name="interestValue" />
             <span class="input-group-addon">%</span>
           </div>
+        </div>
+      </div>
+      <div class="form-group no-b-margin">
+        <label class="control-label col-sm-3"><i class="label-required text-danger">*</i>贷款周期：</label>
+        <div class="col-sm-8">
+          <select class="form-control" [(ngModel)]="modalConf.data.rateCycle" name="rateCycle">
+            <option *ngFor="let rateCycle of modalConf.rateCycleOptions" [value]="rateCycle.label">{{rateCycle.label}}</option>
+          </select>
         </div>
       </div>
     </form>

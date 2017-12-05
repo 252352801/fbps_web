@@ -31,7 +31,7 @@ export class OauthService {
     try{
       let savedUser=JSON.parse(localStorage.getItem(this.storeName.user));
       if(savedUser&&savedUser.accessToken===this.token) {
-        this.user = new User().initByObj(savedUser);
+        this.user = new User().init(savedUser);
         this.initRolesAndFns();
       }
     }catch (err){

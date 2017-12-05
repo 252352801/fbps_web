@@ -77,15 +77,15 @@ export class ModifyProductConfComponent implements OnInit{
         this.loadProductConfigs();
       });
     this.loadProduct();
-    this.dictionarySvc.loadRepaymentWay()
+    this.dictionarySvc.load('payment_way')
       .then((res)=>{
         this.repaymentWays=res;
       });
-    this.dictionarySvc.loadInterestType()
+    this.dictionarySvc.load('interest_type')
       .then((res)=>{
         this.interestTypes=res;
       });
-    this.dictionarySvc.loadRateCycle()
+    this.dictionarySvc.load('rate_cycle')
       .then((res)=>{
         this.rateCycles=res;
       });

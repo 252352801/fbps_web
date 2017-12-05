@@ -6,233 +6,218 @@
   <a class="page-location-item active ">受理还款</a>
 </div>
 <div class="wrapper-md">
-  <div class="group mar-b-sm ">
-    <table class="table no-border no-b-margin ">
-      <tbody>
-      <tr>
-        <td class="table-label" width="12%">还款单号：</td>
-        <td class="text-default" width="38%">{{repaymentNotify.repaymentNotifyId|nullReplace}}</td>
-        <td class="table-label" width="12%">创建时间：</td>
-        <td class="text-default" width="38%">{{repaymentNotify.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group mar-b-sm clearfix">
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">还款单号：</div>
+        <div class="v-table-cell text-default">{{repaymentNotify.repaymentNotifyId|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">创建时间：</div>
+        <div class="v-table-cell text-default">{{repaymentNotify.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">状态：</div>
+        <div class="v-table-cell text-default">{{repaymentNotify.statusName|nullReplace}}</div>
+      </div>
+    </div>
   </div>
-  <div class="group mar-b-sm ">
-    <table class="table no-border no-b-margin ">
-      <tbody>
-      <tr>
-        <td class="table-label" width="12%">贷款单号：</td>
-        <td class="text-default" width="38%">{{loan.borrowApplyId|nullReplace}}</td>
-        <td class="table-label" width="12%">贷款周期：</td>
-        <td class="text-default" width="38%">{{loan.borrowHowlong|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label" width="12%">企业名称：</td>
-        <td class="text-default" width="38%">{{loan.companyName|nullReplace}}</td>
-        <td class="table-label">还款方式：</td>
-        <td class="text-default">
-          <span class="form-control-static">{{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td class="table-label">贷款金额：</td>
-        <td class="text-default">
-          <div class="">
-            <span class="">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</span>
-          </div>
-        </td>
-        <td class="table-label">还款期数：</td>
-        <td class="text-default">
-          <span >{{repaymentPlan|currencyFormat:[0,0,'xx/'+repaymentPlans.length+' 期']|nullReplace}}</span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group mar-b-sm clearfix">
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">贷款单号：</div>
+        <div class="v-table-cell text-default">{{loan.borrowApplyId|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">贷款周期：</div>
+        <div class="v-table-cell text-default">{{loan.ratedCycle|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">企业名称：</div>
+        <div class="v-table-cell text-default">{{loan.companyName|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">还款方式：</div>
+        <div class="v-table-cell text-default">{{loan.paymentWay|dictionary:'payment_way'|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">贷款金额：</div>
+        <div class="v-table-cell text-default">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">还款期数：</div>
+        <div class="v-table-cell text-default">
+          {{currentPeriod|currencyFormat:[0,0,'xx/'+repaymentPlans.length+' 期']|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8" style="vertical-align: top">还款计划：</div>
+        <div class="v-table-cell ">
+          <repay-plans [data]="loan.borrowApplyId"
+                       [isBtnRollover]="true"
+                       [isRepaymentRelDate]="true"
+                       [isRepaymentAmount]="false"
+          ></repay-plans>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="group ">
-    <div class="group-title">还款情况</div>
-      <table class="table table-bordered mar-b-xs mar-t-sm table-middle bg-white">
-        <thead class="bg-default">
-        <tr>
-        <th class="text-center">期数</th>
-        <th class="text-center">计划还款日</th>
-        <th class="text-center">实际还款日</th>
-        <th class="text-center">应还本金(元)</th>
-        <th class="text-center">应还利息(元)</th>
-        <th class="text-center">罚息(元)</th>
-       <!-- <th class="text-center">应还总额（元）</th>-->
-        <th class="text-center">还款状态</th>
-        <th class="text-center">是否展期</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr  *ngFor="let rp of repaymentPlans" >
-          <td class="text-center">{{rp.repaymentPlan}}/{{repaymentPlans?repaymentPlans.length:0}}期</td>
-          <td class="text-center">{{rp.repaymentPlanDate|date:"yyyy-MM-dd"}}</td>
-          <td class="text-center">
-            <span >{{rp.repaymentDate|date:"yyyy-MM-dd"}}</span></td>
-          <td class="text-right text-gold">{{rp.repaymentPrinciple|currencyFormat|nullReplace}}</td>
-          <td class="text-right text-gold">{{rp.repaymentInterest|currencyFormat|nullReplace}}</td>
-          <td class="text-right text-gold">{{(rp.overdueInterest||0)|currencyFormat|nullReplace}}</td>
-          <td class="text-center">
-            <span>{{rp.statusName}}</span>
-          </td>
-          <td class="text-center">
-            <a>{{rp.rolloverApplyId?'是':'否'}}</a>
-          </td>
-        </tr>
-        <tr [hidden]="repaymentPlans.length>0">
-          <td colspan="8" class="text-center text-disabled">
-            无还款记录
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    <table class="table no-border no-b-margin ">
-      <tbody>
-      <tr>
-        <td class="table-label ver-mid" width="12%">应还总额：</td>
-        <td class="ver-mid text-default"  colspan="3">
-          <span >{{(curRepayment?curRepayment.repayRelAmount:'')|currencyFormat:'xx 元'|nullReplace}}</span>
-        </td>
-<!--        <td class="table-label ver-mid" width="12%">已还总额：</td>
-        <td class="ver-mid text-default" width="38%">
-          <span class="">{{repaymentNotify.repaymentAmount|currencyFormat:'xx 元'|nullReplace}}</span>
-        </td>-->
-      </tr>
-      <tr >
-        <td class="table-label ver-mid"  width="12%">
-          <label class="required">实际还款时间：</label>
-        </td>
-        <td class="ver-mid text-default" colspan="3">
-          <input placeholder="请选择" class="form-control" datePicker  style="max-width: 175px;"
-                 [(ngModel)]="repaymentDate" name="repaymentDate" [opt-ispicktime]="true"
-                 opt-format="yyyy-MM-dd HH:mm"/>
-        </td>
-<!--        <td class="table-label ver-mid">
-          <label class="">误差金额：</label>
-        </td>
-        <td class="ver-mid text-default">
-            {{getErrorAmount()|currencyFormat:'元'}}（应还总额-实际还款金额）
-        </td>-->
-      </tr>
-      <tr>
-        <td class="table-label ver-mid" width="12%">
-          <label class="required">实际还款金额：</label>
-        </td>
-        <td class="ver-mid text-default"  colspan="3" >
+  <div class="group clearfix ">
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">应还总额：</div>
+        <div class="v-table-cell text-default" style="line-height: 34px;">
+          <span>{{(curRepayment?curRepayment.repaymentAmount:'')|currencyFormat:'xx 元'|nullReplace}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">
+          <label class="required no-margin">实际还款时间：</label>
+        </div>
+        <div class="v-table-cell text-default">
+          <datetime-picker [(value)]="repaymentDate" format="yyyy-MM-dd HH:mm">
+            <input placeholder="请选择" class="form-control"  style="max-width: 175px;"
+                   [(ngModel)]="repaymentDate" name="repaymentDate" />
+          </datetime-picker>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mar-b-xs">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8">
+          <label class="required no-margin">实际还款金额：</label>
+        </div>
+        <div class="v-table-cell text-default">
           <div class="input-group pull-left" style="max-width:175px">
-            <input class="form-control" [(ngModel)]="payRelAmount" name="payRelAmount" placeholder="请输入"/>
+            <input class="form-control" [(ngModel)]="totalRelAmount" name="totalRelAmount"
+                   placeholder="请输入" currencyFormat />
             <span class="input-group-addon">元</span>
           </div>
-          <div *ngIf="getErrorAmount()" class="form-control-static pull-left pad-l-sm">误差金额： {{getErrorAmount()|currencyFormat:' 元'}}
+          <div *ngIf="getErrorAmount()" class="form-control-static pull-left pad-l-sm">误差金额：
+            {{getErrorAmount()|currencyFormat:'xx 元'}}
             <span class="text-disabled">（实际还款金额-应还总额）</span>
           </div>
-        </td>
-      </tr>
-      <tr *ngIf="getErrorAmount()">
-        <td class="table-label">
-          <label class="required" >误差原因：</label>
-        </td>
-        <td class="ver-mid text-default" colspan="3">
-            <textarea class="form-control" [(ngModel)]="errorAmountRemarks" name="errorAmountRemarks"
-                      placeholder="请输入误差原因"></textarea>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mar-b-xs" *ngIf="getErrorAmount()">
+      <div class="v-table full-w">
+        <div class="v-table-cell bold w-em-8" style="vertical-align: top">
+          <label class="required no-margin">误差原因：</label>
+        </div>
+        <div class="v-table-cell text-default">
+           <textarea class="form-control" [(ngModel)]="errorAmountRemarks" name="errorAmountRemarks"
+                     placeholder="请输入误差原因"></textarea>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="text-disabled mar-b-sm mar-t-xxs">
     <small class="">
       注：应还本金+应还利息+罚息=应还总额
     </small>
   </div>
-  <div class="group mar-b-sm ">
-    <div class="group-title">还款账户</div>
-    <div class="mar-b-xs mar-t-xs">
-      <radio  [(key)]="repaymentNotify.accountRepaymentWay" [value]="0">电子账户还款</radio>
-      <radio  [(key)]="repaymentNotify.accountRepaymentWay" [value]="1">其他方式还款</radio>
-    </div>
-    <div class="bor-def bg-default mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay===0">
-      <div class="form-inline clearfix pad-xs">
-        <div class="col-md-12 form-group">
-          <label class="control-label">账户名：</label>
-          <span class="form-control-static">{{bankAccount.accountName|nullReplace}}</span>
-        </div>
-        <div class="col-md-6 form-group">
-          <label class="control-label">账户号：</label>
-          <span class="form-control-static">{{bankAccount.bankAccount|nullReplace}}</span>
-        </div>
-        <div class="col-md-6 text-right form-group">
-          <label class="control-label">账户余额：</label>
-          <span class="form-control-static text-gold">{{bankAccount.availableBalance|currencyFormat:'xx 元'|nullReplace}}</span>
-        </div>
-      </div>
-      <div class="pad-def bor-t-def">
-        <p class="">最近一个月流水：</p>
-        <table class="table table-bordered bg-white mar-b-xs">
-          <thead class="text-center">
-          <tr>
-          <th class="text-center">交易时间</th>
-          <th class="text-center">发生金额(元)</th>
-          <th class="text-center">对方账户</th>
-          <th class="text-center">对方帐号</th>
-          <th class="text-center">可用余额(元)</th>
-          <th class="text-center">交易类型</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let item of backAccountFlows">
-            <td class="text-center">{{item.dealTime}}</td>
-            <td class="text-right" [ngClass]="{'text-success':item.amount>0,'text-gold':item.amount<0}">
-              <span *ngIf="item.amount<0">-</span>
-              {{absoluteAmount(item.amount)|currencyFormat|nullReplace}}
-            </td>
-            <td class="text-center">{{item.oppoAcctName}}</td>
-            <td class="text-center">{{item.oppoAcctNo}}</td>
-            <td class="text-right text-gold">
-              {{item.availableBalance|currencyFormat|nullReplace}}
-            </td>
-            <td class="text-center">
-              <span *ngIf="item.tradeType==1">出账</span>
-              <span *ngIf="item.tradeType==2">入账</span>
-              <span *ngIf="item.tradeType==3">冲正</span>
-              <span *ngIf="item.tradeType==5">锁定金额</span>
-              <span *ngIf="item.tradeType==6">解锁金额</span>
-              <span *ngIf="item.tradeType==9">冻结金额</span>
-              <span *ngIf="item.tradeType==10">解冻金额</span>
-              <span *ngIf="item.tradeType==11">手续费</span>
-              <span *ngIf="item.tradeType==12">代收手续费</span>
-            </td>
-          </tr>
-          <tr *ngIf="BAFPaginator.count==0">
-            <td colspan="6" class="text-center text-disabled">
-              无记录
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="text-right">
-          <paginator [(index)]="BAFPaginator.index"
-                     [count]="BAFPaginator.count" [(pageSize)]="BAFPaginator.size"
-                     size="sm" (onChangePage)="queryBackAccountFlow()"
-                     styleClass="inline-block"></paginator>
+  <div class="group clearfix mar-b-sm ">
+    <div class="group-title" *ngIf="repaymentNotify.accountRepaymentWay==1">线上还款</div>
+    <div class="group-title" *ngIf="repaymentNotify.accountRepaymentWay==2">线下还款</div>
+<!--    <div class="col-md-12 mar-b-xs mar-t-xs">
+      <radio [(key)]="repaymentNotify.accountRepaymentWay" [value]="0">电子账户还款</radio>
+      <radio [(key)]="repaymentNotify.accountRepaymentWay" [value]="1">其他方式还款</radio>
+    </div>-->
+    <div class="col-md-12 mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay===0">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold" style="vertical-align: top">电子账户流水：</div>
+        <div class="v-table-cell">
+          <table class="table table-bordered mar-b-xs bg-white" *ngIf="bankAccountFlows.length">
+            <thead class="bg-default">
+            <tr>
+              <th class="text-center">交易时间</th>
+              <th class="text-center">发生金额(元)</th>
+              <th class="text-center">对方账户</th>
+              <th class="text-center">对方账号</th>
+              <th class="text-center">可用余额(元)</th>
+              <th class="text-center">交易类型</th>
+              <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let flow of bankAccountFlows">
+              <td class="text-center">{{flow.dealTime}}</td>
+              <td class="text-right text-gold">{{flow.amount|currencyFormat}}</td>
+              <td class="">{{flow.oppoAcctName}}</td>
+              <td class="">{{flow.oppoAcctNo}}</td>
+              <td class="text-right text-gold">{{flow.availableBalance|currencyFormat}}</td>
+              <td class="text-center">{{flow.tradeTypeName}}</td>
+              <td class="text-center">
+                <div class="table-btn-group">
+                  <a class="table-btn" title="删除" (click)="removeBankAccountFlow(flow.flowId)" >删除</a>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <a class="text-info bold" (click)="accountFlow.open({memberId:loan.memberId,selectedItems:bankAccountFlows})">选择</a>
         </div>
       </div>
     </div>
-    <div class="bor-def pad-def mar-b-xs  bg-default" *ngIf="repaymentNotify.accountRepaymentWay===1">
-      <p class="text-center h4 mar-t-def mar-b-def">此客户通过其它方式进行还款，请财务人员核对回款凭证</p>
-      <p class="text-center">
-        <checkbox innerStyle="checked" [(value)]="checkedCertificate" name="checkedCertificate">已发送汇款凭证</checkbox>
-      </p>
+    <div class="col-md-12  mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay===1">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold" style="vertical-align: top">还款凭证：</div>
+        <div class="v-table-cell">
+          <div class="progress no-margin" style="width: 50%"
+               *ngIf="uploader.queue.length>0&&!uploader.queue[0].success&&!uploader.queue[0].error">
+            <div class="progress-bar progress-bar-success" [style.width.%]="uploader.queue[0].progress">
+              <b>{{uploader.queue[0].progress}}%</b>
+            </div>
+          </div>
+          <span class="file-name pull-left" *ngIf="uploader.queue.length>0&&uploader.queue[0].success">{{uploader.queue[0].fileName}}</span>
+          <span class="text-danger pull-left" *ngIf="uploader.queue.length>0&&uploader.queue[0].error">上传失败！</span>
+          <label *ngIf="uploader.queue.length==0">
+            <a class="text-info">上传</a>
+            <input type="file" [uploader]="uploader" style="display: none"/>
+          </label>
+          <file-buttons *ngIf="uploader.queue.length>0&&uploader.queue[0].success"
+                                      styleClass="pull-left"
+                                      [fileId]="uploader.queue[0].customData['fileId']"
+                                      [fileName]="uploader.queue[0].fileName"
+                                      (preview)="previewer.open($event,'放款凭证-预览')"
+                                      (previewImage)="gallery.open($event)"
+          ></file-buttons>
+          <a class="text-info mar-l-xs pull-left" title="删除"
+             *ngIf="uploader.queue.length>0&&(uploader.queue[0].success||uploader.queue[0].error)"
+             (click)="deleteUploadFile()"><i class="fa fa-remove"></i></a>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="text-center mar-t-xs">
-    <button class="btn-def  mar-r-sm" (click)="submit()" [disabled]="submitted">{{submitted?'正在提交...':'提交'}}<i class="fa fa-check-circle-o"></i></button>
+    <button class="btn-def  mar-r-sm" (click)="submit()" [disabled]="submitted">{{submitted?'正在提交...':'提交'}}<i
+      class="fa fa-check-circle-o"></i></button>
     <button class="btn-def " btnBack>放弃<i class="fa fa-arrow-circle-o-left"></i></button>
 
   </div>
 </div>
+<account-flow [mode]="1" #accountFlow (outputSelections)="setBankAccountFlows($event)"></account-flow>
+<previewer #previewer></previewer>
+<gallery #gallery size="md"></gallery>

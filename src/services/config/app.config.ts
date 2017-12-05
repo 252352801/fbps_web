@@ -1,4 +1,5 @@
 import {environment} from '../../environments/environment';
+
 /**
  * 环境
  */
@@ -173,7 +174,7 @@ class Config{
   initHost(){
     if(window['config']&&typeof window['config']==='object'){
       let host=window['config']['host'];
-      let regUrl=/^http[s]?:\/\/\S+/;
+      let regUrl=/^http[s]?:\/\/\S+$/;
       if(host&&typeof host==='object'){
         for(let o in host){
           if(o in this.host){
@@ -295,6 +296,10 @@ export const API = {
     url:'lms/financeApply/firstApprove',
     method: 'post'
   },
+  finishContract:{//合同完成
+    url:'lms/financeApply/contractFinish',
+    method: 'post'
+  },
   loanApprove:{//用款申请审批
     url: 'lms/financeApply/approve',
     method: 'post'
@@ -323,6 +328,30 @@ export const API = {
     url:'lms/financeApply/proveDataList',
     method:'post'
   },
+  applyPayOnline:{//申请线上放款
+    url:'lms/financeApply/applyPayOnline',
+    method:'post'
+  },
+  applyPayOffline:{//申请线下放款
+    url:'lms/financeApply/applyPayOffline',
+    method:'post'
+  },
+  loanOffline:{//线下放款审批
+    url:'lms/financeApply/auditPayOffline',
+    method:'post'
+  },
+  loanOnline:{//线上放款审批
+    url:'lms/financeApply/auditPayOnline',
+    method:'post'
+  },
+  loanFlows:{
+    url:'acct/account/getBorrowFlowList',
+    method:'get'
+  },
+  acceptLoan:{
+    url:'lms/financeApply/accepted',
+    method:'post'
+  },
   /*-----------------------------------展期类---------------------------------------*/
   rolloverList:{//展期申请列表
     url:'lms/rolloverApply/applyList',
@@ -334,6 +363,14 @@ export const API = {
   },
   approveRollover:{//展期审批
     url:'lms/rolloverApply/approve',
+    method:'post'
+  },
+  addProveData:{//添加展期缴费凭证
+    url:'lms/rolloverApply/addProvData',
+    method:'post'
+  },
+  finishRolloverContract:{//完成配置合同
+    url:'lms/rolloverApply/contractFinish',
     method:'post'
   },
   /*-----------------------------------还款类---------------------------------------*/
@@ -360,6 +397,10 @@ export const API = {
   createRepayPlanPreview:{
     url:'lms/repaymentPlan/repayPlanPreview',
     method:'post'
+  },
+  repaymentFlows:{
+    url:'/acct/account/getRepayFlowList',
+    method:'get'
   },
   /*-----------------------------------产品类---------------------------------------*/
   productList:{//产品列表
@@ -454,7 +495,15 @@ export const API = {
     url:'sys/log/logList',
     method:'post'
   },
-
+  capitalBankCards:{
+    url:'base/resource/getBankcardList',
+    method:'post'
+  },
+  /*-----------------------------------账户类---------------------------------------*/
+  flow:{//流水详情
+    url:'acct/account/getFlowDetails',
+    method:'get'
+  },
   /*-----------------------------------字典类---------------------------------------*/
   dictionary:{//字典
     url:'/base/dictionary/dictionaryList',

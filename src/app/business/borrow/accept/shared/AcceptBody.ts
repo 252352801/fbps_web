@@ -7,5 +7,4 @@ export interface AcceptBody{
   }[],
   remarks:string,
   status: string|number
-
 }

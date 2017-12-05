@@ -7,10 +7,13 @@ import {Loan} from '../../../../services/entity/Loan.entity';
 import {Resource} from '../../../../services/entity/Resource.entity';
 import {Contract} from "../../../../services/entity/Contract.entity";
 import {Paginator} from "../../../../services/entity/Paginator.entity";
-import {RepayPlanPreview} from '../../../../services/entity/RepayPlanPreview.entity';
 import {fadeInAnimation} from '../../../../animations/index';
 import {OauthService} from '../../../../services/oauth/oauth.service';
 import {ProveData} from "../../../../services/entity/ProveData.entity";
+import {ReviewInfo} from "../../../../services/entity/ReviewInfo.entity";
+import {CommonService} from "../../../../services/common/common.service";
+import {SharedService} from "../../../shared/shared.service";
+import {BusinessService} from "../../business.service";
 @Component({
   selector: 'borrow-configure',
   templateUrl: './configure.component.html',
@@ -42,13 +45,19 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
 
   proveData: ProveData[] = [];
 
+  firstReviewInfo:ReviewInfo=new ReviewInfo();//一审信息
+  secondReviewInfo:ReviewInfo=new ReviewInfo();//二审信息
   constructor(private oauthSvc: OauthService,
+              private commonSvc: CommonService,
+              private sharedSvc: SharedService,
+              private businessSvc: BusinessService,
               private router: Router,
               private pop: PopService,
               private borrowSvc: BorrowService,
               private BCSvc: BorrowConfigureService,
               private actRoute: ActivatedRoute) {
     this.getLoanById();
+    this.getReviewInfo();
     this.loadResources();
     this.loadContracts();
     this.subscribeRouteParams();
@@ -56,21 +65,11 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit() {
-    this.borrowSvc.getLoanProveData(this.actRoute.snapshot.params['id'])
+    this.businessSvc.getLoanProveData(this.actRoute.snapshot.params['id'])
       .then((res)=> {
         this.proveData = res;
-
-        //dev
-        this.proveData=[];
-        for(let i=0;i<6;i++){
-          let pd=new ProveData();
-          pd.fileTypeName='test'+i;
-          pd.fileLoadId='c1c79da7440749519d7b60ceb2236d3a';
-          this.proveData.push(pd);
-        }
       })
       .catch((err)=> {
-
       });
   }
 
@@ -100,7 +99,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
   }
 
   getLoanById(): Promise<any> {
-    return this.BCSvc.getLoanById(parseInt(this.actRoute.snapshot.params['id']))
+    return this.businessSvc.getLoanById(this.actRoute.snapshot.params['id'])
       .then((data: Loan)=> {
         this.loan = data;
         return Promise.resolve(this.loan);
@@ -108,6 +107,46 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
       .catch((err)=> {
 
       });
+  }
+
+  /**
+   * 获取审核信息
+   */
+  getReviewInfo(){
+    let borrowApplyId=this.actRoute.snapshot.params['id'];
+    let body1={//一审
+      type:0,
+      id:borrowApplyId,
+      status2:2
+    };
+    this.commonSvc.querySystemLog(body1)
+      .then((res)=>{
+        for(let o of res.items){
+          if(o.status==body1.status2){
+            this.firstReviewInfo.operator=o.createBy;
+            this.firstReviewInfo.reviewTime=o.createTime;
+            this.firstReviewInfo.opinion=o.remarks;
+            break;
+          }
+        }
+      });
+    let body2={//二审
+      type:0,
+      id:borrowApplyId,
+      status2:3
+    };
+    this.commonSvc.querySystemLog(body2)
+      .then((res)=>{
+        for(let o of res.items){
+          if(o.status==body2.status2){
+            this.secondReviewInfo.operator=o.createBy;
+            this.secondReviewInfo.reviewTime=o.createTime;
+            this.secondReviewInfo.opinion=o.remarks;
+            break;
+          }
+        }
+      });
+
   }
 
   loadResources() {
@@ -163,7 +202,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
       borrowApplyId: this.loan.borrowApplyId,
       auditOneBy: this.auditOneBy
     };
-    this.BCSvc.approveLoan(body)
+    this.BCSvc.finishContract(body)
       .then((res)=> {
         if (res.status) {
           this.pop.info({
@@ -218,8 +257,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
    * 加载贷款单合同
    */
   loadContracts() {
-
-    this.BCSvc.loadContracts({
+    this.sharedSvc.queryContracts({
       borrowApplyId: this.actRoute.snapshot.params['id'],
       page: this.contractsPaginator.index + 1,
       rows: this.contractsPaginator.size

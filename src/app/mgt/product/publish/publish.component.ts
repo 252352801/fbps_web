@@ -73,7 +73,7 @@ export class PublishProductComponent implements OnInit{
     this.interestTypeOptions=[];
 
     this.proveDataOptions=[];
-    this.dictionarySvc.loadProveData()
+    this.dictionarySvc.load('prove_data')
       .then((data)=>{
         if(data instanceof Array){
           for(let item of data){
@@ -91,12 +91,12 @@ export class PublishProductComponent implements OnInit{
       productTypeOption.value='';
       this.productTypeOptions=[productTypeOption];
     }
-    this.dictionarySvc.loadProductType()
+    this.dictionarySvc.load('product_type')
       .then((res)=>{
         this.productTypeOptions=this.productTypeOptions.concat(res);
         this.product.productType ='';
       });
-    this.dictionarySvc.loadInterestType()
+    this.dictionarySvc.load('interest_type')
       .then((res)=>{
         this.interestTypeOptions=res;
         if(this.interestTypeOptions.length>0) {
@@ -158,6 +158,7 @@ export class PublishProductComponent implements OnInit{
       rolloverInterestValue:this.product.rolloverInterestValue/this.rolloverInterestValueUnit,
       rolloverDeposit:this.product.rolloverDeposit/100,
       overdueInterestValue:this.product.overdueInterestValue/this.overdueInterestUnit,
+      penaltyRate:this.product.penaltyRate/100,
       status:0
     };
     if(this.fileType){

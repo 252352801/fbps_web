@@ -11,25 +11,28 @@ export class Role{
   updateTime:string;//更新时间
   remark:string;//说明,
   roleFunctions:SubSystemFunction[];
-
-  initByObj(obj:any):Role{
-    if(typeof obj==='object'){
-      this.roleCode=obj.roleCode;
-      this.roleName=obj.roleName;
-      this.departCode=obj.departCode;
+  init(obj?:any):Role{
+    let instance=this;
+    if(obj&&typeof obj==='object'){
+      instance.roleCode=obj.roleCode;
+      instance.roleName=obj.roleName;
+      instance.departCode=obj.departCode;
       if(obj.department) {
-        this.departName = obj.department.departName;
+        instance.departName = obj.department.departName;
       }
-      this.createTime=obj.createTime;
-      this.updateTime=obj.updateTime;
-      this.remark=obj.remark;
+      instance.createTime=obj.createTime;
+      instance.updateTime=obj.updateTime;
+      instance.remark=obj.remark;
       if(obj.roleFunctions instanceof Array){
-        this.roleFunctions=[];
+        instance.roleFunctions=[];
         for(let fn of obj.roleFunctions){
-          this.roleFunctions.push(new SubSystemFunction().initByObj(fn));
+          instance.roleFunctions.push(SubSystemFunction.create(fn));
         }
       }
     }
-    return this;
+    return instance;
+  }
+  static create(obj?:any):Role{
+    return new Role().init(obj);
   }
 }

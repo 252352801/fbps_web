@@ -10,16 +10,20 @@ export class ProductConfig{
   paymentWay:number;//还款方式
   rateCycle:string;//贷款周期
 
-  initByObj(obj:any):ProductConfig{
+  init(obj:any):ProductConfig{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.id=obj.id;
-      this.productId=obj.productId;
-      this.appId=obj.appId;
-      this.interestValue=parseFloat(obj.interestValue);
-      this.interestType=parseInt(obj.interestType);
-      this.paymentWay=parseInt(obj.paymentWay);
-      this.rateCycle=obj.rateCycle;
+      instance.id=obj.id;
+      instance.productId=obj.productId;
+      instance.appId=obj.appId;
+      instance.interestValue=parseFloat(obj.interestValue);
+      instance.interestType=parseInt(obj.interestType);
+      instance.paymentWay=parseInt(obj.paymentWay);
+      instance.rateCycle=obj.rateCycle;
     }
-    return this;
+    return instance;
+  }
+  static create(obj:any):ProductConfig{
+    return new ProductConfig().init(obj);
   }
 }

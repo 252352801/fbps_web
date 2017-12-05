@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Contract} from '../../../services/entity/Contract.entity';
 import {Paginator} from '../../../services/entity/Paginator.entity';
+import {SharedService} from '../../shared/shared.service';
 import {FinanceContractService} from './financeContract.service';
 @Component({
   selector: 'finance-ontract',
@@ -20,7 +21,10 @@ export class FinanceContractComponent {
   };
   paginator: Paginator = new Paginator;
 
-  constructor(private contractSvc: FinanceContractService) {
+  constructor(
+    private sharedSvc: SharedService,
+    private contractSvc: FinanceContractService
+  ) {
   }
 
   resetParams() {
@@ -36,7 +40,7 @@ export class FinanceContractComponent {
       rows: this.paginator.size
     };
     this.loading = true;
-    this.contractSvc.query(query)
+    this.sharedSvc.queryContracts(query)
       .then((data)=> {
         this.tableData = data.items;
         this.paginator.count = data.count;
@@ -47,7 +51,6 @@ export class FinanceContractComponent {
       })
 
   }
-
   search() {
     this.paginator.reset();
     this.tableData = [];
