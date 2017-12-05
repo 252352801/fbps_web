@@ -83,6 +83,7 @@ export class ProductComponent {
   }
   search(){
     this.paginator.reset();
+    this.navigate();
     this.query();
   }
   resetParams(){
@@ -90,8 +91,8 @@ export class ProductComponent {
   }
 
   toggleProductStatus(product:Product){
-    let newStatus=product.status===0?-1:0;
-    let newStatText=newStatus===-1?'禁用':'启用';
+    let newStatus=product.status==0?-2:0;
+    let newStatText=newStatus==-2?'禁用':'启用';
     this.pop.confirm({
       text:'确定'+newStatText+'该产品？'
     }).onConfirm(()=>{

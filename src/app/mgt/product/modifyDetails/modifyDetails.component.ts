@@ -5,7 +5,6 @@ import { ProductBody} from '../product.service';
 import { ModifyProductDetailsService} from './modifyDetails.service';
 import { DictionaryService,Dictionary} from '../../../../services/dictionary/dictionary.service';
 import {Product} from "../../../../services/entity/Product.entity";
-import {ProveData} from '../../../../services/entity/ProveData.entity';
 import {PopService} from 'dolphinng';
 import {fadeInAnimation} from '../../../../animations/index';
 
@@ -96,9 +95,10 @@ export class ModifyProductDetailsComponent implements OnInit{
         }else{
           this.rolloverInterestValueUnit=100;
         }
-        this.product.rolloverDeposit=this.product.rolloverDeposit*100;
-        this.product.rolloverInterestValue=this.product.rolloverInterestValue*this.rolloverInterestValueUnit;
-        this.product.overdueInterestValue=this.product.overdueInterestValue*this.overdueInterestUnit;
+        this.product.rolloverDeposit=this.product.rolloverDeposit*100||null;
+        this.product.rolloverInterestValue=this.product.rolloverInterestValue*this.rolloverInterestValueUnit||null;
+        this.product.overdueInterestValue=this.product.overdueInterestValue*this.overdueInterestUnit||null;
+        this.product.penaltyRate=this.product.penaltyRate*100||null;
       });
     {
       let productTypeOption=new Dictionary();
@@ -106,11 +106,11 @@ export class ModifyProductDetailsComponent implements OnInit{
       productTypeOption.value='';
       this.productTypeOptions=[productTypeOption];
     }
-    this.dictionarySvc.loadProductType()
+    this.dictionarySvc.load('product_type')
       .then((res)=>{
         this.productTypeOptions=this.productTypeOptions.concat(res);
       });
-    this.dictionarySvc.loadInterestType()
+    this.dictionarySvc.load('interest_type')
       .then((res)=>{
         this.interestTypeOptions=res;
         this.product.interestType=parseInt(this.interestTypeOptions[0].value);
@@ -145,7 +145,7 @@ export class ModifyProductDetailsComponent implements OnInit{
 
     //融资证明选项
     this.proveDataOptions=[];
-    this.dictionarySvc.loadProveData()
+    this.dictionarySvc.load('prove_data')
       .then((data)=>{
         if(data instanceof Array){
           for(let item of data){
@@ -218,6 +218,7 @@ export class ModifyProductDetailsComponent implements OnInit{
       rolloverDeposit:this.product.rolloverDeposit/100,
       status:this.product.status,
       overdueInterestValue:this.product.overdueInterestValue/this.overdueInterestUnit,
+      penaltyRate:this.product.penaltyRate/100
     };
     if(this.fileType){
       body.fileType=this.fileType;

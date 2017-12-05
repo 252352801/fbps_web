@@ -1,7 +1,7 @@
 /**
  * 签章信息 */
 export class Signature{
-  id:number;//ID
+  id:string|number;//ID
   userId:string;//天威会员ID
   name:string;//名字
   page:number;//	签章页码,
@@ -12,15 +12,20 @@ export class Signature{
 
   }
 
-  initByObj(obj:any):Signature{
+  init(obj?:any):Signature{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.id=parseInt(obj.id);
-      this.userId=obj.userId;
-      this.name=obj.name;
-      this.page=parseInt(obj.page);
-      this.positionX=parseFloat(obj.positionX);
-      this.positionY=parseFloat(obj.positionY);
+      instance.id=obj.contractId;
+      instance.userId=obj.userId;
+      instance.name=obj.name;
+      instance.page=parseInt(obj.page);
+      instance.positionX=parseFloat(obj.positionX);
+      instance.positionY=parseFloat(obj.positionY);
     }
-    return this;
+    return instance;
+  }
+
+  static create(obj?:any):Signature{
+    return new Signature().init(obj);
   }
 }

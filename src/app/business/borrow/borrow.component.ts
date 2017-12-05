@@ -4,6 +4,7 @@ import {Loan} from '../../../services/entity/Loan.entity';
 import {OauthService} from '../../../services/oauth/oauth.service';
 import {Paginator} from '../../../services/entity/Paginator.entity';
 import {BorrowService} from './borrow.service';
+import {BusinessService} from '../business.service';
 import {fadeInAnimation} from '../../../animations/index';
 import {PopService,ModalComponent} from 'dolphinng';
 @Component({
@@ -40,7 +41,10 @@ export class BorrowComponent {
   path: string = '';
 
   @ViewChild('cancelModal') cancelModal:ModalComponent;
+
+  applyLoanId:string='';//申请放款的id
   constructor(private borrowSvc: BorrowService,
+              private businessSvc: BusinessService,
               private router: Router,
               public oauth: OauthService,
               private pop: PopService,
@@ -59,15 +63,15 @@ export class BorrowComponent {
     this.loading = false;
     this.tabs = [{
       tabName: '新申请',
-      status: 201,
+      status: [0,1],
       active: false
     }, {
       tabName: '受理中',
-      status: [203,204],
+      status: [2,3,5],
       active: false
     }, {
       tabName: '待放款',
-      status: 205,
+      status: [6,7],
       active: false
     }];
     this.params = {
@@ -101,6 +105,9 @@ export class BorrowComponent {
     });
   }
 
+  setApplyLoanId(borrowApplyId:string){
+    this.applyLoanId=borrowApplyId;
+  }
 
   getStatus(): string {
     for (let o of this.tabs) {
@@ -144,7 +151,7 @@ export class BorrowComponent {
       rows: this.paginator.size
     };
     this.loading = true;
-    this.borrowSvc.queryLoans(query)
+    this.businessSvc.queryLoans(query)
       .then((res)=> {
         this.loading = false;
         this.paginator.count = res.count;

@@ -26,7 +26,7 @@
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">状态：</div>
         <div class="v-table-cell text-default">
-          {{loan.status|dictionary:'loanStatus'|nullReplace}}
+          {{loan.status|dictionary:'loan_status'|nullReplace}}
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">贷款周期：</div>
         <div class="v-table-cell text-default">
-          {{loan.borrowHowlong|nullReplace}}
+          {{loan.ratedCycle|nullReplace}}
         </div>
       </div>
     </div>
@@ -76,7 +76,7 @@
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">还款方式：</div>
         <div class="v-table-cell text-default">
-          {{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}
+          {{loan.paymentWay|dictionary:'payment_way'|nullReplace}}
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">计息方式：</div>
         <div class="v-table-cell text-default">
-          {{loan.rateType|dictionary:'interestType'|nullReplace}}
+          {{loan.rateType|dictionary:'interest_type'|nullReplace}}
         </div>
       </div>
     </div>
@@ -113,13 +113,13 @@
             <a class="text-info">上传</a>
             <input type="file" [uploader]="opt.uploader" style="display: none"/>
           </label>
-          <preview-or-download-button *ngIf="opt.uploader.queue.length>0&&opt.uploader.queue[0].success"
+          <file-buttons *ngIf="opt.uploader.queue.length>0&&opt.uploader.queue[0].success"
                                       styleClass="pull-left"
                                       [fileId]="opt.fileId"
                                       [fileName]="opt.uploader.queue[0].fileName"
                                       (preview)="previewer.open($event,opt.proveData.fileTypeName+'-预览')"
                                       (previewImage)="gallery.open($event)"
-          ></preview-or-download-button>
+          ></file-buttons>
           <a class="text-info mar-l-xs pull-left" title="删除" *ngIf="opt.uploader.queue.length>0&&(opt.uploader.queue[0].success||opt.uploader.queue[0].error)"
           (click)="opt.deleteUploadFile()"><i class="fa fa-remove"></i></a>
         </div>

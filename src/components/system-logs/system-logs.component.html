@@ -65,7 +65,7 @@
         类型
       </ng-template>
       <ng-template  let-sysLog="rowData" pTemplate="body">
-        {{sysLog.type|dictionary:'systemLogType'}}
+        {{sysLog.type|dictionary:'log_type'}}
       </ng-template>
     </p-column>
     <p-column field="remarks" header="备注" [style]="{'width':'200px'}"></p-column>

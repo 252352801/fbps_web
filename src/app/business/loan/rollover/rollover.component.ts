@@ -4,6 +4,7 @@ import {Rollover} from '../../../../services/entity/Rollover.entity';
 import {Paginator} from '../../../../services/entity/Paginator.entity';
 import {RolloverService} from './rollover.service';
 import {OauthService} from '../../../../services/oauth/oauth.service';
+import {DictionaryService,Dictionary} from '../../../../services/dictionary/dictionary.service';
 import {fadeInAnimation} from '../../../../animations/index';
 import 'rxjs/add/operator/switchMap';
 @Component({
@@ -18,20 +19,22 @@ export class RolloverComponent {
   loading: boolean;//是否正在加载
   tableData: Rollover[];//表格数据
   paginator: Paginator;
-  tabs: {//
-    tabName: string,
-    status: number[]|number,
-    active: boolean
-  }[];
+  statusOptions:Dictionary[];
+  params:{
+    status:string,
+    companyName:string
+  };
   path:string='';
   constructor(
     private rolloverSvc: RolloverService,
+    private dictSvc: DictionaryService,
     private actRoute:ActivatedRoute,
     public oauth:OauthService,
     private router:Router
   ) {
     this.init();
     this.subscribeRouteParams();
+    this.loadRolloverStatuses();
   }
 
   /**
@@ -41,82 +44,41 @@ export class RolloverComponent {
     this.tableData = [];
     this.paginator = new Paginator();
     this.loading = false;
-    this.tabs = [{
-      tabName: '新申请',
-      status: 201,
-      active: false
-    }, {
-      tabName: '受理中',
-      status: [203,204,205,206],//203待配合同   204待确认合同  205待风控审批 206待送签合同
-      active: false
-    }, {
-      tabName: '展期中',
-      status: 211,
-      active: false
-    }/*,{
-      tabName: '已结清',
-      status: 303,
-      active: false
-    },{
-      tabName: '已逾期',
-      status: 401,
-      active: false
-    },{
-      tabName: '异常结束',
-      status: 500,
-      active: false
-    },{
-      tabName: '审批不通过',
-      status: 503,
-      active: false
-    },{
-      tabName: '拒绝合同',
-      status: 505,
-      active: false
-    }*/];
+    this.params={
+      status:'',
+      companyName:''
+    };
+    {//初始化状态下拉选项
+      this.statusOptions = [new Dictionary()];
+      this.statusOptions[0].value ='';
+      this.statusOptions[0].label ='全部';
+    }
     this.path=this.router.url.split(';')[0];
   }
 
   subscribeRouteParams(){
     this.actRoute.params.subscribe((params:Params)=>{
-      let tabIndex=params['tab']?parseInt(params['tab']):0;
       let page=params['page']?parseInt(params['page']):0;
       let rows=params['rows']?parseInt(params['rows']):this.paginator.size;
+      let status=params['status']?params['status']:'';
       let companyName=params['companyName']?params['companyName']:'';
-      let borrowApplyId=params['borrowApplyId']?params['borrowApplyId']:'';
+      let applyId=params['applyId']?params['applyId']:'';
+      this.params.status=status;
+      this.params.companyName=companyName;
       this.paginator.index=page;
       this.paginator.size=rows;
-      this.changeTab(tabIndex);
       this.query();
     });
   }
 
-  /**
-   *
-   * @param tab
-   */
-  changeTab(tabIndex:number) {
-    for (let o of this.tabs) {
-      o.active = false;
-    }
-    this.tabs[tabIndex].active = true;
-  }
-
-  private getStatus(): number[]|number|string {
-    for (let o of this.tabs) {
-      if (o.active) {
-        let status;
-        if(o.status instanceof Array){
-          status=o.status.toString();
-        }else{
-          status=o.status;
+  loadRolloverStatuses(){
+    this.dictSvc.load('rollover_status')
+      .then((res)=>{
+        if(res instanceof Array){
+          this.statusOptions=this.statusOptions.concat(res)
         }
-        return status;
-      }
-    }
-    return -1;
+      })
   }
-
   /**
    * 查询
    */
@@ -124,14 +86,14 @@ export class RolloverComponent {
     if (this.loading) {
       return;
     }
-
     let query = {
-      status: this.getStatus(),
+      status: this.params.status,
+      companyName: this.params.companyName,
       page: this.paginator.index + 1,
       row: this.paginator.size
     };
     this.loading = true;
-    this.rolloverSvc.queryLoans(query)
+    this.rolloverSvc.queryRollovers(query)
       .then((res)=> {
         this.loading = false;
         this.paginator.count = res.count;
@@ -142,26 +104,26 @@ export class RolloverComponent {
   search() {
     this.paginator.reset();
     this.tableData = [];
+    this.navigate();
     this.query();
   }
 
   navigate(){
-    let tab=0;
-    for(let i=0,len=this.tabs.length;i<len;i++){
-      if(this.tabs[i].active){
-        tab=i;
-        break;
-      }
-    }
     let params:{
-      tab:number,
+      status?:string|number,
+      companyName?:string,
       page:number,
       rows:number
     }={
-      tab:tab,
       page:this.paginator.index,
       rows:this.paginator.size,
     };
+    if(this.params.status){
+      params.status=this.params.status;
+    }
+    if(this.params.companyName){
+      params.companyName=this.params.companyName;
+    }
 
     this.router.navigate([this.path,params]);
   }

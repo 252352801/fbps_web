@@ -28,7 +28,7 @@ export class SignInService {
         let result = res || null;
         if (result && result.status == 200) {
           data.status = true;
-          data.user = data.user.initByObj(result.body);
+          data.user = data.user.init(result.body);
         }
         return Promise.resolve(data);
       });

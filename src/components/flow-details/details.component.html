@@ -1,0 +1,78 @@
+<modal  size="lg" *ngIf="mode==1" #contentModal>
+  <modal-header>流水详情</modal-header>
+  <modal-body>
+    <div *ngTemplateOutlet="content"></div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <button class="btn btn-default" (click)="contentModal.close()">关闭</button>
+  </modal-footer>
+</modal>
+<div *ngIf="mode==0">
+  <ng-container *ngTemplateOutlet="content">
+  </ng-container>
+</div>
+<ng-template #content>
+  <div class="group mar-b-sm clearfix">
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">交易时间：</div>
+      <div class="v-table-cell text-default">
+        {{flow.dealTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">交易类型：</div>
+      <div class="v-table-cell text-default">
+        {{flow.tradeType|dictionary:'trade_type'|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">交易金额：</div>
+      <div class="v-table-cell text-gold">
+        {{flow.amount|currencyFormat:'xx 元'|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">可用余额：</div>
+      <div class="v-table-cell text-gold">
+        {{flow.amount|currencyFormat:'xx 元'|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">对方账户名：</div>
+      <div class="v-table-cell text-default">
+        {{flow.oppoAcctName|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">对方账户号：</div>
+      <div class="v-table-cell text-default">
+        {{flow.oppoAcctNo|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">我方账户名：</div>
+      <div class="v-table-cell text-default">
+        {{flow.myAcctName|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">我方账户号：</div>
+      <div class="v-table-cell text-default">
+        {{flow.myAcctNo|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">创建时间：</div>
+      <div class="v-table-cell text-default">
+        {{flow.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+      </div>
+    </div>
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-7">备注：</div>
+      <div class="v-table-cell text-default">
+        {{flow.remark|nullReplace}}
+      </div>
+    </div>
+  </div>
+</ng-template>
+

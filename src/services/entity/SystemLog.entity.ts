@@ -12,17 +12,25 @@ export class SystemLog{
   constructor(){
 
   }
-
-  initByObj(obj:any):SystemLog{
+  /**
+   * 初始化
+   * @param obj
+   * @returns {SystemLog}
+   */
+  init(obj?:any):SystemLog{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.type=parseInt(obj.type);
-      this.id=obj.id;
-      this.title=obj.title;
-      this.remarks= obj.remarks ;
-      this.createBy=obj.createBy;
-      this.createTime=obj.createTime;
-      this.status=obj.status;
+      instance.type=parseInt(obj.type);
+      instance.id=obj.id;
+      instance.title=obj.title;
+      instance.remarks= obj.remarks ;
+      instance.createBy=obj.createBy;
+      instance.createTime=obj.createTime;
+      instance.status=obj.status;
     }
-    return this;
+    return instance;
+  }
+  static create(obj?:any):SystemLog{
+    return new SystemLog().init(obj);
   }
 }

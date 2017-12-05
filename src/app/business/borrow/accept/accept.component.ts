@@ -1,16 +1,15 @@
-import {Component, Injectable,Injector,Host} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PopService,Toaster} from 'dolphinng';
 import {AcceptService} from './accept.service';
-import {SharedService} from '../../../shared/shared.service';
+import {BusinessService} from '../../business.service';
 import {Loan} from '../../../../services/entity/Loan.entity';
+import {SharedService} from '../../../shared/shared.service';
 import {ProveData} from '../../../../services/entity/ProveData.entity';
 import {OauthService} from '../../../../services/oauth/oauth.service';
 import {fadeInAnimation} from '../../../../animations/index';
-import {Uploader} from "dolphinng/modules/uploader/Uploader";
-import {api_file} from '../../../../services/config/app.config';
-import {myInjector,injector} from '../../../shared/myInjector.service';
-import {AcceptBody} from './accept.interface';
+import {AcceptBody} from './shared/AcceptBody';
+import {ProveDataUploader} from './shared/ProveDataUploader';
 @Component({
   selector: 'borrow-accept',
   templateUrl: './accept.component.html',
@@ -23,36 +22,47 @@ import {AcceptBody} from './accept.interface';
 export class AcceptComponent {
   isPassed: boolean;
   loan: Loan = new Loan();//贷款详情
-
   auditOneBy: string = this.oauthSvc.user.employeeName || this.oauthSvc.user.mobile;
   opinion: string = '';
-  //defaultOpinion:string='审批无误，予以通过';
   submitted: boolean = false;
-
   proveDataOptions: ProveDataUploader[] = [];//产品证明材料列表
   constructor(private pop: PopService,
+              private sharedSvc: SharedService,
               private acceptSvc: AcceptService,
-              protected sharedSvc: SharedService,
+              protected businessSvc: BusinessService,
               private actRoute: ActivatedRoute,
               private oauthSvc: OauthService) {
     this.getLoanById()
       .then((data)=> {
+        if(data.status==0){
+          this.acceptSvc.acceptLoan({
+            applyId:data.borrowApplyId,
+            operator:this.oauthSvc.user.employeeName||this.oauthSvc.user.mobile
+          });
+        }
         this.getProdProveData();
       });
-    this.loadProducts();
   }
 
-  getLoanById() {
-    return this.acceptSvc.getLoanById(parseInt(this.actRoute.params['value']['id']))
+  /**
+   * 借款单详情
+   * @returns {Promise<Loan>}
+   */
+  getLoanById():Promise<Loan> {
+    return this.businessSvc.getLoanById(this.actRoute.snapshot.params['id'])
       .then((data: Loan)=> {
         this.loan = data;
         return Promise.resolve(this.loan);
       });
   }
 
+  /**
+   * 产品证明材料列表
+   * @param productId
+   */
   getProdProveData(productId?: string) {
     let prodId = productId || this.loan.productId;
-    this.acceptSvc.getProdProveData(prodId)
+    this.sharedSvc.prodProveData(prodId)
       .then((data: ProveData[])=> {
         if (data instanceof Array) {
           this.proveDataOptions = [];
@@ -62,30 +72,14 @@ export class AcceptComponent {
             this.proveDataOptions.push(opt);
           }
         }
-/*
-        this.proveDataOptions = [];
-        for (let i=0;i<6;i++) {
-          let pd=new ProveData();
-          pd.fileType='0409';
-          pd.fileTypeName=`证明材料`+(i+1);
-          let opt = new ProveDataUploader();
-          opt.proveData=pd;
-          this.proveDataOptions.push(opt);
-        }
-        console.log(this.proveDataOptions);*/
       })
       .catch((err)=>{
       });
   }
 
-
-  loadProducts() {
-    this.acceptSvc.loadProducts()
-      .then((res)=> {
-
-      });
-  }
-
+  /**
+   * 校验
+   */
   validate() {
     //校验
     if (this.opinion === '') {
@@ -103,10 +97,17 @@ export class AcceptComponent {
     }
   }
 
+  /**
+   * 设置通过与否
+   * @param val
+   */
   setIsPass(val: boolean) {
     this.isPassed = val;
   }
 
+  /**
+   * 提交（一审)
+   */
   submit() {
     let body:AcceptBody= {
       auditOneBy: this.auditOneBy,
@@ -126,10 +127,9 @@ export class AcceptComponent {
         }
       }
     }
-    console.log(body);
     this.acceptSvc.approveLoan(body)
       .then((res)=> {
-        if (res.status) {
+        if (res.ok) {
           this.pop.info({
             text: this.isPassed ? '受理成功！' : '已拒绝此贷款单！'
           }).onClose(()=> {
@@ -150,71 +150,4 @@ export class AcceptComponent {
       });
   }
 }
-//----------------------------------------
-@Injectable()
-class ProveDataUploader{
-  fileId: string=null;
-  uploader: Uploader;
-  proveData: ProveData;
-  private sharedSvc:SharedService;
-  private toaster:Toaster;
-  constructor(
 
-  ) {
-    this.sharedSvc=myInjector.get(SharedService);
-    this.toaster=injector([{provide:Toaster,useClass:Toaster}]).get(Toaster);
-    this.initUploader();
-  }
-
-  initUploader() {
-    this.uploader=new Uploader();
-    this.uploader.url=api_file.upload;
-    this.uploader.onQueue((uploadFile)=>{
-      uploadFile.addSubmitData('businessType',this.proveData.fileType);
-      uploadFile.addSubmitData('fileName',uploadFile.fileName);
-      uploadFile.addSubmitData('fileType',uploadFile.fileExtension);
-      uploadFile.addSubmitData('fileSize',uploadFile.fileSize);
-      uploadFile.addSubmitData('fileContent',uploadFile.getFile());
-      if(this.uploader.queue.length>1){
-        this.uploader.queue=[uploadFile];
-      }
-      console.log(uploadFile);
-    });
-    this.uploader.onQueueAll(()=>{
-      this.uploader.upload();
-    });
-    this.uploader.onSuccess((uploadFile,uploader,index)=>{//上传请求成功
-      let response=JSON.parse(uploadFile.response);
-      if(response.status==200){
-        setTimeout(()=>{
-          uploadFile.setSuccess();
-        },1000);
-        uploadFile.customData={
-          fileId:response.body.fileId
-        };
-        this.fileId=response.body.fileId;
-      }else{
-        uploadFile.setError();
-      }
-    });
-    this.uploader.onError((uploadFile,uploader,index)=>{//上传请求失败
-      uploadFile.setError();
-    });
-  }
-
-  deleteUploadFile(){
-    if(this.uploader.queue.length&&this.uploader.queue[0].success&&this.fileId){
-      this.sharedSvc.deleteFile(this.fileId)
-        .then((res)=>{
-          if(res.status){
-            this.fileId=null;
-            this.uploader.queue=[];
-          }else{
-            this.toaster.error('',res.message||'删除失败！');
-          }
-        });
-    }else{
-      this.uploader.queue=[];
-    }
-  }
-}

@@ -8,7 +8,6 @@ export  interface SystemLogSearchParams {
   rows?: number;
   status2?: number;
 }
-
 @Injectable()
 export class SystemLogsService {
 
@@ -17,7 +16,6 @@ export class SystemLogsService {
   ) {
 
   }
-
   query(body:SystemLogSearchParams):Promise<{count:number,items:SystemLog[]}>{
     return this.myHttp.post({
       api:this.myHttp.api.systemLogs,
@@ -32,7 +30,7 @@ export class SystemLogsService {
         if(result.status===200){
           data.count=result.body.paginator.totalCount;
           for(let o of result.body.records){
-            let sysLog=new SystemLog().initByObj(o);
+            let sysLog=new SystemLog().init(o);
             data.items.push(sysLog);
           }
         }

@@ -30,16 +30,9 @@
           产品类别
         </ng-template>
         <ng-template  let-product="rowData" pTemplate="body">
-          {{product.productType|dictionary:'productType'}}
+          {{product.productType|dictionary:'product_type'}}
         </ng-template>
       </p-column>
-<!--      <p-column field="productCompany" header="发布公司" styleClass="text-center" [style]="{'width':'150px'}">
-        <ng-template  let-product="rowData" pTemplate="body">
-          <div textMaxLength="150px" title="{{product.productCompany}}">
-            {{product.productCompany}}
-          </div>
-        </ng-template>
-      </p-column>-->
       <p-column  styleClass="text-center" [style]="{'width':'120px'}">
         <ng-template pTemplate="header">
           发布日期
@@ -53,9 +46,7 @@
           有效期
         </ng-template>
         <ng-template  let-product="rowData" pTemplate="body">
-          <span *ngIf="product.expiryDate==0">长期有效</span>
-          <span *ngIf="product.expiryDate==1">1年</span>
-          <span *ngIf="product.expiryDate==2">2年</span>
+          {{product.expiryDate|dictionary:'expiry_date'}}
         </ng-template>
       </p-column>
       <p-column header="状态" styleClass="text-center" [style]="{'width':'120px'}">
@@ -66,7 +57,7 @@
           <div class="inline-block">
             <div class="pull-left mar-r-xs">
               <span class="" *ngIf="product.status==0">启用</span>
-              <span class="text-disabled" *ngIf="product.status==-1">禁用</span>
+              <span class="text-disabled" *ngIf="product.status==-2">禁用</span>
             </div>
             <toggle styClass="pull-left" [value]="product.status==0?true:false"
                     (action)="toggleProductStatus(product)" [auto]="false"></toggle>
@@ -81,7 +72,7 @@
                   <div class="table-btn-group">
                     <span  class="table-btn"  routerLink="/mgt/product/details/{{product.productId}}">详情</span>
                     <span  class="table-btn" routerLink="/mgt/product/modifyDetails/{{product.productId}}" *ngIf="oauth.roleIn(['010','013'])">编辑</span>
-                    <span  class="table-btn" routerLink="/mgt/product/modifyConf/{{product.productId}}" *ngIf="oauth.roleIn(['010','013'])">参数配置</span>
+                    <span  class="table-btn" routerLink="/mgt/product/modifyConf/{{product.productId}}" *ngIf="oauth.roleIn(['010','013'])">利率配置</span>
                   </div>
         </ng-template>
       </p-column>

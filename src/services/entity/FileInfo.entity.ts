@@ -9,15 +9,19 @@ export class FileInfo{
   fileSize:number;
   uploadTime:string;
 
-  initByObj(obj:any):FileInfo{
+  init(obj?:any):FileInfo{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.fileId=obj.fileId;
-      this.fileName=obj.fileName;
-      this.fileType=obj.fileType;
-      this.businessType=obj.businessType;
-      this.fileSize=parseFloat(obj.fileSize);
-      this.uploadTime=obj.uploadTime;
+      instance.fileId=obj.fileId;
+      instance.fileName=obj.fileName;
+      instance.fileType=obj.fileType;
+      instance.businessType=obj.businessType;
+      instance.fileSize=parseFloat(obj.fileSize);
+      instance.uploadTime=obj.uploadTime;
+      return instance;
     }
-    return this;
+  }
+  static create(obj?:any):FileInfo{
+    return new FileInfo().init(obj);
   }
 }

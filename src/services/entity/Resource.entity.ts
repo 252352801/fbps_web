@@ -3,13 +3,22 @@
  */
 export class Resource{
   resourceId:string;//ID
-  resourceName:string;//ID
+  resourceName:string;//名称
 
-  initByObj(obj:any):Resource{
+  init(obj?:any):Resource{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.resourceId=obj.resourceId;
-      this.resourceName=obj.resourceName;
+      instance.resourceId=obj.resourceId;
+      instance.resourceName=obj.resourceName;
     }
-    return this;
+    return instance;
+  }
+  static create(obj?:any):Resource{
+    let instance=new Resource();
+    if(obj&&typeof obj==='object'){
+      instance.resourceId=obj.resourceId;
+      instance.resourceName=obj.resourceName;
+    }
+    return new Resource().init(obj);
   }
 }

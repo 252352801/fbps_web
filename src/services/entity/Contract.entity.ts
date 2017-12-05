@@ -2,38 +2,41 @@
  * 合同
  */
 export class Contract{
-  id:string;//ID
-  twId:string;//天威合同ID
+  contractId:string;//ID
+  eSignatureId:string;//天威合同ID
   borrowApplyId:string;//贷款编号
   companyName:string;//公司名
-  title:string;//合同标题
-  docNum:string;//合同编号
-  fileId:string;//文件ID
-  capitalId:string;//资方ID
+  fileLoadId:string;//文件ID
+  contractTitle:string;//合同标题
+  contractNum:string;//合同编号
+  resourceId:string;//资方ID
   isSign:boolean;//是否需要送签
   createTime:string;//合同创建时间
-  updateTime:string;//合同签署时间
-  rrl:string;//合同路径
-  status:number;//状态
-  statusName:string;//状态名
+  eSignatureTime:string;//合同签署时间
+  comfirmDate:string;//合同签署时间
+  eSignatureStatus:number|string;//状态
+  eSignatureStatusDic:string;//状态名
 
-  initByObj(obj:any):Contract{
+  init(obj?:any):Contract{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.id=obj.id;
-      this.twId=obj.twId;
-      this.borrowApplyId=obj.borrowApplyId;
-      this.companyName=obj.companyName;
-      this.title=obj.title;
-      this.docNum=obj.docNum;
-      this.fileId=obj.fileId;
-      this.capitalId=obj.capitalId;
-      this.isSign=!!obj.isSign;
-      this.createTime=obj.createTime;
-      this.updateTime=obj.updateTime;
-      this.rrl=obj.rrl;
-      this.status=parseInt(obj.status);
-      this.statusName=obj.statusName;
+      instance.contractId=obj.contractId;
+      instance.eSignatureId=obj.eSignatureId;
+      instance.borrowApplyId=obj.borrowApplyId;
+      instance.companyName=obj.companyName;
+      instance.fileLoadId=obj.fileLoadId;
+      instance.contractTitle=obj.contractTitle;
+      instance.contractNum=obj.contractNum;
+      instance.resourceId=obj.resourceId;
+      instance.isSign=!!obj.isSign;
+      instance.createTime=obj.createTime;
+      instance.eSignatureTime=obj.eSignatureTime;
+      instance.eSignatureStatus=obj.eSignatureStatus;
+      instance.eSignatureStatusDic=obj.eSignatureStatusDic;
+      return instance;
     }
-    return this;
+  }
+  static create(obj?:any):Contract{
+   return new Contract().init(obj);
   }
 }

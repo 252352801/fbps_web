@@ -6,10 +6,11 @@ import { routing } from './app.routing';
 import {LayoutModule} from 'dolphinng';
 import {NavModule} from 'dolphinng';
 
-import {ContractDetailsComponent} from './data/contract/details/details.component';//合同详情
+import {ContractDetailsPageComponent} from './data/contract/details/details.component';//合同详情
 
 import {SharedModule} from './shared/shared.module';
 import {SharedService} from './shared/shared.service';
+import {CommonService} from '../services/common/common.service';
 import {MyInjector} from './shared/myInjector.service';
 
 import { AppComponent } from './app.component';
@@ -43,17 +44,7 @@ import {MyHttpClientInterceptor} from '../services/myHttp/myHttpClient.intercept
     IndexComponent,
     DemoComponent,
     ModifyPasswordComponent,
- /*   RootContainerComponent,
-    AsideLeftComponent,*/
-/*    HeaderComponent,
-    HeaderLeftComponent,
-    HeaderRightComponent,*/
-/*    NavWrapComponent,
-    NavItemComponent,
-    SubNavItemComponent,
-    ThirthNavItemComponent,*/
-
-    ContractDetailsComponent
+    ContractDetailsPageComponent
   ],
   imports: [
     routing,
@@ -74,7 +65,7 @@ import {MyHttpClientInterceptor} from '../services/myHttp/myHttpClient.intercept
     OauthService,
     ParameterService,
     SharedService,
-
+    CommonService,
     PopService,
     Toaster,
 

@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../../../shared/shared.module';
 import {RolloverComponent}   from './rollover.component';
-import {AcceptComponent}   from './accept/accept.component';
 import {ConfigComponent}   from './config/config.component';
+import {RolloverUploadVoucherComponent}   from './upload-voucher/upload-voucher.component';
 import {RolloverDetailsComponent}   from './details/details.component';
 import {routing} from './rollover.routing';
 import {RolloverService} from './rollover.service';
@@ -11,8 +11,8 @@ import {RolloverService} from './rollover.service';
   declarations: [
     RolloverDetailsComponent,
     RolloverComponent,
-    AcceptComponent,
-    ConfigComponent
+    ConfigComponent,
+    RolloverUploadVoucherComponent
   ],
   providers:[RolloverService]
 })

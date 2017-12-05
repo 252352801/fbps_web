@@ -7,126 +7,198 @@
 </div>
 
 <div class="wrapper-md">
-  <div class="group pad-def mar-b-sm">
-    <table class="table no-border  no-margin">
-      <tbody>
-      <tr>
-        <td class="table-label" width="12%">展期单号：</td>
-        <td class="text-default" width="38%"> {{rollover.rolloverApplyId|nullReplace}}</td>
-        <td class="table-label" width="12%">申请日期：</td>
-        <td  class="text-default" width="38%">{{rollover.createTime|date:'yyyy-MM-dd'|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label" width="12%">企业名称：</td>
-        <td  class="text-default" width="38%">{{rollover.companyName|nullReplace}}</td>
-        <td class="table-label">展期开始日期：</td>
-        <td  class="text-default">
-          <div class="inline-block">
-            {{rollover.rolloverTime|date:'yyyy-MM-dd'|nullReplace}}
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="table-label">展期金额：</td>
-        <td  class="text-default">
-          <span >{{rollover.repaymentPrinciple|currencyFormat:'xx 元'|nullReplace}}</span>
-        </td>
-        <td class="table-label">还款期数：</td>
-        <td  class="text-default">
-          <div class="input-unit-wrap">
-            {{rollover.repaymentPlan|currencyFormat:[0,0,'第 xx 期']|nullReplace}}
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="table-label">展期保证金：</td>
-        <td  class="text-default">
-          <div class="input-unit-wrap">
-            {{rolloverSvc.mul(rollover.repaymentPrinciple,product.rolloverDeposit)|currencyFormat:'xx 元'|nullReplace}}
-          </div>
-        </td>
-        <td class="table-label">本期利息：</td>
-        <td  class="text-default">
-          <span class="form-control-static">
-            {{getRolloverInterest()|currencyFormat:'xx 元'|nullReplace}}
-          </span>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="table-label">状态：</td>
-        <td  class="text-default">
-          {{rollover.statusName|nullReplace}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group  mar-b-sm clearfix">
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">展期单号：</div>
+      <div class="v-table-cell text-default">{{rollover.rolloverApplyId|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">创建时间：</div>
+      <div class="v-table-cell text-default">{{rollover.createTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">状态：</div>
+      <div class="v-table-cell text-default">{{rollover.statusName|nullReplace}}</div>
+    </div>
   </div>
-  <div class="group pad-def mar-b-sm">
-    <div class="group-title">贷款信息</div>
-    <table class="table no-border no-margin">
-      <tbody>
-      <tr>
-        <td class="table-label" width="12%">贷款单号：</td>
-        <td  class="text-default" width="38%">{{loan.borrowApplyId|nullReplace}}</td>
-        <td class="table-label" width="12%">放款日期：</td>
-        <td  class="text-default" width="38%">{{loan.loanTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label" width="12%">贷款金额：</td>
-        <td class="text-default" width="38%">
-          {{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}
-        </td>
-        <td class="table-label" width="12%">贷款产品：</td>
-        <td  class="text-default" width="38%">{{loan.productName|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label">贷款周期：</td>
-        <td  class="text-default">{{loan.borrowHowlong|nullReplace}}</td>
-        <td class="table-label">还款方式：</td>
-        <td  class="text-default">{{loan.repaymentWay|dictionary:'repaymentWay'|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label">利率：</td>
-        <td  class="text-default">{{loan.rate|percent|nullReplace}}</td>
-        <td class="table-label">计息方式：</td>
-        <td  class="text-default">{{loan.rateType|dictionary:'interestType'|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="table-label">还款计划：</td>
-        <td colspan="3" style="padding: 15px 15px 5px 15px;">
-          <table class="table table-bordered  no-margin">
-            <thead class="bg-default">
-            <tr>
-              <th class="text-center">期数</th>
-              <th class="text-center">还款日期</th>
-              <th class="text-center">应还本金(元)</th>
-              <th class="text-center">应还利息(元)</th>
-              <th class="text-center">罚息(元)</th>
-              <th class="text-center">应还总额(元)</th>
-              <th class="text-center">状态</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr  *ngFor="let repayPlan of repayPlans" >
-              <td class="text-center">第{{repayPlan.repaymentPlan}}期</td>
-              <td class="text-center">{{repayPlan.repaymentPlanDate|date:'yyyy-MM-dd'}}</td>
-              <td class="text-right text-gold">{{repayPlan.repaymentPrinciple|currencyFormat|nullReplace}}</td>
-              <td class="text-right text-gold">{{repayPlan.repaymentInterest|currencyFormat|nullReplace}}</td>
-              <td class="text-right text-gold">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
-              <td class="text-right text-gold">{{repayPlan.repayRelAmount|currencyFormat|nullReplace}}</td>
-              <td class="text-center">
-                <span>{{repayPlan.statusName}}</span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group  mar-b-sm clearfix">
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">企业名称：</div>
+      <div class="v-table-cell text-default">{{rollover.companyName|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">展期金额：</div>
+      <div class="v-table-cell text-default">
+        {{rollover.repaymentCapital|currencyFormat:'xx 元'|nullReplace}}
+      </div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">保证金：</div>
+      <div class="v-table-cell text-default">
+        {{rollover.rolloverDeposit|currencyFormat:'xx 元'|nullReplace}}
+      </div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">当期利息：</div>
+      <div class="v-table-cell text-default">
+        {{rollover.repaymentInterest|currencyFormat:'xx 元'|nullReplace}}
+      </div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">展期利率：</div>
+      <div class="v-table-cell text-default">{{(rollover.rolloverRate||null)|percent|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">承诺还款日期：</div>
+      <div class="v-table-cell text-default">{{rollover.rolloverDate|date:'yyyy-MM-dd'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs" *ngIf="progress.isSecondReview">
+      <div class="v-table-cell w-em-7 bold">批准还款日期：</div>
+      <div class="v-table-cell text-default">{{rollover.comfirmRolloverDate|date:'yyyy-MM-dd'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs" *ngIf="rollover.realRolloverDate">
+      <div class="v-table-cell w-em-7 bold">实际还款日期：</div>
+      <div class="v-table-cell text-default">{{rollover.realRolloverDate|date:'yyyy-MM-dd'|nullReplace}}</div>
+    </div>
+  </div>
+  <div class="group mar-b-sm clearfix" *ngIf="progress.isUploadedVoucher||progress.isConfiguredContract">
+    <div class="v-table col-md-12 mar-b-xs" *ngIf="progress.isUploadedVoucher">
+      <div class="v-table-cell w-em-7 bold">展期凭证：</div>
+      <div class="v-table-cell text-default">
+        <file-buttons [isLoadFile]="true" [fileId]="rollover.fileLoadId"
+                      (preview)="previewer.open($event,'展期凭证-预览')"
+                      (previewImage)="gallery.open($event)">
+        </file-buttons>
+      </div>
+    </div>
+    <div class="v-table col-md-12 mar-b-xs" *ngIf="progress.isConfiguredContract">
+      <div class="v-table-cell w-em-7 ">
+        <label class="no-margin bold">展期合同：</label>
+      </div>
+      <div class="v-table-cell">
+        <table class="table table-bordered no-margin bg-white" style="margin-bottom: 5px;" *ngIf="contracts.length>0">
+          <thead  *ngIf="contracts.length>0" class="bg-default">
+          <th >合同编号</th>
+          <th >合同标题</th>
+          <th >公司名称</th>
+          <th>是否送签</th>
+          <th >操作</th>
+          </thead>
+          <tbody>
+          <tr *ngFor="let contract of contracts">
+            <td >{{contract.contractNum}}</td>
+            <td >{{contract.contractTitle}}</td>
+            <td >{{contract.companyName}}</td>
+            <td >
+              <span *ngIf="contract.isSign==0">是</span>
+              <span *ngIf="contract.isSign==1">否</span>
+            </td>
+            <td style="width:10em" >
+              <div class="table-btn-group">
+                <a class="table-btn" (click)="contractDetails.open(contract)" title="详情">详情</a>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm clearfix">
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">贷款单号：</div>
+      <div class="v-table-cell text-default">{{loan.borrowApplyId|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">还款期数：</div>
+      <div class="v-table-cell text-default">{{rollover.currentPeriodStr|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">贷款金额：</div>
+      <div class="v-table-cell text-default">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">贷款产品：</div>
+      <div class="v-table-cell text-default">{{loan.productName|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">贷款周期：</div>
+      <div class="v-table-cell text-default">{{loan.ratedCycle|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">还款方式：</div>
+      <div class="v-table-cell text-default">{{loan.paymentWay|dictionary:'payment_way'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">利率：</div>
+      <div class="v-table-cell text-default">{{loan.rate|percent|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-6 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold">计息方式：</div>
+      <div class="v-table-cell text-default">{{loan.rateType|dictionary:'interest_type'|nullReplace}}</div>
+    </div>
+    <div class="v-table col-md-12 mar-b-xs">
+      <div class="v-table-cell w-em-7 bold" style="vertical-align: top">还款计划：</div>
+      <div class="v-table-cell">
+        <repay-plans [data]="loan.borrowApplyId"></repay-plans>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm  clearfix" *ngIf="progress.isFirstReview">
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">一审人员：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditOneBy|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">一审时间：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditOneTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">一审意见：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditOneRemarks|nullReplace}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="group mar-b-sm  clearfix" *ngIf="progress.isSecondReview">
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">二审人员：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditTwoBy|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">二审时间：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditTwoTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mar-b-sm">
+      <div class="v-table full-w">
+        <div class="v-table-cell w-em-8 bold">二审意见：</div>
+        <div class="v-table-cell text-default">
+          {{rollover.auditTwoRemarks|nullReplace}}
+        </div>
+      </div>
+    </div>
   </div>
   <div class="text-center"><button class="btn-def " btnBack>返回<i class="fa fa-arrow-circle-o-left"></i></button>
   </div>
 </div>
+<contract-details  [mode]="1" #contractDetails></contract-details>
+<previewer #previewer></previewer>
+<gallery #gallery size="md"></gallery>

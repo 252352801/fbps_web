@@ -67,7 +67,7 @@
         还款方式
       </ng-template>
       <ng-template let-loan="rowData" pTemplate="body">
-        {{loan.repaymentWay|dictionary:'repaymentWay'}}
+        {{loan.paymentWay|dictionary:'payment_way'}}
       </ng-template>
     </p-column>
     <p-column   [style]="{'width':'120px'}">
@@ -75,7 +75,7 @@
         状态
       </ng-template>
       <ng-template let-loan="rowData" pTemplate="body">
-        <span class="cur-poi text-info" (click)="sysLog.open(loan.borrowApplyId)">{{loan.status|dictionary:'loanStatus'}}</span>
+        <span class="cur-poi text-info" (click)="sysLog.open(loan.borrowApplyId)">{{loan.status|dictionary:'loan_status'}}</span>
       </ng-template>
     </p-column>
     <p-column field="remark" header="备注" [style]="{'width':'150px'}">

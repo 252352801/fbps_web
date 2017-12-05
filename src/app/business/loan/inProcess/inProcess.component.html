@@ -15,7 +15,7 @@
       <input class="form-control " placeholder="企业名称关键字" [(ngModel)]="params.companyName" name="companyName"/>
     </div>
     <div class="form-group">
-      <button class="btn-def" (click)="paginator.reset();navigate()">搜索<i class="fa fa-search"></i></button>
+      <button class="btn-def" (click)="paginator.reset();navigate();query()">搜索<i class="fa fa-search"></i></button>
       <!--          <button type="button"  class="btn btn-primary" [ngClass]="{'cursor-wait':loading}"
                         (click)="paginator.reset();navigate()" ><i class="fa fa-search"></i>搜索</button>-->
       <!--   <button type="button"  class="btn btn-default" (click)="resetParams()" >
@@ -56,7 +56,7 @@
               </div>
             </ng-template>
           </p-column>
-          <p-column styleClass="text-center" [style]="{'width':'120px'}">
+          <p-column styleClass="text-center" [style]="{'width':'110px'}">
             <ng-template pTemplate="header" >
               还款日
             </ng-template>
@@ -64,12 +64,12 @@
               {{loan.limitTime|date:'yyyy-MM-dd'|nullReplace}}
             </ng-template>
           </p-column>
-          <p-column styleClass="text-right text-gold" [style]="{'width':'120px'}">
+          <p-column styleClass="text-right text-gold" [style]="{'width':'140px'}">
             <ng-template pTemplate="header" >
-              应还金额(元)
+              最终确认金额(元)
             </ng-template>
             <ng-template let-loan="rowData" pTemplate="body">
-              {{loan.repayRelAmount|currencyFormat|nullReplace}}
+              {{loan.approveAmount|currencyFormat|nullReplace}}
             </ng-template>
           </p-column>
           <p-column styleClass="text-center" [style]="{'width':'120px'}">
@@ -77,7 +77,9 @@
               状态
             </ng-template>
             <ng-template let-loan="rowData" pTemplate="body">
-              <span class="cur-poi text-info" (click)="sysLog.open(loan.borrowApplyId)">{{loan.status|dictionary:'loanStatus'}}</span>
+              <div class="text-info" textMaxLength="120px" title="{{loan.status|dictionary:'loan_status'}}">
+                <span class="cur-poi" (click)="sysLog.open(loan.borrowApplyId)">{{loan.status|dictionary:'loan_status'}}</span>
+              </div>
             </ng-template>
           </p-column>
           <!-- <p-column field="remarks" header="备注" styleClass="text-center"></p-column>-->
@@ -87,7 +89,7 @@
             </ng-template>
             <ng-template let-loan="rowData" pTemplate="body">
               <div class="table-btn-group">
-                <a class="table-btn" (click)="openRepaymentPlanModal(loan.borrowApplyId)">还款计划</a>
+                <a class="table-btn" (click)="repayPlans.open(loan.borrowApplyId)">还款计划</a>
                 <a class="table-btn" routerLink="/business/loan/inProcess/details/{{loan.borrowApplyId}}">详情</a>
               </div>
             </ng-template>
@@ -111,58 +113,8 @@
   </div>
 </div>
 
-<modal [(visible)]="modalRepaymentPlan.visible" size="lg">
-  <modal-header>还款计划</modal-header>
-  <modal-body>
-    <p class="pad-def text-disabled text-center" *ngIf="modalRepaymentPlan.loading"></p>
-    <table class="table table-bordered no-margin bg-white" *ngIf="!modalRepaymentPlan.loading">
-      <thead class="bg-default">
-      <tr>
-        <th class="text-center">期数</th>
-        <th class="text-center">还款日</th>
-        <th class="text-center">应还本金(元)</th>
-        <th class="text-center">应还利息(元)</th>
-        <th class="text-center">罚息(元)</th>
-        <th class="text-center">应还总额(元)</th>
-        <th class="text-center">状态</th>
-        <th class="text-center">操作</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let repayPlan of modalRepaymentPlan.data" [ngClass]="{'text-disabled':repayPlan.status===1}">
-        <td class="text-center">{{repayPlan.repaymentPlan}}/{{modalRepaymentPlan.data.length}}期</td>
-        <td class="text-center">{{repayPlan.repaymentPlanDate|date:'yyyy-MM-dd'}}</td>
-        <td class="text-right text-gold">{{repayPlan.repaymentPrinciple|currencyFormat|nullReplace}}</td>
-        <td class="text-right text-gold">{{repayPlan.repaymentInterest|currencyFormat|nullReplace}}</td>
-        <td class="text-right text-gold">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
-        <td class="text-right text-gold">{{repayPlan.repayRelAmount|currencyFormat|nullReplace}}</td>
-        <td class="text-center">
-          {{repayPlan.statusName}}
-        </td>
-        <td class="text-center">
-          <div class="table-btn-group">
-            <!--    <a class="table-btn text-info">展期</a>-->
-            <a class="table-btn text-info" *ngIf="repayPlan.status===0&&oauth.roleIn(['003','010'])"
-               routerLink="/business/loan/repayment/repay/{{repayPlan.borrowApplyId}}/{{repayPlan.repaymentPlan}}">还款</a>
-          </div>
-        </td>
-      </tr>
-      <!--            <tr>
-                      <td class="text-center">总计</td>
-                      <td></td>
-                      <td class="text-right">300,000.00</td>
-                      <td class="text-right">6,000.00</td>
-                      <td></td>
-                      <td></td>
-                  </tr>-->
-      </tbody>
-    </table>
-  </modal-body>
-  <modal-footer styleClass="no-t-padding">
-    <button class="btn btn-default" (click)="closeRepaymentPlanModal()">
-      关闭
-    </button>
-  </modal-footer>
-</modal>
+
 
 <system-logs #sysLog [mode]="1" title="操作记录" [isShowType]="false" [isShowId]="false"></system-logs>
+
+<repay-plans [mode]="1" #repayPlans [isBtnRepay]="true"></repay-plans>

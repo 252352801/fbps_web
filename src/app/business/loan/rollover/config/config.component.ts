@@ -9,8 +9,9 @@ import {RolloverService} from '../rollover.service';
 import { RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
 import { Contract} from '../../../../../services/entity/Contract.entity';
 import {fadeInAnimation} from '../../../../../animations/index';
-import {api_file} from '../../../../../services/config/app.config';
-import { Product} from '../../../../../services/entity/Product.entity';
+import {BusinessService} from '../../../business.service';
+import { CommonService} from '../../../../../services/common/common.service';
+import { SharedService} from '../../../../shared/shared.service';
 @Component({
   selector: 'rollover-config',
   templateUrl: './config.component.html',
@@ -21,7 +22,6 @@ import { Product} from '../../../../../services/entity/Product.entity';
   host: {'[@fadeInAnimation]': ''}
 })
 export class ConfigComponent implements OnInit{
-  isPassed:boolean=false;
   rollover:Rollover=new Rollover();//展期详情
   loan:Loan=new Loan();//贷款详情
   repayPlans:RepayPlan[]=[];//还款计划
@@ -41,11 +41,14 @@ export class ConfigComponent implements OnInit{
     visible: false
   };
 
-  downloadFileAddr:string=api_file.download;
+  //firstReviewInfo:ReviewInfo=new ReviewInfo();//一审信息
+  //secondRevi/ewInfo:ReviewInfo=new ReviewInfo();//二审信息
 
-  product:Product=new Product();
   constructor(
     private pop:PopService,
+    public commonSvc:CommonService,
+    public sharedSvc:SharedService,
+    public businessSvc:BusinessService,
     public rolloverSvc:RolloverService,
     private configSvc:ConfigService,
     private actRoute:ActivatedRoute,
@@ -58,12 +61,11 @@ export class ConfigComponent implements OnInit{
     this.rolloverSvc.getRolloverById(id)
       .then((res)=>{
         this.rollover=res;
-        return this.rolloverSvc.getLoanById(res.borrowApplyId);
+        return this.businessSvc.getLoanById(res.borrowApplyId);
       })
       .then((res)=>{
         this.loan=res;
-        this.loadProduct(this.loan.productId);
-        return this.rolloverSvc.getRepayPlans(this.loan.borrowApplyId);
+        return this.businessSvc.getRepayPlans(this.loan.borrowApplyId);
       })
       .then((res)=>{
         this.repayPlans=res;
@@ -71,14 +73,54 @@ export class ConfigComponent implements OnInit{
       .catch((err)=>{
       });
     this.loadContracts();
+    //this.getReviewInfo();
   }
 
-  loadProduct(prodId:string){
-    this.rolloverSvc.getProductById(prodId)
+
+  /**
+   * 获取审核信息
+   */
+ /* getReviewInfo(){
+    let applyId=this.actRoute.snapshot.params['id'];
+    let body1={//一审
+      type:2,
+      id:applyId,
+      status2:2
+    };
+    this.commonSvc.querySystemLog(body1)
       .then((res)=>{
-        this.product=res;
-      });
-  }
+        console.log(res);
+        for(let o of res.items){
+          if(o.status==body1.status2){
+            this.firstReviewInfo.operator=o.createBy;
+            this.firstReviewInfo.reviewTime=o.createTime;
+            this.firstReviewInfo.opinion=o.remarks;
+            break;
+          }
+        }
+      })
+      .catch((err)=>{});
+    let body2={//二审
+      type:2,
+      id:applyId,
+      status2:3
+    };
+    this.commonSvc.querySystemLog(body2)
+      .then((res)=>{
+        console.log(res);
+        for(let o of res.items){
+          if(o.status==body2.status2){
+            this.secondReviewInfo.operator=o.createBy;
+            this.secondReviewInfo.reviewTime=o.createTime;
+            this.secondReviewInfo.opinion=o.remarks;
+            break;
+          }
+        }
+      })
+      .catch((err)=>{});
+
+  }*/
+
 
   openConfirmModal(){
     this.modalConfirm.submitted=false;
@@ -111,14 +153,11 @@ export class ConfigComponent implements OnInit{
       this.modalConfirm.submitted=true;
       let body={
         rolloverApplyId:this.rollover.rolloverApplyId,
-        status:205,
-        remarks:this.opinion,
-        auditOneBy:this.auditOneBy,
+        operator:this.auditOneBy,
       };
-      this.rolloverSvc.approve(body)
+      this.configSvc.finishContract(body)
         .then((res)=>{
-          this.closeConfirmModal();
-          if(res.status){
+          if(res.ok){
             this.pop.info({
               text:'已成功配置合同！'
             }).onClose(()=>{
@@ -142,7 +181,8 @@ export class ConfigComponent implements OnInit{
   }
 
   openContractEditor() {
-    this.contractEditor.associateId = this.actRoute.snapshot.params['id'];
+    let id=(this.rollover&&this.rollover.rolloverApplyId)|| this.actRoute.snapshot.params['id'];
+    this.contractEditor.associateId =id;//关联ID
     this.contractEditor.borrowApplyId = this.loan.borrowApplyId;
     this.contractEditor.visible = true;
   }
@@ -151,7 +191,7 @@ export class ConfigComponent implements OnInit{
    * 加载合同
    */
   loadContracts(){
-    this.configSvc.loadContracts({
+    this.sharedSvc.queryContracts({
       borrowApplyId:this.actRoute.snapshot.params['id'],
       page:1,
       rows:100000
@@ -162,7 +202,6 @@ export class ConfigComponent implements OnInit{
   }
 
   removeContract(id: string) {
-
     this.pop.confirm({
       text:'确定要删除这个合同？',
       showLoaderOnConfirm:true,
@@ -183,18 +222,4 @@ export class ConfigComponent implements OnInit{
     })
   }
 
-  /**
-   * 本期利息
-   * @returns {any}
-   */
-  getRolloverInterest():number|string{
-    if(this.rollover.repaymentPlan&&this.repayPlans.length){
-      for(let o of this.repayPlans){
-        if(o.repaymentPlan==this.rollover.repaymentPlan){
-          return o.repaymentInterest;
-        }
-      }
-    }
-    return null;
-  }
 }

@@ -1,4 +1,4 @@
-import {Component,OnInit,OnChanges,SimpleChanges,ElementRef, Input, Output,ViewChild} from '@angular/core';
+import {Component,OnInit,OnChanges,SimpleChanges,ElementRef, Input, Output,ViewChild,EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'previewer',
@@ -12,6 +12,8 @@ export class PreviewerComponent implements OnInit,OnChanges{
   title:string='';
   url:string='';
 
+  @Output() onOpen:EventEmitter<any>=new EventEmitter();
+  @Output() onClose:EventEmitter<any>=new EventEmitter();
   @ViewChild('iframe') iframe:ElementRef;
   constructor(
   ) {
@@ -25,9 +27,11 @@ export class PreviewerComponent implements OnInit,OnChanges{
     setTimeout(()=>{
       this.iframe.nativeElement.setAttribute('src',this.url);
     });
+    this.onOpen.emit(this.visible);
   }
   close(){
     this.visible=false;
+    this.onClose.emit(this.visible);
   }
   ngOnInit(){
 

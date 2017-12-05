@@ -1,0 +1,73 @@
+<modal size="lg" *ngIf="mode==1" #contentModal>
+  <modal-header>还款计划</modal-header>
+  <modal-body>
+    <div *ngTemplateOutlet="content"></div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <button class="btn btn-default" (click)="contentModal.close()">关闭</button>
+  </modal-footer>
+</modal>
+<div *ngIf="mode==0">
+  <ng-container *ngTemplateOutlet="content">
+  </ng-container>
+</div>
+<ng-template #content>
+  <table class="table table-bordered no-margin bg-white">
+    <thead class="bg-default">
+    <tr>
+      <th class="text-center" *ngIf="isCurrentPeriod">期数</th>
+      <th class="text-center" *ngIf="isRepaymentDate">计划还款日</th>
+      <th class="text-center" *ngIf="isRepaymentRelDate">实际还款日</th>
+      <th class="text-center" *ngIf="isRepaymentCapital">应还本金(元)</th>
+      <th class="text-center" *ngIf="isRepaymentInterest">应还利息(元)</th>
+      <th class="text-center" *ngIf="isOverdueInterest">罚息(元)</th>
+      <th class="text-center" *ngIf="isRepaymentAmount">应还总额(元)</th>
+      <th class="text-center" *ngIf="isTotalRelAmount">累计已还金额(元)</th>
+      <th class="text-center" *ngIf="isStatus">状态</th>
+      <th class="text-center" *ngIf="isBtnDetail||isBtnRepay">操作</th>
+      <th class="text-center" *ngIf="isBtnRollover">是否展期</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let repayPlan of repayPlans" >
+      <td class="text-center" *ngIf="isCurrentPeriod">{{repayPlan.currentPeriod}}/{{repayPlan.totalPeriod}}期</td>
+      <td class="text-center" *ngIf="isRepaymentDate">{{repayPlan.repaymentDate|date:'yyyy-MM-dd'}}</td>
+      <td class="text-center" *ngIf="isRepaymentRelDate">{{repayPlan.repaymentRelDate|date:'yyyy-MM-dd'}}</td>
+      <td class="text-right text-gold" *ngIf="isRepaymentCapital">{{repayPlan.repaymentCapital|currencyFormat|nullReplace}}</td>
+      <td class="text-right text-gold" *ngIf="isRepaymentInterest">{{repayPlan.repaymentInterest|currencyFormat|nullReplace}}</td>
+      <td class="text-right text-gold" *ngIf="isOverdueInterest">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
+      <td class="text-right text-gold" *ngIf="isRepaymentAmount">{{repayPlan.repaymentAmount|currencyFormat|nullReplace}}</td>
+      <td class="text-right text-gold" *ngIf="isTotalRelAmount">{{repayPlan.totalRelAmount|currencyFormat|nullReplace}}</td>
+      <td class="text-center" *ngIf="isStatus">{{repayPlan.status|dictionary:'repay_plan_status'}}</td>
+      <td class="text-center" *ngIf="isBtnDetail||isBtnRepay">
+        <div class="table-btn-group">
+          <a class="table-btn text-info" *ngIf="isBtnDetail"
+             >详情</a>
+          <a class="table-btn text-info" *ngIf="isBtnRepay&&repayPlan.status===1&&oauth.roleIn(['003','010'])"
+             routerLink="/business/loan/repayment/repay/{{repayPlan.borrowApplyId}}/{{repayPlan.currentPeriod}}">还款</a>
+        </div>
+      </td>
+      <td class="text-center" *ngIf="isBtnRollover">
+        <a class="text-info" routerLink="/business/loan/rollover/details/{{repayPlan.rolloverApplyId}}"
+           *ngIf="repayPlan.rolloverApplyId">是</a>
+        <span class="" *ngIf="!repayPlan.rolloverApplyId">否</span>
+      </td>
+    </tr>
+    <!--            <tr>
+                    <td class="text-center">总计</td>
+                    <td></td>
+                    <td class="text-right">300,000.00</td>
+                    <td class="text-right">6,000.00</td>
+                    <td></td>
+                    <td></td>
+                </tr>-->
+    <tr *ngIf="loading">
+      <td colspan="12" class="text-center text-disabled">正在加载...</td>
+    </tr>
+    <tr *ngIf="!loading&&repayPlans.length===0">
+      <td colspan="12" class="text-center text-disabled">无还款计划</td>
+    </tr>
+    </tbody>
+  </table>
+</ng-template>
+

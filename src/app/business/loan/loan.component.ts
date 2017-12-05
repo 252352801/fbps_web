@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
 import { Router} from '@angular/router';
 @Component({
-    selector: 'loan',
+    selector: 'loaning',
     templateUrl: './loan.component.html',
     styleUrls: ['./loan.component.less'],
 })

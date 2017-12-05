@@ -20,14 +20,10 @@
                opt-max="{{currentTime}}"/>
       </div>
     </div>
-    <div class="form-group">
-      <label class="control-label">合同编号：</label>
-      <input class="form-control" placeholder="合同编号" [(ngModel)]="params.docNum" name="docNum" />
-    </div>
     <div class="form-group ">
       <label class="control-label">状态：</label>
-      <select class="form-control" [(ngModel)]="params.status" name="status">
-        <option *ngFor="let opt of statusOptions" [value]="opt.value">{{opt.name}}</option>
+      <select class="form-control" [(ngModel)]="params.eSignatureStatus" name="status">
+        <option *ngFor="let opt of statusOptions" [value]="opt.value">{{opt.label}}</option>
       </select>
     </div>
     <div class="form-group">
@@ -38,17 +34,17 @@
                [loading]="loading" scrollable="true" scrollHeight="375px">
 <!--    <p-column field="id" header="合同ID" styleClass="text-center"></p-column>
     <p-column field="twId" header="天威合同ID" styleClass="text-center"></p-column>-->
-    <p-column field="docNum" header="合同编号" [style]="{'width':'140px'}">
+    <p-column field="contractNum" header="合同编号" [style]="{'width':'140px'}">
       <ng-template  let-contract="rowData" pTemplate="body">
-        <div textMaxLength="140px" title="{{contract.docNum}}">
-        {{contract.docNum}}
+        <div textMaxLength="140px" title="{{contract.contractNum}}">
+        {{contract.contractNum}}
           </div>
       </ng-template>
     </p-column>
-    <p-column field="title" header="合同标题" [style]="{'width':'150px'}">
+    <p-column field="contractTitle" header="合同标题" [style]="{'width':'150px'}">
       <ng-template let-contract="rowData" pTemplate="body">
-        <div textMaxLength="150px" title="{{contract.title}}">
-          {{contract.title}}
+        <div textMaxLength="150px" title="{{contract.contractTitle}}">
+          {{contract.contractTitle}}
         </div>
       </ng-template>
     </p-column>
@@ -68,8 +64,8 @@
     </p-column>
     <p-column field="capitalId" header="乙方" [style]="{'width':'150px'}">
       <ng-template let-contract="rowData" pTemplate="body">
-        <div textMaxLength="150px" title="{{matchCapitalName(contract.capitalId)}}">
-          {{matchCapitalName(contract.capitalId)}}
+        <div textMaxLength="150px" title="{{matchCapitalName(contract.resourceId)}}">
+          {{matchCapitalName(contract.resourceId)}}
         </div>
       </ng-template>
     </p-column>
@@ -82,7 +78,7 @@
     </p-column>
    <!-- <p-column field="companyName" header="公司名称" styleClass="text-center"></p-column>-->
   <!--  <p-column field="updateTime" header="签署时间" styleClass="text-center"></p-column>-->
-    <p-column field="statusName" header="状态" styleClass="text-center" [style]="{'width':'120px'}"></p-column>
+    <p-column field="eSignatureStatusDic" header="状态" styleClass="text-center" [style]="{'width':'120px'}"></p-column>
     <p-column [style]="{'width':'80px'}" styleClass="text-center">
       <ng-template pTemplate="header"  >
         操作

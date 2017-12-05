@@ -15,31 +15,48 @@ export class User {
   subsystem:SubSystem;
   expiresIn:number;
   isManager:boolean;//是否是主管
-  initByObj(obj:any):User{
-    if(typeof obj==='object'){
-      this.accessToken=obj.accessToken;
-      this.mobile=obj.mobile;
-      this.departCode=obj.departCode;
-      this.employeeId=obj.employeeId;
-      this.employeeName=obj.employeeName;
-      this.expiresIn=obj.expiresIn*1000;
-      this.isManager=!!obj.isManager;
-      if(obj['subsysFuncs'] instanceof Array){
-        this.subsysFuncs=[];
-        for(let o of obj['subsysFuncs']){
-          this.subsysFuncs.push(new SubSystemFunction().initByObj(o));
-        }
-      }
-      if(obj['roles'] instanceof Array){
-        this.roles=[];
-        for(let o of obj['roles']){
-          this.roles.push(new Role().initByObj(o));
-        }
-      }
-      if(typeof obj['subsystem']==='object'){
-        this.subsystem=new SubSystem().initByObj(obj['subsystem']);
-      }
-    }
-    return this;
+
+  /**
+   * 初始化
+   * @param obj
+   * @returns {User}
+   */
+   init(obj?:any):User{
+     let instance=this;
+     if(obj&&typeof obj==='object'){
+       instance.accessToken=obj.accessToken;
+       instance.mobile=obj.mobile;
+       instance.departCode=obj.departCode;
+       instance.employeeId=obj.employeeId;
+       instance.employeeName=obj.employeeName;
+       instance.expiresIn=obj.expiresIn*1000;
+       instance.isManager=!!obj.isManager;
+       if(obj['subsysFuncs'] instanceof Array){
+         instance.subsysFuncs=[];
+         for(let o of obj['subsysFuncs']){
+           instance.subsysFuncs.push(new SubSystemFunction().init(o));
+         }
+       }
+       if(obj['roles'] instanceof Array){
+         instance.roles=[];
+         for(let o of obj['roles']){
+           instance.roles.push(new Role().init(o));
+         }
+       }
+       if(typeof obj['subsystem']==='object'){
+         instance.subsystem=new SubSystem().init(obj['subsystem']);
+       }
+     }
+     return instance;
+  }
+
+  /**
+   * 新建一个实例
+   * @param obj
+   * @returns {User}
+   */
+  static create(obj?:any):User{
+    let instance=new User();
+    return instance.init(obj);
   }
 }

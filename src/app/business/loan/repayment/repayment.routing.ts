@@ -19,7 +19,7 @@ const routes: Routes = <Routes>[
   {
     path: 'accept/:id',
     component: AcceptComponent,
-    data: {title: '受理还款',roleIn:['003','010']},
+    data: {title: '受理还款',roleIn:['001','010']},
     canActivate: [OauthGuard]
   },
   {

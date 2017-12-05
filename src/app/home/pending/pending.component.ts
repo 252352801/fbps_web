@@ -150,27 +150,28 @@ export class PendingComponent implements OnInit,OnDestroy{
     this.pendingSvc.queryLoans({//查询逾期通知
       rows: 1,
       page: 1,
-      status: 401
+      status: '8,9',
+      isOver:1
     }) .then((data)=> {
       this.notifyData.overdue.count = data.count;
     });
     this.pendingSvc.queryLoans({//查询即将到期通知
       rows: 1,
       page: 1,
-      status: 207,
+      status: '8,9',
       limitDay: 7,
     }) .then((data)=> {
       this.notifyData.willExpire.count = data.count;
     });
-    this.pendingSvc.queryLoans({//查询已确认合同通知
+    this.pendingSvc.queryLoans({//查询待放款
       rows: 1,
       page: 1,
-      status: 205
+      status: '6,7'
     }) .then((data)=> {
       this.notifyData.loanConfirmResponse.count = data.count;
     });
-    this.pendingSvc.queryRollovers({
-      status: 205,
+    this.pendingSvc.queryRollovers({//展期二审回复（二审通过）
+      status: 3,
       page: 1,
       rows: 1
     })
@@ -186,7 +187,7 @@ export class PendingComponent implements OnInit,OnDestroy{
   queryLoans() {
     this.tableData[0].loading = true;
     this.pendingSvc.queryLoans({
-      status: 201,
+      status: '0,1',
       page: this.tableData[0].paginator.index + 1,
       rows: this.tableData[0].paginator.size
     })
@@ -203,7 +204,7 @@ export class PendingComponent implements OnInit,OnDestroy{
   queryRepaymentNotifies() {
     this.tableData[1].loading = true;
     this.pendingSvc.queryRepaymentNotifies({
-      status:0,
+      status:1,
       page: this.tableData[1].paginator.index + 1,
       rows: this.tableData[1].paginator.size
     }).then((data)=> {
@@ -219,7 +220,7 @@ export class PendingComponent implements OnInit,OnDestroy{
   queryRollovers() {
     this.tableData[2].loading = false;
     this.pendingSvc.queryRollovers({
-      status: 201,
+      status: 0,
       page: this.tableData[2].paginator.index + 1,
       rows: this.tableData[2].paginator.size
     })

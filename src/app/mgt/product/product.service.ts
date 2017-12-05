@@ -21,6 +21,7 @@ export interface ProductBody{
   rolloverInterestValue:string|number,
   rolloverDeposit:string|number,
   overdueInterestValue:string|number,
+  penaltyRate:string|number,
   status:string|number
 }
 @Injectable()
@@ -43,7 +44,7 @@ export class ProductService{
         let product=new Product();
         let result=res;
         if(result.status===200){
-          product.initByObj(result.body);
+          product.init(result.body);
         }
         return Promise.resolve(product);
       });
@@ -66,7 +67,7 @@ export class ProductService{
         if(result.status===200){
           data.count=result.body.paginator.totalCount;
           for(let o of result.body.records){
-            let product=new Product().initByObj(o);
+            let product=new Product().init(o);
             data.items.push(product);
           }
         }
@@ -107,7 +108,7 @@ export class ProductService{
         let result = res;
         if (result.status === 200) {
           for(let o of result.body.records){
-            let prodConf = new ProductConfig().initByObj(o);
+            let prodConf = new ProductConfig().init(o);
             productConfigs.push(prodConf);
           }
         }

@@ -20,11 +20,14 @@ export class OauthGuard implements CanActivate {
     let canActivate = true;
     let data=route.routeConfig.data;
     if (data&&typeof data === 'object') {
+      //功能判断
       if ((data['fnIn'] instanceof Array) || (typeof data['fnIn'] === 'string')) {
         canActivate = this.oauth.fnIn(data['fnIn']);
       } else if ((data['fnRequire'] instanceof Array) || (typeof data['fnRequire'] === 'string')) {
         canActivate = this.oauth.fnRequire(data['fnRequire']);
-      }else if((data['roleIn'] instanceof Array) || (typeof data['roleIn'] === 'string')){
+      }
+      //角色判断
+      if((data['roleIn'] instanceof Array) || (typeof data['roleIn'] === 'string')){
         canActivate = this.oauth.roleIn(data['roleIn']);
       }else if ((data['roleRequire'] instanceof Array) || (typeof data['roleRequire'] === 'string')) {
         canActivate = this.oauth.roleRequire(data['roleRequire']);

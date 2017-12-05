@@ -12,7 +12,6 @@ export class PendingService{
    * 查询贷款申请列表
    */
   queryLoans(query:any):Promise<{count:number,items:Loan[]}>{
-
     return this.myHttp.get({
       api:this.myHttp.api.loanList,
       query:query
@@ -22,11 +21,10 @@ export class PendingService{
           count:0,
           items:[]
         };
-        let result=res;
-        if(result.status===200){
-          data.count=result.body.paginator.totalCount;
-          for(let l of result.body.records){
-            let loan=new Loan().initByObj(l);
+        if(res.status===200){
+          data.count=res.body.paginator.totalCount;
+          for(let l of res.body.records){
+            let loan=new Loan().init(l);
             data.items.push(loan);
           }
         }
@@ -37,7 +35,6 @@ export class PendingService{
           items:[]
         });
       });
-
   }
 
   /**
@@ -57,7 +54,7 @@ export class PendingService{
         if(result.status===200){
           data.count=result.body.paginator.totalCount;
           for(let o of result.body.records){
-            let repayment=new RepaymentNotify().initByObj(o);
+            let repayment=new RepaymentNotify().init(o);
             data.items.push(repayment);
           }
         }
@@ -87,7 +84,7 @@ export class PendingService{
         if(result.status===200){
           data.count=result.body.paginator.totalCount;
           for(let o of result.body.records){
-            let rollover=new Rollover().initByObj(o);
+            let rollover=new Rollover().init(o);
             data.items.push(rollover);
           }
         }

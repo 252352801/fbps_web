@@ -171,6 +171,18 @@
             <span class="input-group-addon">天</span>
           </div>
         </td>
+        <td class="td-label" width="12%">
+          <label class="required">逾期罚息利率：</label>
+        </td>
+        <td width="38%">
+          <div class="input-group max-w">
+            <input class="form-control" [(ngModel)]="product.penaltyRate" name="penaltyRate"
+                   placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #penaltyRateRef="ngModel"
+                   [HTML5Validate]="[[penaltyRateRef.errors &&penaltyRateRef.errors.required,'请输入逾期罚息利率！'],
+                   [penaltyRateRef.errors &&penaltyRateRef.errors.pattern,'逾期罚息利率输入有误']]" />
+            <div class="input-group-addon">%</div>
+          </div>
+        </td>
       </tr>
       <tr>
         <td class="td-label" width="12%">
@@ -222,6 +234,7 @@
         <td width="88%" colspan="3" style="position: relative">
           <checkbox *ngFor="let pd of proveDataOptions"
                     [value]="pd.selected"
+                    innerStyle="checked" customBackground="rgb(1, 139, 189)"
                     (valueChange)="pd.selected=$event;setFileType();"
           >
             {{pd.item.label}}

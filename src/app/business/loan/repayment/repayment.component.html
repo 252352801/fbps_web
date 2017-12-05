@@ -78,10 +78,10 @@
             </ng-template>
             <ng-template let-notify="rowData" pTemplate="body">
               <div class="table-btn-group">
-                <a class="table-btn" *ngIf="tabs[0].active&&oauth.roleIn(['003','010'])"
+                <a class="table-btn" *ngIf="notify.status==1&&oauth.roleIn(['001','010'])"
                    (click)="navigateWithData('/business/loan/repayment/accept',notify,['/business/loan/repayment/accept',notify.repaymentNotifyId])"
                    >受理</a>
-                <a class="table-btn" *ngIf="tabs[1].active&&oauth.roleIn(['001','009','010'])"
+                <a class="table-btn" *ngIf="notify.status==2&&oauth.roleIn(['001','009','010'])"
                    (click)="navigateWithData('/business/loan/repayment/cav',notify,['/business/loan/repayment/cav',notify.repaymentNotifyId])">核销</a>
                 <a class="table-btn"
                    (click)="navigateWithData('/business/loan/repayment/details',notify,['/business/loan/repayment/details',notify.repaymentNotifyId])">详情</a>

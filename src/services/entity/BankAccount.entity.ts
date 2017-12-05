@@ -8,15 +8,18 @@ export class BankAccount{
   accountId:string;//账户ID
   lastTranTime:string;//最后交易时间
 
-  initByObj(obj:any):BankAccount{
+  init(obj?:any):BankAccount{
+    let instance=this;
     if(obj&&typeof obj==='object'){
-      this.bankAccount=obj.bankAccount;
-      this.accountName=obj.accountName;
-      this.availableBalance=parseFloat(obj.availableBalance);
-      this.accountId=obj.accountId;
-      this.lastTranTime=obj.lastTranTime;
+      instance.bankAccount=obj.bankAccount;
+      instance.accountName=obj.accountName;
+      instance.availableBalance=parseFloat(obj.availableBalance);
+      instance.accountId=obj.accountId;
+      instance.lastTranTime=obj.lastTranTime;
+      return instance;
     }
-    return this;
-
+  }
+  static create(obj?:any):BankAccount{
+    return new BankAccount().init(obj);
   }
 }
