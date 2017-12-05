@@ -1,0 +1,250 @@
+<div class="page-location" >
+  <a class="h4 pad-r-xs font-bold">待办事项</a>
+</div>
+<div class="wrapper-md" >
+ <!-- <form HTML5Validate>
+    <input [(ngModel)]="test" currencyFormat  name="test" required
+    pattern="^((\d{1,3}(,\d{3}){0,3})||(\d(,\d{3}){0,4})||(\d{1,13}))(\.\d{1,2})?$" />{{test}}
+    <input type="submit"/>
+  </form>-->
+  <div class="row no-margin maximum-w">
+    <div class="col-md-6 col-xs-12 no-l-padding pad-r-def no-padding-xs no-padding-sm">
+      <a  class="col-xs-6 text-center mar-b-def no-l-padding pad-r-def" (click)="go('/business/loan/inProcess',{tab:2})">
+        <div class="pad-def pending-box">
+          <h4 class="h4">{{notifyData.overdue.text}}</h4>
+          <p class="h3 pad-t-def text-danger">{{notifyData.overdue.count}}</p>
+        </div>
+      </a>
+      <a class="col-xs-6 text-center mar-b-def no-padding" (click)="go('/business/loan/inProcess',{tab:1})">
+        <div class="pad-def pending-box">
+          <h4 class="h4">{{notifyData.willExpire.text}}</h4>
+          <p class="h3 pad-t-def text-danger">{{notifyData.willExpire.count}}</p>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-xs-12 no-padding home-dashboard">
+      <a class="col-xs-6  text-center mar-b-def no-l-padding pad-r-def" (click)="go('/business/borrow',{tab:2})">
+        <div class="pad-def pending-box">
+          <h4 class="h4">{{notifyData.loanConfirmResponse.text}}</h4>
+          <p class="h3 pad-t-def text-danger">{{notifyData.loanConfirmResponse.count}}</p>
+        </div>
+      </a>
+      <a class="col-xs-6 text-center mar-b-def no-padding"  (click)="go('business/loan/rollover',{tab:1})">
+        <div class="pad-def pending-box">
+          <h4 class="h4">{{notifyData.rolloverReviewResponse.text}}</h4>
+          <p class="h3 pad-t-def text-danger">{{notifyData.rolloverReviewResponse.count}}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <!--<div class="split-line mar-b-def"></div>-->
+  <div class="btn-group btn-group-justified maximum-w mar-b-def">
+    <a class="btn btn-default" [ngClass]="{'btn-info':tabIndex===0}" (click)="changeTab(0);navigate()">贷款申请<span class="mar-l-xs ">（{{tableData[0].paginator.count}}）</span></a>
+    <a class="btn btn-default" [ngClass]="{'btn-info':tabIndex===1}" (click)="changeTab(1);navigate()">还款通知<span class="mar-l-xs ">（{{tableData[1].paginator.count}}）</span></a>
+    <a class="btn btn-default" [ngClass]="{'btn-info':tabIndex===2}" (click)="changeTab(2);navigate()">展期申请 <span class="mar-l-xs ">（{{tableData[2].paginator.count}}）</span></a>
+  </div>
+  <div *ngIf="tabIndex===0">
+    <p-dataTable #dt [value]="tableData[0].records" exportFilename="贷款申请"  [loading]="tableData[0].loading"
+                 emptyMessage="{{tableData[0].loading?'':'没有查询到符合条件的记录'}}"
+                  scrollable="true" scrollHeight="375px">
+      <p-header *ngIf="tableData[0].paginator.count>0">
+        <div class="ui-helper-clearfix text-right">
+          当前有<span class="text-danger">{{tableData[0].paginator.count}}</span>笔贷款申请，请尽快处理！
+          <a routerLink="/business/borrow" class="text-info ">去处理<i class="pad-l-min fa fa-angle-right"></i></a>
+        </div>
+      </p-header>
+      <p-column field="borrowApplyId" header="贷款单号" styleClass="text-center" [style]="{'width':'140px'}">
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div textMaxLength="140px" title="{{loan.borrowApplyId}}">
+            {{loan.borrowApplyId}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="companyName" header="企业名称" [style]="{'width':'200px'}">
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div textMaxLength="200px" title="{{loan.companyName}}">
+            {{loan.companyName}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="productName" header="贷款产品"  [style]="{'width':'150px'}">
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div textMaxLength="150px" title="{{loan.productName}}">
+            {{loan.productName}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-right text-gold" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          申请金额(元)
+        </ng-template>
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+           {{loan.applyAmount|currencyFormat|nullReplace}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="createTime" header="申请时间" styleClass="text-center" [style]="{'width':'180px'}"></p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          状态
+        </ng-template>
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+            {{loan.status|dictionary:'loan_status'}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['009','010'])">
+        <ng-template pTemplate="header" >
+          操作
+        </ng-template>
+        <ng-template  let-loan="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+            <a  class="table-btn"  routerLink="/business/borrow/accept/{{loan.borrowApplyId}}">审核</a>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+  </div>
+  <div *ngIf="tabIndex===1">
+    <p-dataTable #dt [value]="tableData[1].records"   emptyMessage="{{tableData[1].loading?'':'没有查询到符合条件的记录'}}"
+                  [loading]="tableData[1].loading"
+                 scrollable="true" scrollHeight="375px">
+
+      <p-header *ngIf="tableData[1].paginator.count>0">
+        <div class="ui-helper-clearfix text-right">
+          当前有<span class="text-danger">{{tableData[1].paginator.count}}</span>笔还款通知，请尽快处理！
+          <a routerLink="/business/loan/repayment" class="text-info ">去处理<i class="pad-l-min fa fa-angle-right"></i></a>
+        </div>
+      </p-header>
+
+      <p-column field="repaymentNotifyId" header="还款单号" styleClass="text-center"  [style]="{'width':'130px'}">
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          <div textMaxLength="150px" title="{{repayment.repaymentNotifyId}}">
+            {{repayment.repaymentNotifyId}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="companyName" header="企业名称" [style]="{'width':'220px'}">
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          <div textMaxLength="220px" title="{{repayment.companyName}}">
+            {{repayment.companyName}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="borrowApplyId" header="贷款单号" styleClass="text-center"  [style]="{'width':'130px'}">
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          <div textMaxLength="120px" title="{{repayment.borrowApplyId}}">
+            {{repayment.borrowApplyId}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-right text-gold" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          还款金额(元)
+        </ng-template>
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+            {{repayment.repaymentAmount|currencyFormat|nullReplace}}
+        </ng-template>
+      </p-column>
+
+      <p-column styleClass="text-center" [style]="{'width':'100px'}">
+        <ng-template pTemplate="header">
+          还款期数
+        </ng-template>
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          第{{repayment.repaymentPlan}}期
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'100px'}">
+        <ng-template pTemplate="header">
+          还款日期
+        </ng-template>
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+            {{repayment.repaymentDate|date:"yyyy-MM-dd"}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'100px'}">
+        <ng-template pTemplate="header">
+          状态
+        </ng-template>
+        <ng-template  let-repayment="rowData" pTemplate="body" >
+          <span >{{repayment.statusName}}</span>
+        </ng-template>
+      </p-column>
+      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['001','010'])">
+        <ng-template pTemplate="header" >
+          操作
+        </ng-template>
+        <ng-template  let-notify="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+            <a  class="table-btn"
+                (click)="navigateWithData('/business/loan/repayment/accept',notify,['/business/loan/repayment/accept',notify.repaymentNotifyId])">受理</a>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+  </div>
+  <div *ngIf="tabIndex===2">
+    <p-dataTable #dt [value]="tableData[2].records"   emptyMessage="{{tableData[2].loading?'':'没有查询到符合条件的记录'}}"
+                 [loading]="tableData[2].loading"
+                 scrollable="true" scrollHeight="375px">
+      <p-header *ngIf="tableData[2].paginator.count>0">
+        <div class="ui-helper-clearfix text-right">
+          当前有<span class="text-danger">{{tableData[2].paginator.count}}</span>笔展期申请，请尽快处理！
+          <a routerLink="/business/loan/rollover" class="text-info ">去处理<i class="pad-l-min fa fa-angle-right"></i></a>
+        </div>
+      </p-header>
+
+      <p-column field="rolloverApplyId" header="展期单号" styleClass="text-center" [style]="{'width':'130px'}">
+
+      </p-column>
+      <p-column field="companyName" header="企业名称" [style]="{'width':'200px'}">
+        <ng-template  let-rollover="rowData" pTemplate="body" >
+          <div textMaxLength="180px" title="{{rollover.companyName}}">
+            {{rollover.companyName}}
+          </div>
+        </ng-template>
+      </p-column>
+      <p-column field="borrowApplyId" header="贷款单号" styleClass="text-center" [style]="{'width':'130px'}"></p-column>
+      <p-column  styleClass="text-right text-gold" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          展期金额(元)
+        </ng-template>
+        <ng-template  let-rollover="rowData" pTemplate="body" >
+          {{rollover.repaymentPrinciple}}
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">
+          还款期数
+        </ng-template>
+        <ng-template  let-rollover="rowData" pTemplate="body" >
+          第{{rollover.repaymentPlan}}期
+        </ng-template>
+      </p-column>
+      <p-column  styleClass="text-center" [style]="{'width':'120px'}">
+        <ng-template pTemplate="header">申请日期</ng-template>
+        <ng-template  let-rollover="rowData" pTemplate="body" >{{rollover.createTime|date:'yyyy-MM-dd'}}</ng-template>
+      </p-column>
+      <p-column field="statusName" header="状态" [style]="{'width':'120px'}"></p-column>
+      <p-column *ngIf="oauth.roleIn(['001','003','010'])" [style]="{'width':'100px'}">
+        <ng-template pTemplate="header">
+          操作
+        </ng-template>
+        <ng-template  let-rollover="rowData" pTemplate="body" >
+          <div class="table-btn-group">
+            <a  class="table-btn"
+                routerLink="/business/loan/rollover/accept/{{rollover.rolloverApplyId}}">受理</a>
+          </div>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+  </div>
+</div>
+
+
+
