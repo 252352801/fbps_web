@@ -204,7 +204,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
     };
     this.BCSvc.finishContract(body)
       .then((res)=> {
-        if (res.status) {
+        if (res.ok) {
           this.pop.info({
             text: '已完成合同配置！' || res.message
           }).onClose(()=> {
@@ -239,7 +239,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
     }).onConfirm(()=> {
       this.BCSvc.removeContract(id)
         .then((res)=> {
-          if (res.status) {
+          if (res.ok) {
             this.pop.info({text: '删除成功！'});
             this.loadContracts();
           } else {

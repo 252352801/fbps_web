@@ -6,6 +6,11 @@ export class ModifyProductConfService {
 
   constructor(private myHttp:MyHttpClient){
   }
+  /**
+   * 加载资方/渠道
+   * @param query
+   * @returns Promise<Resource[]>
+   */
   loadResources(query?: any): Promise<Resource[]> {
     return this.myHttp.get({
       api: this.myHttp.api.resource,
@@ -13,9 +18,8 @@ export class ModifyProductConfService {
     }).toPromise()
       .then((res)=> {
         let resources = [];
-        let result = res;
-        if (result.status === 200) {
-          for(let o of result.body.records){
+        if (res.status === 200) {
+          for(let o of res.body.records){
             let resource = new Resource();
             resource.resourceId=o.resourceId;
             resource.resourceName=o.resourceName;
@@ -26,8 +30,12 @@ export class ModifyProductConfService {
       });
   }
 
-
-  deleteProductConfig(id:string):Promise<{status:boolean,message:string}>{
+  /**
+   *删除产品配置
+   * @param id
+   * @returns Promise<{ok:boolean,message:string}>
+   */
+  deleteProductConfig(id:string):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api: this.myHttp.api.deleteProductConfig,
       body: {
@@ -36,16 +44,20 @@ export class ModifyProductConfService {
     }).toPromise()
       .then((res)=> {
         let data={
-          status:false,
+          ok:false,
           message:'',
         };
-        let result = res;
-        data.status=(result.status == 200);
-        data.message=result.message||'';
+        data.ok=(res.status == 200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }
 
+  /**
+   * 配置产品
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
   configProduct(body:{
     productId:string,
     appId:string,
@@ -53,19 +65,18 @@ export class ModifyProductConfService {
     interestType:number,
     paymentWay:number,
     rateCycle:string
-  }):Promise<{status:boolean,message:string}>{
+  }):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api: this.myHttp.api.configProduct,
       body: body
     }).toPromise()
       .then((res)=> {
         let data={
-          status:false,
+          ok:false,
           message:'',
         };
-        let result = res;
-        data.status=(result.status == 200);
-        data.message=result.message||'';
+        data.ok=(res.status == 200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }

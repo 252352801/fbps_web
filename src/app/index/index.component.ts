@@ -166,16 +166,15 @@ export class IndexComponent implements OnInit {
     this.pop.confirm({
       text: '确定要退出登录吗？'
     }).onConfirm(()=> {
-
       this.sharedSvc.signOut({
         employeeId:this.oauth.user.employeeId
       }).then((res)=>{
-        if(res.ok){
+        if(res.ok) {
           this.oauth.removeToken();
           this.oauth.removeUser();
         }
         this.router.navigate(['/signin']);
-      }).catch(()=>{
+      }).catch((err)=>{
         this.router.navigate(['/signin']);
       });
 

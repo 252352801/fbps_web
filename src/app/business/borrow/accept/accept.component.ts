@@ -113,10 +113,10 @@ export class AcceptComponent {
       auditOneBy: this.auditOneBy,
       borrowApplyId: this.loan.borrowApplyId,
       remarks: this.opinion,
-      status: this.isPassed ?2 : -2
+      status: this.isPassed ?2 : -2 //2二审通过   -2二审不通过
     };
     if(body.status==2){
-      body.financeProveDataVos=[];
+      body.financeProveDataVos=[];//证明材料列表
       for(let o of this.proveDataOptions){
         if(o.fileId&&o.proveData&&o.uploader.queue.length&&o.uploader.queue[0].success){
           let fpv={

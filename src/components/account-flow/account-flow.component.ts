@@ -135,7 +135,6 @@ export class AccountFlowComponent implements OnInit,OnChanges {
       rows: this.paginator.size,//每页大小
       memberId: this.memberId,//会员Id
     };
-    console.log(body);
     if (this.accountId) {
       body.accountId = this.accountId;
     }
@@ -266,7 +265,6 @@ export class AccountFlowComponent implements OnInit,OnChanges {
   }
 
   sure(){
-    console.log(this.selectedItems);
     this.outputSelections.emit(this.selectedItems);
     this.contentModal.close();
   }

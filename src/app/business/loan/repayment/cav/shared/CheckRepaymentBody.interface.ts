@@ -6,5 +6,6 @@ export interface CheckRepaymentBody {
   operator:string;//操作者
   auditPwd:string;//审核口令
   remarks?:string;//审批意见
+  employeeId?:string;//线上还款必填
   bankList?:SubmitBankCard[]//转账银行list ,线上还款必填
 }

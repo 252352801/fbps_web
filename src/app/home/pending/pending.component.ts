@@ -64,7 +64,6 @@ export class PendingComponent implements OnInit,OnDestroy{
       loading: boolean
     }
   ];
-
   constructor(
     private pendingSvc: PendingService,
     public oauth: OauthService,
@@ -220,7 +219,7 @@ export class PendingComponent implements OnInit,OnDestroy{
   queryRollovers() {
     this.tableData[2].loading = false;
     this.pendingSvc.queryRollovers({
-      status: 0,
+      status: 3,
       page: this.tableData[2].paginator.index + 1,
       rows: this.tableData[2].paginator.size
     })
@@ -238,10 +237,4 @@ export class PendingComponent implements OnInit,OnDestroy{
   go(path:string,params:any){
     this.router.navigate([path,params]);
   }
-
-  navigateWithData(path:string,data:any,commands:any[]){
-    this.paramSvc.set(path,data);
-    this.router.navigate(commands);
-  }
-
 }

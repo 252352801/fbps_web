@@ -44,6 +44,7 @@ export class RepayPlansComponent implements OnInit,OnChanges{
 
   ngOnInit(){
    // this.init();
+    //this.initByData(this.data);
   }
   ngOnChanges(changes:SimpleChanges){
     if(this.mode==0) {

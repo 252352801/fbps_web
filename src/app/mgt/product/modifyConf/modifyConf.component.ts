@@ -236,7 +236,7 @@ export class ModifyProductConfComponent implements OnInit{
       })
         .then((res)=>{
           this.modalConf.submitted=false;
-          if(res.status){
+          if(res.ok){
             this.pop.info({
               text:'添加配置成功！'
             });
@@ -269,7 +269,7 @@ export class ModifyProductConfComponent implements OnInit{
       .onConfirm(()=>{
         this.mpcSvc.deleteProductConfig(id)
           .then((res)=>{
-            if(res.status){
+            if(res.ok){
               this.pop.info({text:'删除成功！'});
               this.loadProductConfigs();
             }else{

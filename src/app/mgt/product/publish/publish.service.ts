@@ -7,22 +7,24 @@ export class PublishProductService{
   constructor(private myHttp:MyHttpClient){
 
   }
-  createProduct(body:ProductBody):Promise<{status:boolean,message:string}>{
+
+  /**
+   *
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
+  createProduct(body:ProductBody):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api:this.myHttp.api.createProduct,
       body:body
     }).toPromise()
       .then((res)=>{
         let data={
-          status:false,
+          ok:false,
           message:''
         };
-        let result=res;
-        if(result.status===200){
-          data.status=true;
-        }else{
-          data.message=result.message||'';
-        }
+        data.ok=(res.status===200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }

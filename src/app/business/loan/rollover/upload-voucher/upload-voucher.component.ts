@@ -10,7 +10,7 @@ import {fadeInAnimation} from '../../../../../animations/index';
 import {ReviewInfo} from "../../../../../services/entity/ReviewInfo.entity";
 import {CommonService} from '../../../../../services/common/common.service';
 import {BusinessService} from '../../../business.service';
-import {api_file} from '../../../../../services/config/app.config';
+import {config} from '../../../../../services/config/app.config';
 import {patterns} from '../../../../../services/config/patterns.config';
 import {SharedService} from '../../../../shared/shared.service';
 import {Uploader, Toaster, PopService} from 'dolphinng';
@@ -113,7 +113,7 @@ export class RolloverUploadVoucherComponent implements OnInit {
 
 
   initUploader() {
-    this.uploader.url = api_file.upload;
+    this.uploader.url = config.api.uploadFile.url;
     this.uploader.onQueue((uploadFile)=> {
       uploadFile.addSubmitData('businessType', '0504');
       uploadFile.addSubmitData('fileName', uploadFile.fileName);
@@ -122,6 +122,10 @@ export class RolloverUploadVoucherComponent implements OnInit {
       uploadFile.addSubmitData('fileContent', uploadFile.getFile());
       if (this.uploader.queue.length > 1) {
         this.uploader.queue = [uploadFile];
+      }
+      if(uploadFile.fileName.length>50){
+        this.pop.info('文件名不能大于50个字符！');
+        this.uploader.queue=[];
       }
     });
     this.uploader.onQueueAll(()=> {
@@ -169,7 +173,7 @@ export class RolloverUploadVoucherComponent implements OnInit {
       rolloverApplyId:this.rollover.rolloverApplyId,
       fileLoadId:this.fileId,
       rolloverDeposit:this.rollover.rolloverDeposit,
-      repaymentInterest:this.rollover.repaymentInterest/100,
+      repaymentInterest:this.rollover.repaymentInterest,
       operator:this.oauth.user.employeeName||this.oauth.user.mobile
     };
     this.submitted=true;

@@ -193,7 +193,6 @@ export class ModifyProductDetailsComponent implements OnInit{
       if(selections.length){
         this.fileType=selections.join(',');
       }
-      console.log(this.fileType);
     }
   }
 
@@ -227,7 +226,7 @@ export class ModifyProductDetailsComponent implements OnInit{
     this.modProdDtSvc.updateProduct(body)
       .then((res)=>{
         this.submitted=false;
-          if(res.status){
+          if(res.ok){
             this.pop.info({
               text:'修改成功！'
             }).onConfirm(()=>{

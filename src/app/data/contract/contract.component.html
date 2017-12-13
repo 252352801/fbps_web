@@ -9,15 +9,13 @@
     <div class="form-group ">
       <label class="control-label">签署时间：</label>
       <div class="input-group" style="max-width: 280px">
-        <input class="form-control " placeholder="起始时间" [(ngModel)]="params.beginTime" name="beginTime"
-               datePicker
-               opt-max="{{params.endTime?params.endTime:currentTime}}"
-               />
+        <datetime-picker [(value)]="params.beginTime" [max]="params.endTime?params.endTime:currentTime">
+          <input class="form-control " placeholder="起始时间" [(ngModel)]="params.beginTime" name="beginTime"/>
+        </datetime-picker>
         <span class="input-group-addon">-</span>
-        <input class="form-control " placeholder="截止时间" [(ngModel)]="params.endTime" name="endTime"
-               datePicker
-               opt-min="{{params.beginTime}}"
-               opt-max="{{currentTime}}"/>
+        <datetime-picker [(value)]="params.endTime" [min]="params.beginTime" [max]="currentTime">
+          <input class="form-control " placeholder="截止时间" [(ngModel)]="params.endTime" name="endTime"/>
+        </datetime-picker>
       </div>
     </div>
     <div class="form-group ">

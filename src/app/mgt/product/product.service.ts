@@ -29,8 +29,11 @@ export class ProductService{
   constructor(private myHttp:MyHttpClient){
 
   }
+
   /**
    * 查询产品详情
+   * @param id
+   * @returns Promise<Product>
    */
   getProductById(id:string):Promise<Product>{
 
@@ -42,15 +45,17 @@ export class ProductService{
     }).toPromise()
       .then((res)=>{
         let product=new Product();
-        let result=res;
-        if(result.status===200){
-          product.init(result.body);
+        if(res.status===200){
+          product.init(res.body);
         }
         return Promise.resolve(product);
       });
   }
+
   /**
    * 查询产品列表
+   * @param query
+   * @returns Promise<{count:number,items:Product[]}>
    */
   queryProducts(query?:any):Promise<{count:number,items:Product[]}>{
 
@@ -63,10 +68,9 @@ export class ProductService{
           count:0,
           items:[]
         };
-        let result=res;
-        if(result.status===200){
-          data.count=result.body.paginator.totalCount;
-          for(let o of result.body.records){
+        if(res.status===200){
+          data.count=res.body.paginator.totalCount;
+          for(let o of res.body.records){
             let product=new Product().init(o);
             data.items.push(product);
           }
@@ -74,19 +78,24 @@ export class ProductService{
         return Promise.resolve(data);
       });
   }
-  updateProductsStatus(body:{productId:string,status:number}):Promise<{status:boolean,message:string}>{
+
+  /**
+   * 更新产品状态
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
+  updateProductsStatus(body:{productId:string,status:number}):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api:this.myHttp.api.updateProductsStatus,
       query:body
     }).toPromise()
       .then((res)=>{
         let data={
-          status:false,
+          ok:false,
           message:''
         };
-        let result=res;
-        data.status=(result.status==200);
-        data.message=result.message||'';
+        data.ok=(res.status==200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }
@@ -94,7 +103,7 @@ export class ProductService{
   /**
    * 加载产品配置列表
    * @param productId
-   * @returns {promise.Promise<Promise<Array>>|Promise<Promise<Array>>|wdpromise.Promise<T>|PromiseLike<Array>|promise.Promise<R>|wdpromise.Promise<any>|any}
+   * @returns  Promise<ProductConfig[]>
    */
   loadProductConfigs(productId:string): Promise<ProductConfig[]> {
     return this.myHttp.get({

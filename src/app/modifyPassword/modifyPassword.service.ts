@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import { MyHttpClient} from 'services/myHttp/myhttpClient.service';
-import { host_oauth} from 'services/config/app.config';
 @Injectable()
 export class ModifyPasswordService{
   constructor(private myHttp:MyHttpClient){
@@ -14,7 +13,7 @@ export class ModifyPasswordService{
     type:number|string
   }):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
-      url:host_oauth+'iam/employee/setPwd',
+      api:this.myHttp.api.setPassword,
       body:body
     }).toPromise()
       .then((res)=>{

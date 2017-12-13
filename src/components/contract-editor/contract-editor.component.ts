@@ -8,7 +8,7 @@ import {Signature} from '../../services/entity/Signature.entity';
 import {PopService} from 'dolphinng';
 import {Resource} from '../../services/entity/Resource.entity';
 import {Uploader,UploadFile} from 'dolphinng';
-import {api_file} from '../../services/config/app.config';
+import {config} from '../../services/config/app.config';
 import {Contract} from '../../services/entity/Contract.entity';
 import {Toaster} from 'dolphinng';
 import {CreateContractBody} from './shared/CreateContractBody';
@@ -66,6 +66,8 @@ export class ContractEditorComponent implements OnInit{
     return this._borrowApplyId;
   }
 
+
+
   constructor(
     private contractEditorSvc: ContractEditorService,
     private dictionarySvc: DictionaryService,
@@ -102,7 +104,7 @@ export class ContractEditorComponent implements OnInit{
   }
 
   initUploader(){
-    this.uploader.url=api_file.upload;
+    this.uploader.url=config.api.uploadFile.url;
     this.uploader.onQueue((uploadFile:UploadFile)=>{
       let businessType='';
       if(this.contractType==0){
@@ -121,11 +123,20 @@ export class ContractEditorComponent implements OnInit{
       if(uploadFiles.length>1){
         this.uploader.queue=[uploadFiles[uploadFiles.length-1]];
       }
+      let valid=false;
       if(this.uploader.queue[0].fileExtension!=='.pdf'){
         this.toaster.error('','请上传PDF文件！');
-        this.uploader.queue=[];
+      }else if(this.uploader.queue[0].fileName.length>50){//限制文件名长度
+        this.toaster.error('文件名不能超过50个字符！');
+      }else if(this.uploader.queue[0].fileSize>5242880){//限制5M
+        this.toaster.error('上传的合同不能超过5MB！');
       }else{
+        valid=true;
+      }
+      if(valid){
         this.uploader.upload();
+      }else{
+        this.uploader.queue=[];
       }
     });
     this.uploader.onSuccess((uploadFile,uploader,index)=>{//上传请求成功
@@ -152,7 +163,7 @@ export class ContractEditorComponent implements OnInit{
     if(this.uploader.queue[index].uploaded&&this.uploader.queue[index].success){
       this.contractEditorSvc.deleteFile(this.uploader.queue[index].customData.fileId)
         .then((res)=>{
-          if(res.status){
+          if(res.ok){
             this.uploader.queue.splice(index,1);
             this.fileId='';
             this.fileName='';
@@ -249,42 +260,48 @@ export class ContractEditorComponent implements OnInit{
     this.visibleChange.emit(false);
   }
 
-  open() {
+  open(...args) {
+    if(args&&args.length>0){
+      this.reset();
+      this.associateId=args[0];
+      if(args.length>1){
+        this.borrowApplyId=args[1];
+      }
+    }
     this.visible = true;
   }
 
+  reset(){
+    this.uploader.queue=[];
+    this.contractTitle = '';//合同标题
+    this.contractNum= '';//合同编号
+    this.wouldSign= true;//是否送签
+    this.fileId = '';//文件ID
+    this.fileName = '';//合同PDF文件名
+    this.loan = new Loan();
+    this.signatures= [];
+    this.addNewSignature();
+  }
   submit() {
     if (this.contractTitle === '') {
-      this.pop.error({
-        text: '请输入合同标题！'
-      });
+      this.toaster.error('请输入合同标题!');
     } else if (this.contractNum === '') {
-      this.pop.error({
-        text: '请输入合同编号！'
-      });
+      this.toaster.error('请输入合同编号!');
     } else if (this.resourceId === undefined) {
-      this.pop.error({
-        text: '请选择资方！'
-      });
+      this.toaster.error('请选择资方!');
     } else if (this.fileName === ''||this.fileId==='' ) {
-      this.pop.error({
-        text: '请上传合同文件！'
-      });
+      this.toaster.error('请上传合同文件!');
     } else {
       let signatures = [];
       //验证签章用户
       let valid = true;
       if (this.wouldSign) {
         if (this.signatures.length === 0) {
-          this.pop.error({
-            text: '请选择签章用户！'
-          });
+          this.toaster.error('请选择签章用户!');
           valid = false;
         }
         if (this.signatures.length === 1 && this.signatures[0].userId === undefined) {
-          this.pop.error({
-            text: '请选择签章用户！'
-          });
+          this.toaster.error('请选择签章用户!');
           valid = false;
         }
         for (let o of this.signatures) {
@@ -292,21 +309,13 @@ export class ContractEditorComponent implements OnInit{
           if (o.userId !== undefined) {
             let invalid = true;
             if (!o.page && o.page != 0) {
-              this.pop.error({
-                text: '请输入签章页码！'
-              });
+              this.toaster.error('请输入签章页码!');
             } else if (!numRegExp.test(o.page + '')) {
-              this.pop.error({
-                text: '签章页码输入有误！'
-              });
+              this.toaster.error('签章页码输入有误!');
             } else if (!o.positionX && o.positionX != 0) {
-              this.pop.error({
-                text: '请输入X坐标！'
-              });
+              this.toaster.error('请输入X坐标!');
             } else if (!o.positionY && o.positionY != 0) {
-              this.pop.error({
-                text: '请输入Y坐标！'
-              });
+              this.toaster.error('请输入Y坐标!');
             } else {
               invalid = false;
             }
@@ -351,11 +360,12 @@ export class ContractEditorComponent implements OnInit{
         this.contractEditorSvc.createContract(body)
           .then((res)=> {
             this.submitted=false;
-            if (res.status) {
+            if (res.ok) {
               this.pop.info({
                 text: '添加合同成功！'
               });
               this.complete.emit();
+              this.reset();
             } else {
               this.pop.error({
                 text: res.message || '添加合同失败！'

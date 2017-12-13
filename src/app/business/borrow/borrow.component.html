@@ -94,7 +94,8 @@
                 <a *ngIf="loan.status==3&&oauth.roleIn(['001','010'])" class="table-btn" routerLink="/business/borrow/configure/{{loan.borrowApplyId}}">配合同</a>
 
                 <a *ngIf="loan.status==6&&oauth.roleIn(['001','010'])" class="table-btn"
-                   (click)="setApplyLoanId(loan.borrowApplyId);applyLoanSwitchModal.open()">申请放款</a>
+                   (click)="lineSwitch.open(loan.borrowApplyId,loan.memberId)"
+                >申请放款</a>
                 <a *ngIf="loan.status==7&&oauth.roleIn(['009','010'])" class="table-btn"
                    routerLink="/business/borrow/loan/{{loan.borrowApplyId}}">放款</a>
                 <a class="table-btn" routerLink="/business/borrow/details/{{loan.borrowApplyId}}">详情</a>
@@ -147,21 +148,7 @@
   </modal-footer>
   </form>
 </modal>
-<system-logs  #sysLog [mode]="1" title="操作记录" [isShowType]="false" [isShowId]="false"></system-logs>
-<modal #applyLoanSwitchModal>
-  <modal-header>请选择放款方式</modal-header>
-  <modal-body>
-    <div class="mar-b-sm text-center mar-t-sm">
-      <span class="pad-r-xs bold">方式一：</span>
-      <a  class="btn  btn-primary" routerLink="/business/borrow/applyLoan/online/{{applyLoanId}}">线上放款</a>
-    </div>
-    <div class="text-center">
-      <span class="pad-r-xs bold">方式二：</span>
-      <a  class="btn  btn-default" routerLink="/business/borrow/applyLoan/offline/{{applyLoanId}}">线下放款</a>
-    </div>
-  </modal-body>
-  <modal-footer>
-  </modal-footer>
-</modal>
+<system-logs  #sysLog [mode]="1" title="操作记录" [isShowType]="false" [isShowId]="false" ></system-logs>
+<line-switch #lineSwitch ></line-switch>
 
 

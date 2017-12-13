@@ -12,6 +12,12 @@ export class LoanService{
   ){
 
   }
+
+  /**
+   * 线上放款
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
   loanOnline(body:{
     borrowApplyId:string,
     loanTime:string,
@@ -38,7 +44,18 @@ export class LoanService{
         return Promise.resolve(result);
       });
   }
-  loanOffline(body:any):Promise<{ok:boolean,message:string}>{
+
+  /**
+   * 线下放款
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
+  loanOffline(body:{
+    borrowApplyId:string,
+    loanTime:string,
+    auditOneBy:string,
+    fileLoadId:string
+  }):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api:this.myHttp.api.loanOffline,
       body:body

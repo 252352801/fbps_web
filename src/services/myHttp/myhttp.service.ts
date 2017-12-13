@@ -10,7 +10,7 @@ import {
   RequestOptionsArgs,
   Response
 } from '@angular/http';
-import {API,host_api} from '../config/app.config';
+import {config} from '../config/app.config';
 import {Observable} from "rxjs/Observable";
 import {CookieService} from 'ng2-cookies';
 export interface MyHttpAPIOptions {
@@ -31,7 +31,7 @@ export interface MyHttpParameters {
 }
 @Injectable()
 export class MyHttp {
-  api = API;
+  api= config.api;
   private cookieSvc: CookieService = new CookieService();
 
   constructor(private http: Http) {
@@ -89,7 +89,6 @@ export class MyHttp {
           url += '?' + urlParams;
         }
       }
-      url = host_api + url;
       return url;
     }
   }

@@ -8,25 +8,25 @@ var config={
    测试环境 test
    测试环境 dev development
    */
-  env:'test',
+  env:'',
   host:{
     //开发访问地址
     dev:{
-      api:'http://192.168.10.10:8090/fbps/',//api地址
-      oauth:'http://192.168.10.10:8090/ims/',//认证地址
+      fbps:'http://192.168.10.10:8090/fbps/',//api地址
+      ims:'http://192.168.10.10:8090/ims/',//认证地址
       file:'http://121.46.18.25:9090/oss/'//文件服务器地址
     },
     //测试访问地址
     test:{
-      api:'http://192.168.10.10:9090/fbps/',//api地址
-      oauth:'http://192.168.10.10:9090/ims/',//认证地址
+      fbps:'http://192.168.10.10:9090/fbps/',//api地址
+      ims:'http://192.168.10.10:9090/ims/',//认证地址
       file:'http://121.46.18.25:9090/oss/'//文件服务器地址
     },
     //生产访问地址
     prod:{
-      api:'',//api地址
-      oauth:'',//认证地址
-      file:'http://121.46.18.25:8080/oss/'//文件服务器地址
+      fbps:'http://120.76.244.160:8082/fbps/',//api地址
+      ims:'http://120.76.244.160:8082/ims/',//认证地址
+      file:'http://121.46.18.25:9090/oss/'//文件服务器地址
     }
   },
   //登录页系统列表
@@ -43,7 +43,7 @@ var config={
     link:{//链接
       dev:'http://192.168.10.10:8091/fbps',
       test:'http://192.168.10.10:9091/fbps',
-      prod:''
+      prod:'http://fsmp.money56.com:8083/fbps'
     },
     active:true
   },{
@@ -51,7 +51,7 @@ var config={
     link:{//链接
       dev:'http://192.168.10.10:8091/crm',
       test:'http://192.168.10.10:9091/crm',
-      prod:''
+      prod:'http://fsmp.money56.com:8083/crm'
     },
     active:false
   },{
@@ -59,15 +59,15 @@ var config={
     link:{//链接
       dev:'http://192.168.10.10:8091/rcm',
       test:'http://192.168.10.10:9091/rcm',
-      prod:''
+      prod:'http://fsmp.money56.com:8083/rcm'
     },
     active:false
   },{
     name:'银行账户管理系统',
     link:{//链接
-      dev:'',
-      test:'http://192.168.10.10:9090/ams',
-      prod:''
+      dev:'http://192.168.10.10:8091/ams',
+      test:'http://192.168.10.10:9091/ams',
+      prod:'http://fsmp.money56.com:8082/ams'
     },
     active:false
   },{
@@ -75,7 +75,7 @@ var config={
     link:{//链接
       dev:'http://192.168.10.10:8091/ims',
       test:'http://192.168.10.10:9091/ims',
-      prod:''
+      prod:'http://fsmp.money56.com:8083/ims'
     },
     active:false
   }]

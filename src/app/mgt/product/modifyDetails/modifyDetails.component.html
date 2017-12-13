@@ -7,243 +7,241 @@
 </div>
 
 <form class="wrapper " (ngSubmit)="submit()" #productForm="ngForm"  HTML5Validate>
-  <div class="group mar-b-sm">
-    <table class="table no-border no-margin">
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">产品名称：</label>
-        </td>
-        <td width="38%">
-          <input class="form-control" [(ngModel)]="product.productName"
-                 name="productName" required placeholder="请输入产品名称" #productName="ngModel"
-                 [HTML5Validate]="[productName.errors &&productName.errors.required,' 请输入产品名称!']"/>
-        </td>
-        <td class="td-label" width="12%">
-          <label class="required">发布公司：</label>
-        </td>
-        <td width="38%">
-          <select class="form-control">
-            <option>运金所</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">产品类别：</label>
-        </td>
-        <td width="38%">
-          <select class="form-control" [(ngModel)]="product.productType" name="productType"
-                  required pattern="^\d+$" #productTypeRef="ngModel"
-                  [HTML5Validate]="[!!(productTypeRef.errors&&productTypeRef.errors.required),'请选择产品类别！']">
-            <option *ngFor="let prodType of productTypeOptions" [value]="prodType.value">{{prodType.label}}</option>
-          </select>
-        </td>
-        <td class="td-label" width="12%">
-          <label class="required">有效期：</label>
-        </td>
-        <td width="38%">
-          <select class="form-control" [(ngModel)]="product.expiryDate" name="expiryDate">
-            <option *ngFor="let opt of expiryDateOptions" [value]="opt.value">{{opt.label}}</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">额度范围：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group">
-            <div class="input-unit-wrap unit-em-1">
-              <input class="form-control text-center" [(ngModel)]="formData.minAmount" name="minAmount"
-                     required pattern="^[0-9]+(\.[0-9]+)?$" #minAmount="ngModel" type="number"
-                     [HTML5Validate]="[[minAmount.errors &&minAmount.errors.required,'请输入最小额度范围！'],
+  <div class="group clearfix mar-b-sm">
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">产品名称：</label>
+      </div>
+      <div class="v-table-cell">
+        <input class="form-control" [(ngModel)]="product.productName"
+               name="productName" required placeholder="请输入产品名称" #productName="ngModel"
+               [HTML5Validate]="[productName.errors &&productName.errors.required,' 请输入产品名称!']"/>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">发布公司：</label>
+      </div>
+      <div class="v-table-cell">
+        <select class="form-control">
+          <option>运金所</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">产品类别：</label>
+      </div>
+      <div class="v-table-cell">
+        <select class="form-control" [(ngModel)]="product.productType" name="productType"
+                required pattern="^\d+$" #productTypeRef="ngModel"
+                [HTML5Validate]="[!!(productTypeRef.errors&&productTypeRef.errors.required),'请选择产品类别！']">
+          <option *ngFor="let prodType of productTypeOptions" [value]="prodType.value">{{prodType.label}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">有效期：</label>
+      </div>
+      <div class="v-table-cell">
+        <select class="form-control" [(ngModel)]="product.expiryDate" name="expiryDate">
+          <option *ngFor="let opt of expiryDateOptions" [value]="opt.value">{{opt.label}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">额度范围：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group" style="max-width: 396px">
+          <div class="input-unit-wrap unit-em-1">
+            <input class="form-control text-center" [(ngModel)]="formData.minAmount" name="minAmount"
+                   required pattern="^[0-9]+(\.[0-9]+)?$" #minAmount="ngModel" type="number"
+                   [HTML5Validate]="[[minAmount.errors &&minAmount.errors.required,'请输入最小额度范围！'],
                    [minAmount.errors &&minAmount.errors.pattern,'最小额度范围输入有误']]"
-              />
-              <span class="input-unit-addon">{{amountUnit}}</span>
-            </div>
-            <span class="input-group-addon">至</span>
-            <div class="input-unit-wrap unit-em-1">
-              <input class="form-control text-center" [(ngModel)]="formData.maxAmount" name="maxAmount" type="number"
-                     required pattern="^[0-9]+(\.[0-9]+)?$" #maxAmount="ngModel" [min]="formData.minAmount"
-                     [HTML5Validate]="[[maxAmount.errors &&maxAmount.errors.required,'请输入最大额度范围！'],
+            />
+            <span class="input-unit-addon">{{amountUnit}}</span>
+          </div>
+          <span class="input-group-addon">至</span>
+          <div class="input-unit-wrap unit-em-1">
+            <input class="form-control text-center" [(ngModel)]="formData.maxAmount" name="maxAmount" type="number"
+                   required pattern="^[0-9]+(\.[0-9]+)?$" #maxAmount="ngModel" [min]="formData.minAmount"
+                   [HTML5Validate]="[[maxAmount.errors &&maxAmount.errors.required,'请输入最大额度范围！'],
                    [maxAmount.errors &&maxAmount.errors.pattern,'最大额度范围输入有误'],
                    [maxAmount.errors &&maxAmount.errors.min,'最大额度范围不能小于最小额度范围']]"
-              />
-              <span class="input-unit-addon">{{amountUnit}}</span>
-            </div>
+            />
+            <span class="input-unit-addon">{{amountUnit}}</span>
           </div>
-
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">贷款周期：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group">
-            <div class="input-unit-wrap unit-em-1">
-              <input class="form-control text-center" [(ngModel)]="formData.minCycle"  type="number"
-                     name="minCycle" required pattern="^[0-9]+(\.[0-9]+)?$" #minCycle="ngModel"
-                     [HTML5Validate]="[[minCycle.errors &&minCycle.errors.required,'请输入贷款周期最小值！！'],
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">贷款周期：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group" style="max-width: 396px">
+          <div class="input-unit-wrap unit-em-1">
+            <input class="form-control text-center" [(ngModel)]="formData.minCycle"  type="number"
+                   name="minCycle" required pattern="^[0-9]+(\.[0-9]+)?$" #minCycle="ngModel"
+                   [HTML5Validate]="[[minCycle.errors &&minCycle.errors.required,'请输入贷款周期最小值！！'],
                    [minCycle.errors &&minCycle.errors.pattern,'贷款周期最小值输入有误']]" />
-              <select class="input-unit-addon" [(ngModel)]="cycleUnit" name="minCycleUnit">
-                <option *ngFor="let unit of cycleUnitOptions" [value]="unit.value">{{unit.value}}</option>
-              </select>
-            </div>
-            <span class="input-group-addon">至</span>
-            <div class="input-unit-wrap unit-em-1">
-              <input class="form-control text-center" [(ngModel)]="formData.maxCycle"
-                     name="maxCycle" required type="number"
-                     pattern="^[0-9]+(\.[0-9]+)?$" #maxCycle="ngModel" [min]="formData.minCycle"
-                     [HTML5Validate]="[[maxCycle.errors &&maxCycle.errors.required,'请输入贷款周期最大值！'],
+            <select class="input-unit-addon" [(ngModel)]="cycleUnit" name="minCycleUnit">
+              <option *ngFor="let unit of cycleUnitOptions" [value]="unit.value">{{unit.value}}</option>
+            </select>
+          </div>
+          <span class="input-group-addon">至</span>
+          <div class="input-unit-wrap unit-em-1">
+            <input class="form-control text-center" [(ngModel)]="formData.maxCycle"
+                   name="maxCycle" required type="number"
+                   pattern="^[0-9]+(\.[0-9]+)?$" #maxCycle="ngModel" [min]="formData.minCycle"
+                   [HTML5Validate]="[[maxCycle.errors &&maxCycle.errors.required,'请输入贷款周期最大值！'],
                    [maxCycle.errors &&maxCycle.errors.pattern,'贷款周期最大值输入有误！'],
                    [maxAmount.errors &&maxAmount.errors.min,'贷款周期最大值不能小于贷款周期最小值']]"/>
-              <select class="input-unit-addon" [(ngModel)]="cycleUnit" name="maxCycleUnit">
-                <option *ngFor="let unit of cycleUnitOptions" [value]="unit.value">{{unit.value}}</option>
-              </select>
-            </div>
+            <select class="input-unit-addon" [(ngModel)]="cycleUnit" name="maxCycleUnit">
+              <option *ngFor="let unit of cycleUnitOptions" [value]="unit.value">{{unit.value}}</option>
+            </select>
           </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%" style="vertical-align: top" >
-          <label style="padding-top: 5px">条件要求：</label>
-        </td>
-        <td width="88%" colspan="3">
-          <input class="form-control"
-                 [(ngModel)]="product.productRequirement" name="productRequirement" placeholder="选填" />
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%" style="vertical-align: top">
-          <label class="required">产品简介：</label>
-        </td>
-        <td width="88%" colspan="3">
-        <textarea class="form-control" style="min-height: 100px;" placeholder="请输入产品简介"
-                  required #productRemark="ngModel"
-                  [(ngModel)]="product.productRemark" name="productRemark"
-                  #productRemark="ngModel"
-                  [HTML5Validate]="[[productRemark.errors &&productRemark.errors.required,'请输入产品简介！']]"></textarea>
-
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold">条件要求：</label>
+      </div>
+      <div class="v-table-cell">
+        <input class="form-control"
+               [(ngModel)]="product.productRequirement" name="productRequirement" placeholder="选填" />
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8" style="vertical-align: top">
+        <label class="no-margin bold required">产品简介：</label>
+      </div>
+      <div class="v-table-cell">
+                <textarea class="form-control" style="min-height: 100px;" placeholder="请输入产品简介"
+                          required #productRemark="ngModel"
+                          [(ngModel)]="product.productRemark" name="productRemark"
+                          #productRemark="ngModel"
+                          [HTML5Validate]="[[productRemark.errors &&productRemark.errors.required,'请输入产品简介！']]"></textarea>
+      </div>
+    </div>
   </div>
-  <div class="group mar-b-sm">
-    <table class="table no-border no-margin">
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">展期日利率：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group max-w">
-            <input class="form-control" [(ngModel)]="product.rolloverInterestValue" name="rolloverInterestValue" placeholder="百分比"
-                   required pattern="^[0-9]+(\.[0-9]+)?$" #rolloverInterestValue="ngModel"
-                   [HTML5Validate]="[[rolloverInterestValue.errors &&rolloverInterestValue.errors.required,'请输入展期日利率！'],
+  <div class="group clearfix mar-b-sm">
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">展期日利率：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group max-w">
+          <input class="form-control" [(ngModel)]="product.rolloverInterestValue" name="rolloverInterestValue" placeholder="百分比"
+                 required pattern="^[0-9]+(\.[0-9]+)?$" #rolloverInterestValue="ngModel"
+                 [HTML5Validate]="[[rolloverInterestValue.errors &&rolloverInterestValue.errors.required,'请输入展期日利率！'],
                    [rolloverInterestValue.errors &&rolloverInterestValue.errors.pattern,'展期日利率输入有误']]"/>
-            <div class="input-group-addon">%</div>
-          </div>
-        </td>
-        <td class="td-label" width="12%">
-          <label class="required">逾期日利率：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group max-w">
-            <input class="form-control" [(ngModel)]="product.overdueInterestValue" name="overdueInterestValue"
-                   placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #overdueInterestValue="ngModel"
-                   [HTML5Validate]="[[overdueInterestValue.errors &&overdueInterestValue.errors.required,'请输入逾期日利率！'],
+          <div class="input-group-addon">%</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">逾期日利率：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group max-w">
+          <input class="form-control" [(ngModel)]="product.overdueInterestValue" name="overdueInterestValue"
+                 placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #overdueInterestValue="ngModel"
+                 [HTML5Validate]="[[overdueInterestValue.errors &&overdueInterestValue.errors.required,'请输入逾期日利率！'],
                    [overdueInterestValue.errors &&overdueInterestValue.errors.pattern,'逾期日利率输入有误']]" />
-            <div class="input-group-addon">%</div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">展期最长期限：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group max-w">
-            <input class="form-control max-w" [(ngModel)]="product.rolloverHowlong"
-                   name="rolloverHowlong" placeholder="天数" required pattern="^[0-9]+(\.[0-9]+)?$"
-                   #rolloverHowlong="ngModel"
-                   [HTML5Validate]="[[rolloverHowlong.errors &&rolloverHowlong.errors.required,'请输入展期最长期限！'],
+          <div class="input-group-addon">%</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">展期最长期限：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group max-w">
+          <input class="form-control max-w" [(ngModel)]="product.rolloverHowlong"
+                 name="rolloverHowlong" placeholder="天数" required pattern="^[0-9]+(\.[0-9]+)?$"
+                 #rolloverHowlong="ngModel"
+                 [HTML5Validate]="[[rolloverHowlong.errors &&rolloverHowlong.errors.required,'请输入展期最长期限！'],
                    [rolloverHowlong.errors &&rolloverHowlong.errors.pattern,'展期最长期限输入有误！']]"/>
-            <span class="input-group-addon">天</span>
-          </div>
-        </td>
-        <td class="td-label" width="12%">
-          <label class="required">逾期罚息利率：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group max-w">
-            <input class="form-control" [(ngModel)]="product.penaltyRate" name="penaltyRate"
-                   placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #penaltyRateRef="ngModel"
-                   [HTML5Validate]="[[penaltyRateRef.errors &&penaltyRateRef.errors.required,'请输入逾期罚息利率！'],
+          <span class="input-group-addon">天</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">逾期罚息利率：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group max-w">
+          <input class="form-control" [(ngModel)]="product.penaltyRate" name="penaltyRate"
+                 placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #penaltyRateRef="ngModel"
+                 [HTML5Validate]="[[penaltyRateRef.errors &&penaltyRateRef.errors.required,'请输入逾期罚息利率！'],
                    [penaltyRateRef.errors &&penaltyRateRef.errors.pattern,'逾期罚息利率输入有误']]" />
-            <div class="input-group-addon">%</div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">展期保证金：</label>
-        </td>
-        <td width="38%">
-          <div class="input-group max-w">
-            <input class="form-control" [(ngModel)]="product.rolloverDeposit" name="rolloverDeposit"
-                   placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #rolloverDeposit="ngModel"
-                   [HTML5Validate]="[[rolloverDeposit.errors &&rolloverDeposit.errors.required,'请输入展期保证金！'],
+          <div class="input-group-addon">%</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">展期保证金：</label>
+      </div>
+      <div class="v-table-cell">
+        <div class="input-group max-w">
+          <input class="form-control" [(ngModel)]="product.rolloverDeposit" name="rolloverDeposit"
+                 placeholder="百分比" required pattern="^[0-9]+(\.[0-9]+)?$" #rolloverDeposit="ngModel"
+                 [HTML5Validate]="[[rolloverDeposit.errors &&rolloverDeposit.errors.required,'请输入展期保证金！'],
                    [rolloverDeposit.errors &&rolloverDeposit.errors.pattern,'展期保证金输入有误']]"/>
-            <span class="input-group-addon">%</span>
-          </div>
-        </td>
-      </tr>
-    </table>
+          <span class="input-group-addon">%</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="group mar-b-sm">
-    <table class="table no-border no-margin">
-
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">适用渠道：</label>
-        </td>
-        <td width="38%">
-          <select class="form-control" [(ngModel)]="product.productAppScope" name="productAppScope" disabled>
-            <option value="0">全渠道</option>
-            <option value="1">指定渠道</option>
-          </select>
-        </td>
-        <td class="td-label" width="12%">
-          <label class="required">地域范围：</label>
-        </td>
-        <td width="38%">
-          <select class="form-control" [(ngModel)]="product.productAreaScope" name="productAreaScope" disabled>
-            <option value="0">全国</option>
-            <!-- <option value="1">指定城市</option>-->
-          </select>
-        </td>
-      </tr>
-    </table>
+  <div class="group clearfix mar-b-sm">
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">适用渠道：</label>
+      </div>
+      <div class="v-table-cell">
+        <select class="form-control" [(ngModel)]="product.productAppScope" name="productAppScope" disabled>
+          <option value="0">全渠道</option>
+          <option value="1">指定渠道</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">
+        <label class="no-margin bold required">地域范围：</label>
+      </div>
+      <div class="v-table-cell">
+        <select class="form-control" [(ngModel)]="product.productAreaScope" name="productAreaScope" disabled>
+          <option value="0">全国</option>
+        </select>
+      </div>
+    </div>
   </div>
-  <div class="group mar-b-sm">
-    <table class="table no-border no-margin">
-      <tr>
-        <td class="td-label" width="12%">
-          <label class="required">融资证明：</label>
-        </td>
-        <td width="88%" colspan="3" style="position: relative">
-          <checkbox *ngFor="let pd of proveDataOptions"
-                    [value]="pd.selected"
-                    innerStyle="checked" customBackground="rgb(1, 139, 189)"
-                    (valueChange)="pd.selected=$event;setFileType();"
-          >
-            {{pd.item.label}}
-          </checkbox>
-          <input [(ngModel)]="fileType" required name="fileType" class="hidden-validate" #fileTypeRef="ngModel"
-                 [HTML5Validate]="[!fileType,'请选择融资证明！']"  />
-        </td>
-      </tr>
-    </table>
+  <div class="group clearfix mar-b-sm">
+    <div class="col-xs-12 col-xs-12 col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8" style="vertical-align: top">
+        <label class="no-margin bold required">融资证明：</label>
+      </div>
+      <div class="v-table-cell">
+        <checkbox *ngFor="let pd of proveDataOptions"
+                  [value]="pd.selected"
+                  innerStyle="checked" customBackground="rgb(1, 139, 189)"
+                  (valueChange)="pd.selected=$event;setFileType();"
+        >
+          {{pd.item.label}}
+        </checkbox>
+        <input [(ngModel)]="fileType" required name="fileType" class="hidden-validate" #fileTypeRef="ngModel"
+               [HTML5Validate]="[!fileType,'请选择融资证明！']"  />
+      </div>
+    </div>
   </div>
   <div class="text-center">
     <button class="btn-def mar-r-sm" type="submit"

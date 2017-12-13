@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import { RepaymentNotify} from '../../../../services/entity/RepaymentNotify.entity';
+import { RepayPlan} from '../../../../services/entity/RepayPlan.entity';
 import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
 import { BankAccount} from '../../../../services/entity/BankAccount.entity';
 import { RepaymentFlow} from '../../../../services/entity/RepaymentFlow.entity';
@@ -8,8 +9,11 @@ export class RepaymentService{
   constructor(private myHttp:MyHttpClient){
 
   }
+
   /**
    * 查询还款通知列表
+   * @param query
+   * @returns Promise<{count:number,items:RepaymentNotify[]}>
    */
   queryRepaymentNotifies(query?:any):Promise<{count:number,items:RepaymentNotify[]}>{
     return this.myHttp.post({
@@ -30,6 +34,71 @@ export class RepaymentService{
           }
         }
         return Promise.resolve(data);
+      });
+  }
+
+  /**
+   * 通过id获取还款通知单
+   * @param repaymentNotifyId
+   * @returns Promise<RepaymentNotify>
+   */
+  getRepaymentNotifyById(repaymentNotifyId:string):Promise<RepaymentNotify>{
+    return this.myHttp.post({
+      api:this.myHttp.api.repaymentNotify,
+      query:{
+        repaymentNotifyId:repaymentNotifyId
+      }
+    }).toPromise()
+      .then((res)=>{
+        let notify=new RepaymentNotify();
+        if(res.status===200){
+          notify.init(res.body);
+        }
+        return Promise.resolve(notify);
+      });
+  }
+
+  /**
+   * 还款计划详情
+   * @param body
+   * @returns Promise<RepayPlan>
+   */
+  getRepayPlan(body:{
+    borrowApplyId:string,
+    currentPeriod:string|number
+  }):Promise<RepayPlan>{
+    return this.myHttp.post({
+      api:this.myHttp.api.repayPlan,
+      body:body
+    }).toPromise()
+      .then((res)=>{
+        let repayPlan=new RepayPlan();
+        if(res.status===200){
+          repayPlan.init(res.body);
+        }
+        return Promise.resolve(repayPlan);
+      });
+  }
+  /**
+   * 还款计划详情预览
+   * @param body
+   * @returns Promise<RepayPlan>
+   */
+  getRepayPlanPreview(body:{
+    borrowApplyId:string,
+    repayDate:string,//还款时间
+    currentPeriod:string|number
+  }):Promise<RepayPlan>{
+    return this.myHttp.post({
+      api:this.myHttp.api.repayPlanPreview,
+      body:body
+    }).toPromise()
+      .then((res)=>{
+        let repayPlan=new RepayPlan();
+        if(res.status===200){
+          repayPlan.init(res.body);
+        }
+        return Promise.resolve(repayPlan);
       });
   }
 }

@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="v-table col-md-12 mar-b-xs" *ngIf="progress.isConfiguredContract">
-      <div class="v-table-cell w-em-7 ">
+      <div class="v-table-cell w-em-7 " style="vertical-align: top">
         <label class="no-margin bold">展期合同：</label>
       </div>
       <div class="v-table-cell">
@@ -90,8 +90,8 @@
             <td >{{contract.contractTitle}}</td>
             <td >{{contract.companyName}}</td>
             <td >
-              <span *ngIf="contract.isSign==0">是</span>
-              <span *ngIf="contract.isSign==1">否</span>
+              <span *ngIf="contract.isSign">是</span>
+              <span *ngIf="!contract.isSign">否</span>
             </td>
             <td style="width:10em" >
               <div class="table-btn-group">
@@ -113,36 +113,42 @@
       <div class="v-table-cell w-em-7 bold">还款期数：</div>
       <div class="v-table-cell text-default">{{rollover.currentPeriodStr|nullReplace}}</div>
     </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">贷款金额：</div>
-      <div class="v-table-cell text-default">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">贷款产品：</div>
-      <div class="v-table-cell text-default">{{loan.productName|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">贷款周期：</div>
-      <div class="v-table-cell text-default">{{loan.ratedCycle|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">还款方式：</div>
-      <div class="v-table-cell text-default">{{loan.paymentWay|dictionary:'payment_way'|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">利率：</div>
-      <div class="v-table-cell text-default">{{loan.rate|percent|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-6 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold">计息方式：</div>
-      <div class="v-table-cell text-default">{{loan.rateType|dictionary:'interest_type'|nullReplace}}</div>
-    </div>
-    <div class="v-table col-md-12 mar-b-xs">
-      <div class="v-table-cell w-em-7 bold" style="vertical-align: top">还款计划：</div>
-      <div class="v-table-cell">
-        <repay-plans [data]="loan.borrowApplyId"></repay-plans>
+    <drop-down #dropDown >
+      <div class="clearfix">
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">贷款金额：</div>
+          <div class="v-table-cell text-default">{{loan.approveAmount|currencyFormat:'xx 元'|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">贷款产品：</div>
+          <div class="v-table-cell text-default">{{loan.productName|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">贷款周期：</div>
+          <div class="v-table-cell text-default">{{loan.ratedCycle|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">还款方式：</div>
+          <div class="v-table-cell text-default">{{loan.paymentWay|dictionary:'payment_way'|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">利率：</div>
+          <div class="v-table-cell text-default">{{loan.rate|percent|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-6 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold">计息方式：</div>
+          <div class="v-table-cell text-default">{{loan.rateType|dictionary:'interest_type'|nullReplace}}</div>
+        </div>
+        <div class="v-table col-md-12 mar-b-xs">
+          <div class="v-table-cell w-em-7 bold" style="vertical-align: top">还款计划：</div>
+          <div class="v-table-cell">
+            <repay-plans [data]="loan.borrowApplyId"></repay-plans>
+          </div>
+        </div>
       </div>
-    </div>
+    </drop-down>
+<!--    <div class="group-toggle" (click)="dropDown.toggle()">展开
+    </div>-->
   </div>
   <div class="group mar-b-sm  clearfix" *ngIf="progress.isFirstReview">
     <div class="col-md-6 mar-b-sm">
@@ -196,7 +202,7 @@
       </div>
     </div>
   </div>
-  <div class="text-center"><button class="btn-def " btnBack>返回<i class="fa fa-arrow-circle-o-left"></i></button>
+  <div class="text-center mar-t-sm"><button class="btn-def " btnBack>返回<i class="fa fa-arrow-circle-o-left"></i></button>
   </div>
 </div>
 <contract-details  [mode]="1" #contractDetails></contract-details>

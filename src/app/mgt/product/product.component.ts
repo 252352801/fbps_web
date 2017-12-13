@@ -102,7 +102,7 @@ export class ProductComponent {
       };
       this.prodSvc.updateProductsStatus(body)
         .then((res)=>{
-          if(res.status){
+          if(res.ok){
             product.status=newStatus;
           }else{
             this.toaster.error('',newStatText+'失败！');

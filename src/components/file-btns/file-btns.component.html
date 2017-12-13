@@ -1,4 +1,4 @@
-<span class="{{styleClass}}" *ngIf="isLoadFile">{{fileName}}</span>
+<span class="file-name{{styleClass?' '+styleClass:''}}" *ngIf="isLoadFile">{{fileName}}</span>
 <a class="text-info mar-l-xs {{styleClass}}" title="预览" *ngIf="isPreview&&canPreview" (click)="triggerPreview()" ><i class="fa fa-search"></i></a>
 <a class="text-info mar-l-xs {{styleClass}}" title="下载" *ngIf="isDownload&&fileId" download href="{{downloadUrl}}"><i class="fa fa-download"></i></a>
 <a class="text-info mar-l-xs {{styleClass}}" title="删除" *ngIf="isDelete&&fileId"><i class="fa fa-remove"></i></a>

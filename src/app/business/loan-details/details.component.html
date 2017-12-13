@@ -76,8 +76,8 @@
       </div>
     </div>
   </div>
-  <div class="group mar-b-sm pad-sm clearfix" *ngIf="(isProveData&&proveData.length)||isContracts">
-    <div  *ngIf="isProveData">
+  <div class="group mar-b-sm pad-sm clearfix" *ngIf="(progress.isProveData&&proveData.length)||progress.isContracts">
+    <div  *ngIf="progress.isProveData">
       <div class="col-md-6 mar-b-sm" *ngFor="let pd of proveData">
         <div class="v-table full-w">
           <div class="v-table-cell w-em-8 bold">{{pd.fileTypeName}}：</div>
@@ -90,38 +90,38 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12 mar-b-sm v-table" *ngIf="isContracts">
+    <div class="col-md-12 mar-b-sm v-table" *ngIf="progress.isContracts">
       <div class="v-table-cell w-em-8 bold">合同：</div>
       <div class="v-table-cell text-default">
         <ul>
           <li class="">
             <a class="text-info" *ngFor="let contract of contracts"
-               routerLink="/data/contract/details/{{contract|json}}"
+               (click)="contractDetails.open(contract)"
             >
-              《{{contract.title}}》
+              《{{contract.contractTitle}}》
             </a>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <div class="group mar-b-sm pad-sm clearfix" *ngIf="isApproved||isPlanList||isLoanFlows">
-    <div class="col-md-6 mar-b-sm v-table" *ngIf="isApproved">
+  <div class="group mar-b-sm pad-sm clearfix" *ngIf="progress.isApproved||progress.isPlanList||progress.isLoanFlows">
+    <div class="col-md-6 mar-b-sm v-table" *ngIf="progress.isApproved">
       <div class="v-table-cell w-em-8 bold">放款时间：</div>
       <div class="v-table-cell text-default" >
         {{loan.loanTime|date:'yyyy-MM-dd hh:mm:ss'|nullReplace}}
       </div>
     </div>
-    <div class="col-md-6 mar-b-sm v-table" *ngIf="isPlanList">
+    <div class="col-md-6 mar-b-sm v-table" *ngIf="progress.isPlanList">
       <div class="v-table-cell w-em-8 bold">还款计划：</div>
       <div class="v-table-cell text-default">
         <a class="text-info" (click)="repayPlans.open(loan.borrowApplyId)" >查看</a>
       </div>
     </div>
-    <div class="col-md-12 mar-b-sm v-table" *ngIf="loan.toWhere==1&&isLoanFlows">
-      <div class="v-table-cell w-em-8 bold">电子账户流水：</div>
+    <div class="col-md-12 mar-b-sm v-table" *ngIf="loan.toWhere==2&&progress.isLoanFlows">
+      <div class="v-table-cell w-em-8 bold" style="vertical-align: top">电子账户流水：</div>
       <div class="v-table-cell text-default">
-        <table class="table table-bordered bg-white no-margin">
+        <table class="table table-bordered bg-white no-margin" *ngIf="loanFlows&&loanFlows.length">
           <thead class="bg-default">
           <tr>
             <th class="text-center">交易时间</th>
@@ -139,14 +139,14 @@
             <td>{{flow.oppoAcctName}}</td>
             <td>{{flow.oppoAcctNo}}</td>
             <td class="text-right text-gold">{{flow.availableBalance}}</td>
-            <td>{{flow.tradeType|dictionary:'trade_type'}}</td>
+            <td>{{flow.tradeTypeDic}}</td>
           </tr>
           </tbody>
         </table>
         <span class="text-default" *ngIf="!loanFlows||loanFlows.length===0">{{''|nullReplace}}</span>
       </div>
     </div>
-    <div class="col-md-12 mar-b-sm v-table" *ngIf="loan.toWhere==2&&isLoanFlows&&loanFlows.le">
+    <div class="col-md-12 mar-b-sm v-table" *ngIf="loan.toWhere==1&&progress.isLoanFlows&&loanFlows.length">
       <div class="v-table-cell w-em-8 bold">放款凭证：</div>
       <div class="v-table-cell text-default">
               <file-buttons [fileId]="loanFlows[0].fileLoadId" [isLoadFile]="true"
@@ -157,7 +157,7 @@
     </div>
   </div>
 
-  <div class="group mar-b-sm  clearfix" *ngIf="isFirstReviewInfo">
+  <div class="group mar-b-sm  clearfix" *ngIf="progress.isFirstReviewInfo">
     <div class="col-md-6 mar-b-sm">
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">一审人员：</div>
@@ -183,7 +183,7 @@
       </div>
     </div>
   </div>
-  <div class="group mar-b-sm  clearfix" *ngIf="isSecondReviewInfo">
+  <div class="group mar-b-sm  clearfix" *ngIf="progress.isSecondReviewInfo">
     <div class="col-md-6 mar-b-sm">
       <div class="v-table full-w">
         <div class="v-table-cell w-em-8 bold">二审人员：</div>

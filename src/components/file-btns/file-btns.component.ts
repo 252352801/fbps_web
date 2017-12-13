@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit,ElementRef,OnChanges,SimpleChanges} from '@angular/core';
 import {FileButtonsService} from './file-btns.service';
-import {api_file} from '../../services/config/app.config';
+import {config} from '../../services/config/app.config';
 import {SharedService} from '../../app/shared/shared.service';
 import {CommonService} from '../../services/common/common.service';
 @Component({
@@ -48,7 +48,7 @@ export class FileButtonsComponent implements OnInit,OnChanges{
     //
     let fileIdChg=changes['fileId'];
     if(fileIdChg&&fileIdChg.currentValue&&fileIdChg.currentValue!=fileIdChg.previousValue){
-      this.downloadUrl=api_file.download+'?fileId='+fileIdChg.currentValue;
+      this.downloadUrl=config.api.downloadFile.url+'?fileId='+fileIdChg.currentValue;
       if(this.isLoadFile){
         //this.PODBSvc.
         this.commonSvc.getFileInfo(fileIdChg.currentValue)
@@ -77,11 +77,11 @@ export class FileButtonsComponent implements OnInit,OnChanges{
     if(this.isImg(this.fileName)){
       this.triggerPreviewImage();
     }else{
-      this.preview.emit(api_file.preview+'?fileId='+this.fileId);
+      this.preview.emit(config.api.previewFile.url+'?fileId='+this.fileId);
     }
   }
   triggerPreviewImage(){
-    this.previewImage.emit(api_file.preview+'?fileId='+this.fileId);
+    this.previewImage.emit(config.api.previewFile.url+'?fileId='+this.fileId);
   }
 }
 

@@ -70,11 +70,11 @@
       </div>
     </div>
     <div class="v-table col-md-12 mar-b-xs">
-      <div class="v-table-cell w-em-7 ">
+      <div class="v-table-cell w-em-7 " style="vertical-align: top">
         <label class="no-margin bold required">展期合同：</label>
       </div>
       <div class="v-table-cell">
-        <table class="table table-bordered  bg-white" style="margin-bottom: 5px;" *ngIf="contracts.length>0">
+        <table class="table table-bordered  mar-b-xs bg-white" style="margin-bottom: 5px;" *ngIf="contracts.length>0">
           <thead  *ngIf="contracts.length>0" class="bg-default">
           <th >合同编号</th>
           <th >合同标题</th>
@@ -90,8 +90,8 @@
             <td >{{contract.companyName}}</td>
             <!--<td >{{matchResourceName(contract.capitalId)}}</td>-->
             <td >
-              <span *ngIf="contract.isSign==0">是</span>
-              <span *ngIf="contract.isSign==1">否</span>
+              <span *ngIf="contract.isSign">是</span>
+              <span *ngIf="!contract.isSign">否</span>
             </td>
             <td style="width:10em" >
               <div class="table-btn-group">

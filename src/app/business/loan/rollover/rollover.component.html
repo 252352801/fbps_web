@@ -64,7 +64,9 @@
         状态
       </ng-template>
       <ng-template  let-rollover="rowData" pTemplate="body" >
-        <span>{{rollover.statusName}}</span>
+        <div textMaxLength="120px" title="{{rollover.statusName}}">
+          {{rollover.statusName}}
+        </div>
       </ng-template>
     </p-column>
     <p-column [style]="{'width':'120px'}">

@@ -7,150 +7,126 @@
 </div>
 
 <div class="wrapper-md">
-  <div class="group mar-b-sm">
-
-    <table class="table no-border no-margin" >
-      <tbody>
-      <tr>
-        <td class="prod-label" >产品名称：</td>
-        <td class="text-default" width="38%">{{product.productName|nullReplace}}</td>
-<!--        <td class="prod-label" >状态：</td>
-        <td class="text-default" width="38%">
-          <span  *ngIf="product.status==0">启用中</span>
-          <span  *ngIf="product.status==1">已禁用</span>
-          <span  *ngIf="product.status!=0&&product.status!=1">{{''|nullReplace}}</span>
-        </td>-->
-        <td class="prod-label" width="12%">发布公司：</td>
-        <td class="text-default" width="38%">{{product.productCompany|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label"  >产品类别：</td>
-        <td class="text-default"  width="38%">{{product.productType|dictionary:'product_type'|nullReplace}}</td>
-        <td class="prod-label">发布日期：</td>
-        <td class="text-default" >{{product.beginDate|date:'yyyy-MM-dd'|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label">额度范围：</td>
-        <td class="text-default" >{{product.valueLimit|nullReplace}}</td>
-        <td class="prod-label">有效期：</td>
-        <td class="text-default" >
-          {{product.expiryDate|dictionary:'expiry_date'|nullReplace}}
-        </td>
-      </tr>
-      <tr>
-        <td class="prod-label">贷款周期：</td>
-        <td class="text-default" >{{product.borrowHowlong|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label">条件要求：</td>
-        <td class="text-default" colspan="3">{{product.productRequirement|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label">产品简介：</td>
-        <td class="text-default" colspan="3">{{product.productRemark|nullReplace}}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group clearfix mar-b-sm">
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">产品名称：</div>
+      <div class="v-table-cell text-default">{{product.productName|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">发布公司：</div>
+      <div class="v-table-cell text-default">{{product.productCompany|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">产品类别：</div>
+      <div class="v-table-cell text-default">{{product.productType|dictionary:'product_type'|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">发布日期：</div>
+      <div class="v-table-cell text-default">{{product.beginDate|date:'yyyy-MM-dd'|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">额度范围：</div>
+      <div class="v-table-cell text-default">{{product.valueLimit|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">有效期：</div>
+      <div class="v-table-cell text-default">{{product.expiryDate|dictionary:'expiry_date'|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">贷款周期：</div>
+      <div class="v-table-cell text-default">{{product.borrowHowlong|nullReplace}}</div>
+    </div>
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">条件要求：</div>
+      <div class="v-table-cell text-default">{{product.productRequirement|nullReplace}}</div>
+    </div>
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">产品简介：</div>
+      <div class="v-table-cell text-default">{{product.productRemark|nullReplace}}</div>
+    </div>
   </div>
-  <div class="group mar-b-sm">
-    <table class="table no-border mar-b-sm ">
-      <tbody>
-      <tr>
-        <td class="prod-label"  width="12%">展期日利率：</td>
-        <td class="text-default"  width="38%">
-          <!--<span class="full-width inline-block modify-text-only" [(contentModel)]="test" contentEditable="plaintext-only"></span>-->
-          <span>{{product.rolloverInterestValue|percent|nullReplace}}</span>
-        </td>
-        <td class="prod-label"  width="12%" >逾期日利率：</td>
-        <td class="text-default"  width="38%">{{product.overdueInterestValue|percent|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label">展期最长期限：</td>
-        <td class="text-default" >{{product.rolloverHowlong|currencyFormat:[0,0,'xx 天']|nullReplace}}</td>
-        <td class="prod-label">逾期罚息利率：</td>
-        <td class="text-default" >{{(product.penaltyRate||null)|percent|nullReplace}}</td>
-      </tr>
-      <tr>
-        <td class="prod-label">展期保证金：</td>
-        <td class="text-default" >{{product.rolloverDeposit|percent|nullReplace}}</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="group clearfix mar-b-sm">
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">展期日利率：</div>
+      <div class="v-table-cell text-default">{{product.rolloverInterestValue|percent|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">逾期日利率：</div>
+      <div class="v-table-cell text-default">{{product.overdueInterestValue|percent|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">展期最长期限：</div>
+      <div class="v-table-cell text-default">{{product.rolloverHowlong|currencyFormat:[0,0,'xx 天']|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">逾期罚息利率：</div>
+      <div class="v-table-cell text-default">{{(product.penaltyRate||null)|percent|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">展期保证金：</div>
+      <div class="v-table-cell text-default">{{product.rolloverDeposit|percent|nullReplace}}</div>
+    </div>
   </div>
-  <div class="group mar-b-sm">
-    <table class="table no-border mar-b-sm ">
-      <tbody>
-      <tr>
-        <td class="prod-label"   width="12%">适用渠道：</td>
-        <td class="text-default"   width="38%">
-          {{product.productAppScope|dictionary:'product_app_scope'|nullReplace}}
-        </td>
-        <td class="prod-label" width="12%" >
-          地域范围：
-        </td>
-        <td  class="text-default"  width="38%" >
-          {{product.productAreaScope|dictionary:'product_area_scope'|nullReplace}}
-        </td>
-      </tr>
-      <tr>
-        <td class="prod-label" width="12%">
-          参数配置：
-        </td>
-        <td  colspan="3">
-          <table class="table table-bordered bg-white no-b-margin">
-            <tbody>
-            <tr>
-              <td class="no-padding" *ngIf="product.productAppScope===1" rowspan="2">
-                <p class="resource-item" *ngFor="let resource of selectedResources" (click)="activateResource(resource)"
-                   [ngClass]="{'active':activeResource==resource}">{{resource.resourceName}}</p>
-              </td>
-              <td rowspan="2" [ngClass]="{'no-padding':product.productAppScope===0}">
-                <table class="table table-bordered no-margin" >
-                  <thead class="bg-default">
-                  <tr>
-                    <th class="text-center">还款方式</th>
-                    <th class="text-center">计息方式</th>
-                    <th class="text-center">利率（%）</th>
-                    <th class="text-center">贷款周期</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr class="text-center" *ngFor="let conf of productConfigs"
-                      [hidden]="(product.productAppScope===0&&conf.appId!=-1)||
+  <div class="group clearfix mar-b-sm">
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">适用渠道：</div>
+      <div class="v-table-cell text-default">{{product.productAppScope|dictionary:'product_app_scope'|nullReplace}}</div>
+    </div>
+    <div class="col-md-6 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">地域范围：</div>
+      <div class="v-table-cell text-default">{{product.productAreaScope|dictionary:'product_area_scope'|nullReplace}}</div>
+    </div>
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8" style="vertical-align: top">参数配置：</div>
+      <div class="v-table-cell">
+        <table class="table table-bordered bg-white no-b-margin">
+          <tbody>
+          <tr>
+            <td class="no-padding" *ngIf="product.productAppScope===1" rowspan="2">
+              <p class="resource-item" *ngFor="let resource of selectedResources" (click)="activateResource(resource)"
+                 [ngClass]="{'active':activeResource==resource}">{{resource.resourceName}}</p>
+            </td>
+            <td rowspan="2" [ngClass]="{'no-padding':product.productAppScope===0}">
+              <table class="table table-bordered no-margin" >
+                <thead class="bg-default">
+                <tr>
+                  <th class="text-center">还款方式</th>
+                  <th class="text-center">计息方式</th>
+                  <th class="text-center">利率（%）</th>
+                  <th class="text-center">贷款周期</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" *ngFor="let conf of productConfigs"
+                    [hidden]="(product.productAppScope===0&&conf.appId!=-1)||
                   (product.productAppScope===1&&!activeResource)||
                 (product.productAppScope===1&&activeResource&&conf.appId!=activeResource.resourceId)">
-                    <td>{{conf.paymentWay|dictionary:'payment_way'}}</td>
-                    <td>{{conf.interestType|dictionary:'interest_type'}}</td>
-                    <td>{{conf.interestValue|percent}}</td>
-                    <td>{{conf.rateCycle}}</td>
-                  </tr>
-                  <tr *ngIf="productConfigs.length==0">
-                    <td colspan="4" class="text-center text-disabled">
-                      无配置
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+                  <td>{{conf.paymentWay|dictionary:'payment_way'}}</td>
+                  <td>{{conf.interestType|dictionary:'interest_type'}}</td>
+                  <td>{{conf.interestValue|percent}}</td>
+                  <td>{{conf.rateCycle}}</td>
+                </tr>
+                <tr *ngIf="productConfigs.length==0">
+                  <td colspan="4" class="text-center text-disabled">
+                    无配置
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <div class="group mar-b-sm" *ngIf="proveData&&proveData.length">
-    <table class="table no-border no-margin">
-      <tr>
-        <td class="prod-label" width="12%">
-          融资证明：
-        </td>
-        <td width="88%" colspan="3" class="text-default">
-          <span *ngFor="let item of proveData" class="mar-r-sm">{{item.fileTypeName}}</span>
-        </td>
-      </tr>
-    </table>
+  <div class="group clearfix mar-b-sm" *ngIf="proveData&&proveData.length">
+    <div class="col-md-12 v-table mar-b-xs">
+      <div class="v-table-cell bold w-em-8">融资证明：</div>
+      <div class="v-table-cell text-default">
+        <span *ngFor="let item of proveData" class="mar-r-sm">{{item.fileTypeName}}</span>
+      </div>
+    </div>
   </div>
   <div class="text-center">
     <button class="btn-def" btnBack>返 回<i class="fa fa-arrow-circle-o-left"></i></button>

@@ -23,7 +23,6 @@ export class ContractDetailsService {
             data.push(signature);
           }
         }
-        console.log(data);
         return Promise.resolve(data);
       });
   }

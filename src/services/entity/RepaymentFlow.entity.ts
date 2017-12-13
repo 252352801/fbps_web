@@ -14,6 +14,7 @@ export class RepaymentFlow{
   oppoAcctNo:string;//对方账户号
   oppoAcctName:string;//对方账户名
   tradeType:number;//交易类型0：全部 1：出账；2：入账； 3：冲正5：锁定金额；6：解锁金额9：冻结金额；10：解冻金额11：手续费； 12：代收手续费
+  tradeTypeDic:string;
   myAcctNo:string;//我方帐号
   myAcctName:string;//我方帐户名
   remark:string;//备注
@@ -33,6 +34,7 @@ export class RepaymentFlow{
       instance.oppoAcctNo=obj.oppoAcctNo;
       instance.oppoAcctName=obj.oppoAcctName;
       instance.tradeType=parseInt(obj.tradeType);
+      instance.tradeTypeDic=obj.tradeTypeDic;
       instance.myAcctNo=obj.myAcctNo;
       instance.myAcctName=obj.myAcctName;
       instance.remark=obj.remark;

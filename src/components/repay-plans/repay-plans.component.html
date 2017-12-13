@@ -29,7 +29,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let repayPlan of repayPlans" >
+    <tr *ngFor="let repayPlan of repayPlans;let i=index" >
       <td class="text-center" *ngIf="isCurrentPeriod">{{repayPlan.currentPeriod}}/{{repayPlan.totalPeriod}}期</td>
       <td class="text-center" *ngIf="isRepaymentDate">{{repayPlan.repaymentDate|date:'yyyy-MM-dd'}}</td>
       <td class="text-center" *ngIf="isRepaymentRelDate">{{repayPlan.repaymentRelDate|date:'yyyy-MM-dd'}}</td>
@@ -43,8 +43,10 @@
         <div class="table-btn-group">
           <a class="table-btn text-info" *ngIf="isBtnDetail"
              >详情</a>
-          <a class="table-btn text-info" *ngIf="isBtnRepay&&repayPlan.status===1&&oauth.roleIn(['003','010'])"
+          <a class="table-btn text-info" *ngIf="isBtnRepay&&(i==0||repayPlans[i-1].status==3)&&repayPlan.status==1&&oauth.roleIn(['003','010'])"
              routerLink="/business/loan/repayment/repay/{{repayPlan.borrowApplyId}}/{{repayPlan.currentPeriod}}">还款</a>
+          <a class="text-disabled" *ngIf="isBtnRepay&&!(i==0||repayPlans[i-1].status==3)&&repayPlan.status==1&&oauth.roleIn(['003','010'])"
+             title="上期未还，请先完成上期还款！">还款</a>
         </div>
       </td>
       <td class="text-center" *ngIf="isBtnRollover">
@@ -53,14 +55,6 @@
         <span class="" *ngIf="!repayPlan.rolloverApplyId">否</span>
       </td>
     </tr>
-    <!--            <tr>
-                    <td class="text-center">总计</td>
-                    <td></td>
-                    <td class="text-right">300,000.00</td>
-                    <td class="text-right">6,000.00</td>
-                    <td></td>
-                    <td></td>
-                </tr>-->
     <tr *ngIf="loading">
       <td colspan="12" class="text-center text-disabled">正在加载...</td>
     </tr>

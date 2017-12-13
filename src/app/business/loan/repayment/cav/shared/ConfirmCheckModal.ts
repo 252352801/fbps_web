@@ -63,8 +63,9 @@ export class ConfirmCheckModal{
       this.submitData.bankList=this.getSelectedBankCards();
     }
     this.submitted=true;
-    body.auditPwd=md5(body.auditPwd);
-    console.log(body);
+    let orgPw=body.auditPwd;
+    let md5Pw=md5(body.auditPwd);
+    body.auditPwd=md5Pw;
     this.checkRepayment(body)
       .then((res)=>{
         this.submitted=false;
@@ -84,7 +85,8 @@ export class ConfirmCheckModal{
       .catch((err)=>{
         this.submitted=false;
         this.toaster.error('','请求失败！');
-      })
+      });
+    body.auditPwd=orgPw;
   }
 
 

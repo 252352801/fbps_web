@@ -19,9 +19,14 @@ const routes: Routes = [
       loadChildren: './home/home.module#HomeModule',
       data: {title: '首页'},
       canActivate: [OauthGuard]
-    }, { path: 'modifyPassword',
+    }, {
+      path: 'modifyPassword',
       component:ModifyPasswordComponent,
       data:{title:'修改密码'}
+    }, {
+      path: 'modifyReviewPassword',
+      component:ModifyPasswordComponent,
+      data:{title:'修改审核密码'}
     },{
       path: 'business',
       loadChildren: './business/business.module#BusinessModule',

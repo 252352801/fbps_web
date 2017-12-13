@@ -168,7 +168,7 @@ export class PublishProductComponent implements OnInit{
     this.pubProdSvc.createProduct(body)
       .then((res)=>{
         this.submitted=false;
-        if(res.status){
+        if(res.ok){
           this.pop.info({
             text:'发布成功！'
           }).onConfirm(()=>{
@@ -207,7 +207,6 @@ export class PublishProductComponent implements OnInit{
       if(selections.length){
         this.fileType=selections.join(',');
       }
-      console.log(this.fileType);
     }
   }
 

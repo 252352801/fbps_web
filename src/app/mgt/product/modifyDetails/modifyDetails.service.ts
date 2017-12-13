@@ -6,19 +6,25 @@ export class ModifyProductDetailsService{
   constructor(private myHttp:MyHttpClient){
 
   }
-  updateProduct(body:ProductBody):Promise<{status:boolean,message:string}>{
+
+  /**
+   * 更新产品
+   * @param body
+   * @returns Promise<{ok:boolean,message:string}>
+   */
+  updateProduct(body:ProductBody):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api:this.myHttp.api.updateProduct,
       body:body
     }).toPromise()
       .then((res)=>{
         let data={
-          status:false,
+          ok:false,
           message:''
         };
         let result=res;
         if(result.status===200){
-          data.status=true;
+          data.ok=true;
         }else{
           data.message=result.message||'';
         }

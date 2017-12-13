@@ -17,13 +17,13 @@ const routes: Routes = <Routes>[
     canActivate: [OauthGuard]
   },
   {
-    path: 'accept/:id',
+    path: 'accept/:type/:id',
     component: AcceptComponent,
-    data: {title: '受理还款',roleIn:['001','010']},
+    data: {title: '受理还款',roleIn:['003','010']},
     canActivate: [OauthGuard]
   },
   {
-    path: 'repay/:borrowApplyId/:repaymentPlan',
+    path: 'repay/:borrowApplyId/:currentPeriod',
     component: RepayComponent,
     data: {title: '还款',roleIn:['003','010']},
     canActivate: [OauthGuard]

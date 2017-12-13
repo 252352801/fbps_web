@@ -4,7 +4,6 @@ import {Resource} from '../../services/entity/Resource.entity';
 import {MyHttpClient} from '../../services/myHttp/myhttpClient.service';
 import {QueryContractBody} from './shared.interfaces';
 import {ProveData} from '../../services/entity/ProveData.entity';
-import {host_oauth,api_file} from '../../services/config/app.config';
 import {BankAccount} from '../../services/entity/BankAccount.entity';
 import {Contract} from '../../services/entity/Contract.entity';
 @Injectable()
@@ -54,7 +53,7 @@ export class SharedService{
     employeeId: string
   }): Promise<{ok: boolean,message: string}> {
     return this.myHttp.post({
-      url: host_oauth+'iam/employee/logout',
+      api: this.myHttp.api.signOut,
       body: body
     }).toPromise()
       .then((res)=> {

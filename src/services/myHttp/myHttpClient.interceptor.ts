@@ -8,6 +8,7 @@ import {serializeURLParams} from './myhttpClient.service';
 
 import {HttpResponse}     from '@angular/common/http';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
 @Injectable()
 export class MyHttpClientInterceptor implements HttpInterceptor {
   private toaster: Toaster = new Toaster();
@@ -41,6 +42,18 @@ export class MyHttpClientInterceptor implements HttpInterceptor {
             }
           }
         }
-      });
+      })/*.filter(event => {
+        if (event instanceof HttpResponse) {
+          if (event.ok) {
+            let body = event.body;
+            if (typeof body === 'object') {
+              if (body.status == '411') {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      })*/;
   }
 }

@@ -61,7 +61,7 @@
     <div class="col-md-6 v-table mar-b-xs">
       <div class="v-table-cell bold w-em-8">还款期数：</div>
       <div class="v-table-cell text-default">
-        <span >{{currentPeriod|currencyFormat:[0,0,'xx/'+repaymentPlans.length+' 期']|nullReplace}}</span>
+        <span >{{repaymentNotify.currentPeriod|currencyFormat:[0,0,'xx/'+repaymentPlans.length+' 期']|nullReplace}}</span>
       </div>
     </div>
     <div class="col-md-12 v-table mar-b-xs">
@@ -80,25 +80,25 @@
     <div class="col-md-6 v-table mar-b-xs">
       <div class="v-table-cell bold w-em-8">应还总额：</div>
       <div class="v-table-cell text-default">
-        <span >{{(curRepayment?curRepayment.repaymentAmount:'')|currencyFormat:'xx 元'|nullReplace}}</span>
+        <span >{{(repayPlan?repayPlan.repaymentAmount:'')|currencyFormat:'xx 元'|nullReplace}}</span>
       </div>
     </div>
     <div class="col-md-6 v-table mar-b-xs">
       <div class="v-table-cell bold w-em-8">实际还款日：</div>
       <div class="v-table-cell text-default">
-        <span >{{(curRepayment?curRepayment.repaymentRelDate:'')|date:"yyyy-MM-dd"|nullReplace}}</span>
+        <span >{{(repayPlan?repayPlan.repaymentRelDate:'')|date:"yyyy-MM-dd"|nullReplace}}</span>
       </div>
     </div>
     <div class="col-md-12 v-table mar-b-xs">
       <div class="v-table-cell bold w-em-8">实际还款金额：</div>
       <div class="v-table-cell text-default">
-        <span >{{(curRepayment?curRepayment.payRelAmount:'')|currencyFormat:'xx 元'|nullReplace}}</span>
+        <span >{{repaymentNotify.repaymentAmount|currencyFormat:'xx 元'|nullReplace}}</span>
       </div>
     </div>
-    <div class="col-md-12 v-table mar-b-xs" *ngIf="curRepayment&&curRepayment.errorRemark">
+    <div class="col-md-12 v-table mar-b-xs" *ngIf="repayPlan&&repayPlan.errorRemark">
       <div class="v-table-cell bold w-em-8">误差原因：</div>
       <div class="v-table-cell text-default">
-        <span >{{(curRepayment?curRepayment.errorRemark:'')|nullReplace}}</span>
+        <span >{{(repayPlan?repayPlan.errorRemark:'')|nullReplace}}</span>
       </div>
     </div>
   </div>
@@ -116,9 +116,9 @@
       </div>
     </div>
     <div class="col-md-12 v-table mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay==0">
-      <div class="v-table-cell bold w-em-8">电子账户流水：</div>
+      <div class="v-table-cell bold w-em-8" style="vertical-align: top">电子账户流水：</div>
       <div class="v-table-cell">
-        <table class="table table-bordered bg-white no-margin">
+        <table class="table table-bordered bg-white no-margin" *ngIf="repaymentFlows&&repaymentFlows.length">
           <thead class="bg-default">
           <tr>
             <th class="text-center">交易时间</th>
@@ -136,19 +136,19 @@
             <td>{{flow.oppoAcctName}}</td>
             <td>{{flow.oppoAcctNo}}</td>
             <td class="text-right text-gold">{{flow.availableBalance}}</td>
-            <td>{{flow.tradeType|dictionary:'trade_type'}}</td>
+            <td>{{flow.tradeTypeDic}}</td>
           </tr>
           </tbody>
         </table>
         <span class="text-default" *ngIf="!repaymentFlows||repaymentFlows.length===0">{{''|nullReplace}}</span>
       </div>
     </div>
-    <div class="col-md-12 v-table mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay==1">
+    <div class="col-md-12 v-table mar-b-xs" *ngIf="repaymentNotify.accountRepaymentWay==1&&fileId">
       <div class="v-table-cell bold w-em-8">还款凭证：</div>
       <div class="v-table-cell">
         <file-buttons [fileId]="fileId" [isLoadFile]="true"
         (preview)="previewer.open($event,'还款凭证-预览')"
-         (previewimage)="gallery.open($event)"></file-buttons>
+         (previewImage)="gallery.open($event)"></file-buttons>
       </div>
     </div>
   </div>

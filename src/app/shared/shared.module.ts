@@ -14,6 +14,7 @@ import {
   CurrencyFormatModule,
   DateFormatModule,
   NullReplaceModule,
+  DropDownModule,
 }   from 'dolphinng';
 //primeng
 import {
@@ -38,6 +39,7 @@ import {ContractDetailsComponent}   from '../../components/contract-details/deta
 import {FlowDetailsComponent}   from '../../components/flow-details/details.component';
 import {RepayPlansComponent}   from '../../components/repay-plans/repay-plans.component';
 import { AccountFlowComponent} from '../../components/account-flow/account-flow.component';
+import { LineSwitchComponent} from '../../components/line-switch/line-switch.component';
 @NgModule({
   imports:[
     //ng
@@ -55,6 +57,7 @@ import { AccountFlowComponent} from '../../components/account-flow/account-flow.
     DatePickerModule,
     DatetimePickerModule,
     UploaderModule,
+    DropDownModule,
     //primeng
     PDataTableModule,
     PSharedModule,
@@ -76,7 +79,8 @@ import { AccountFlowComponent} from '../../components/account-flow/account-flow.
     ContractDetailsComponent,
     FlowDetailsComponent,
     RepayPlansComponent,
-    AccountFlowComponent
+    AccountFlowComponent,
+    LineSwitchComponent
   ],
   exports:      [
     //ng
@@ -94,6 +98,7 @@ import { AccountFlowComponent} from '../../components/account-flow/account-flow.
     DatePickerModule,
     DatetimePickerModule,
     UploaderModule,
+    DropDownModule,
     //primeng
     PDataTableModule,
     PSharedModule,
@@ -114,7 +119,8 @@ import { AccountFlowComponent} from '../../components/account-flow/account-flow.
     ContractDetailsComponent,
     FlowDetailsComponent,
     RepayPlansComponent,
-    AccountFlowComponent
+    AccountFlowComponent,
+    LineSwitchComponent
   ]
 })
 export class SharedModule { }

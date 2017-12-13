@@ -214,7 +214,7 @@ export class BorrowComponent {
       .then((res)=>{
         this.modalCancel.submitted=false;
         this.modalCancel.visible=false;
-        if(res.status){
+        if(res.ok){
           this.pop.info({
             text:'取消成功！'
           });

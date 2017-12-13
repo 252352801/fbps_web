@@ -152,8 +152,8 @@ export class CapitalBankCardPicker{
               toBankNo:bankCard.cardNo,
               toBankSub:bankCard.subbankName,
               toLineNo:bankCard.lineNo,
-              toAccountName:bankCard.cardName,
-              toAccountId:bankCard.cardId
+              toAccountName:bankCard.cardName
+              //toAccountId:bankCard.cardId
             };
             cards.push(card);
           }

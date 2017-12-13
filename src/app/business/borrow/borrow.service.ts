@@ -7,8 +7,6 @@ export class BorrowService{
   constructor(private myHttp:MyHttpClient){
 
   }
-
-
   /**
    * 渠道或资方列表
    * @param resourceType 0渠道 1资方
@@ -37,23 +35,23 @@ export class BorrowService{
   /**
    * 取消
    * @param body
-   * @returns Promise<{status:boolean,message:string}>
+   * @returns Promise<{ok:boolean,message:string}>
    */
   cancelLoan(body:{
     borrowApplyId:string,
     operator:string,//操作者
     remarks:string//备注
-  }):Promise<{status:boolean,message:string}>{
+  }):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api:this.myHttp.api.cancelLoan,
       body:body}
     ).toPromise()
       .then((res)=>{
         let data={
-          status:false,
+          ok:false,
           message:''
         };
-        data.status=(res.status==200);
+        data.ok=(res.status==200);
         data.message=res.message;
         return Promise.resolve(data);
       });

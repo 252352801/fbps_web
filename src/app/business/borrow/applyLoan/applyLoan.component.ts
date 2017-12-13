@@ -102,7 +102,6 @@ export class ApplyLoanComponent implements OnInit,OnDestroy{
     };
     this.commonSvc.querySystemLog(body1)
       .then((res)=>{
-        console.log(res);
         for(let o of res.items){
           if(o.status==body1.status2){
             this.firstReviewInfo.operator=o.createBy;
@@ -120,7 +119,6 @@ export class ApplyLoanComponent implements OnInit,OnDestroy{
     };
     this.commonSvc.querySystemLog(body2)
       .then((res)=>{
-        console.log(res);
         for(let o of res.items){
           if(o.status==body2.status2){
             this.secondReviewInfo.operator=o.createBy;
@@ -293,7 +291,6 @@ export class ApplyLoanComponent implements OnInit,OnDestroy{
   }
 
   removeBankAccountFlow(flowId:string){
-    console.log(flowId);
     let newArr=[];
     for(let i=0,len=this.bankAccountFlows.length;i<len;i++){
       if(flowId!==this.bankAccountFlows[i].flowId){

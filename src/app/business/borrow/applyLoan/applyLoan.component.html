@@ -189,7 +189,7 @@
             </thead>
             <tbody>
             <tr *ngFor="let rpp of repayPlanPreview;">
-              <td class="text-center">{{rpp.repaymentPlan+'/'+repayPlanPreview.length}}期</td>
+              <td class="text-center">{{rpp.currentPeriod+'/'+repayPlanPreview.length}}期</td>
               <td class="text-center">{{rpp.repaymentDate|date:'yyyy-MM-dd'}}</td>
               <td class="text-right text-gold">{{rpp.repaymentCapital|currencyFormat|nullReplace}}</td>
               <td class="text-right text-gold">{{rpp.repaymentInterest|currencyFormat|nullReplace}}</td>
@@ -206,7 +206,7 @@
           <label class="control-label required">电子账户流水：</label>
         </div>
         <div class="v-table-cell">
-          <table class="table table-bordered bg-white no-margin">
+          <table class="table table-bordered bg-white mar-b-xs" *ngIf="bankAccountFlows&&bankAccountFlows.length">
             <thead class="bg-default">
             <tr>
               <th class="text-center">交易时间</th>
@@ -225,10 +225,10 @@
               <td>{{flow.oppoAcctName}}</td>
               <td>{{flow.oppoAcctNo}}</td>
               <td class="text-right text-gold">{{flow.availableBalance}}</td>
-              <td>{{flow.tradeType|dictionary:'trade_type'}}</td>
+              <td>{{flow.tradeTypeName}}</td>
               <td class="text-center">
                 <div class="table-btn-group">
-                  <a class="table-btn" title="删除" (click)="removeBankAccountFlow(item.flowId)" >删除</a>
+                  <a class="table-btn" title="删除" (click)="removeBankAccountFlow(flow.flowId)" >删除</a>
                 </div>
               </td>
             </tr>

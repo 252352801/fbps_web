@@ -9,7 +9,7 @@ import {RepaymentFlow} from '../entity/RepaymentFlow.entity';
 import {Flow} from '../entity/Flow.entity';
 import {BankAccount} from '../entity/BankAccount.entity';
 import {BankCard} from '../entity/BankCard.entity';
-import {api_file} from '../config/app.config';
+import {config} from '../config/app.config';
 import {LoanFlowQuery,RepaymentFlowQuery} from './common.interface';
 @Injectable()
 export class CommonService{
@@ -25,7 +25,7 @@ export class CommonService{
    */
   getFileInfo(fileId:string):Promise<{ok:boolean,data:FileInfo}>{
     return this.myHttp.post({
-      url:api_file.info,
+      api:config.api.fileInfo,
       body:{
         fileId:fileId
       }
@@ -50,7 +50,7 @@ export class CommonService{
    */
   deleteFile(fileId:string):Promise<{status:boolean,message:string}>{
     return this.myHttp.post({
-      url:api_file.delete,
+      api:config.api.removeFile,
       body:{
         fileId:fileId
       }

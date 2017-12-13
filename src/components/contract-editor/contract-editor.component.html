@@ -1,4 +1,4 @@
-<modal [visible]="visible" (visibleChange)="close()"  size="lg" [outClickClose]="false" >
+<modal [visible]="visible" (visibleChange)="close()"  size="lg" [disabled]="submitted">
     <modal-header>添加合同</modal-header>
     <modal-body styleClass="bg-default">
         <table class="table table-bordered mar-b-xs table-middle">
@@ -46,8 +46,12 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let file of uploader.queue;let i=index">
-                      <td class="text-primary"> {{file.fileName}}</td>
-                      <td>{{(file.fileSize/1024).toFixed(2)}}kb</td>
+                      <td class="text-primary">
+                        <div style="max-width: 300px" class="text-ellipsis" title="{{file.fileName}}">
+                          {{file.fileName}}
+                        </div>
+                      </td>
+                      <td>{{(file.fileSize/1024).toFixed(2)}}KB</td>
                       <td style="width: 180px;">
                         <span  *ngIf="!file.uploaded&&file.progress===0">等待上传</span>
                         <span class="text-success" *ngIf="file.uploaded&&file.success">上传成功</span>
@@ -107,14 +111,14 @@
    <!--     <button class="btn btn-info" (click)="submit()" [disabled]="submitted">{{submitted?'正在提交...':'提交'}}</button>
         <button class="btn btn-default" (click)="close()" >取消</button>-->
 
-      <button class="btn btn-primary btn-sm" (click)="submit()" [disabled]="submitted" >{{submitted?'正在提交...':'提交'}}</button>
-      <button class="btn btn-default btn-sm" (click)="close()">取 消</button>
+      <button class="btn btn-primary" (click)="submit()" [disabled]="submitted" >{{submitted?'正在提交...':'提交'}}</button>
+      <button class="btn btn-default" (click)="reset();close()">取 消</button>
     </modal-footer>
 </modal>
 <modal [visible]="modalPickSignatory.visible" size="lg" (visibleChange)="closePickSignatoryModal();open()" >
     <modal-header>选择用户</modal-header>
     <modal-body>
-        <div class="bor-def mar-b-sm">
+        <div class="mar-b-sm">
             <form class="form-inline"  >
                 <div class="form-group">
                     <label class="control-label">用户名：</label>
@@ -133,11 +137,13 @@
         </div>
         <table class="table table-bordered mar-b-xs bg-white">
             <thead class="bg-default">
-            <th class="text-center">会员ID</th>
-            <th class="text-center">会员名称</th>
-            <th class="text-center">天威用户ID</th>
-            <th class="text-center">类型</th>
-            <th class="text-center">操作</th>
+            <tr>
+              <th class="text-center">会员ID</th>
+              <th class="text-center">会员名称</th>
+              <th class="text-center">天威用户ID</th>
+              <th class="text-center">类型</th>
+              <th class="text-center">操作</th>
+            </tr>
             </thead>
             <tbody>
             <tr *ngFor="let signatory of modalPickSignatory.data">
@@ -165,7 +171,7 @@
 </modal>
 <modal [visible]="contractSignatoryPicker.visible" size="lg" (visibleChange)="contractSignatoryPicker.close();open()" >
     <modal-header>选择已有签章用户</modal-header>
-    <modal-body>
+    <modal-body styleClass="no-b-padding">
         <div class="  mar-b-sm">
             <form class="form-inline">
                 <div class="form-group">
@@ -181,22 +187,24 @@
                 </div>
             </form>
         </div>
-        <table class="table table-bordered bg-white">
+        <table class="table table-bordered bg-white mar-b-xs">
             <thead class="bg-default">
-            <th class="text-center">贷款单号</th>
-            <th class="text-center">贷款公司</th>
-            <th class="text-center">合同编号</th>
-            <th class="text-center">合同标题</th>
-            <th class="text-center">操作</th>
+            <tr>
+              <th class="text-center">贷款单号</th>
+              <th class="text-center">贷款公司</th>
+              <th class="text-center">合同编号</th>
+              <th class="text-center">合同标题</th>
+              <th class="text-center">操作</th>
+            </tr>
             </thead>
             <tbody>
             <tr *ngFor="let item of contractSignatoryPicker.data">
                 <td class="text-center">{{item.borrowApplyId}}</td>
                 <td class="text-center">{{item.companyName}}</td>
-                <td class="text-center">{{item.docNum}}</td>
-                <td class="text-center">{{item.title}}</td>
+                <td class="text-center">{{item.contractNum}}</td>
+                <td class="text-center">{{item.contractTitle}}</td>
                 <td class="text-center">
-                  <a class="btn btn-xs btn-primary" (click)="contractSignatoryPicker.pick(item.id);">选择</a>
+                  <a class="btn btn-xs btn-primary" (click)="contractSignatoryPicker.pick(item.contractId);">选择</a>
                 </td>
             </tr>
             </tbody>

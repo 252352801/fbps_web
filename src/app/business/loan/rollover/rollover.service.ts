@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Rollover} from '../../../../services/entity/Rollover.entity';
 import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
-import { Loan} from '../../../../services/entity/Loan.entity';
-import { RepayPlan} from '../../../../services/entity/RepayPlan.entity';
 import { Product} from '../../../../services/entity/Product.entity';
 @Injectable()
 export class RolloverService{
@@ -36,6 +34,11 @@ export class RolloverService{
 
   }
 
+  /**
+   * 通过id获取展期申请单
+   * @param id
+   * @returns Promise<Rollover>
+   */
   getRolloverById(id:string):Promise<Rollover>{
     return this.myHttp.get({
       api:this.myHttp.api.rollover,
@@ -45,9 +48,8 @@ export class RolloverService{
     }).toPromise()
       .then((res)=>{
         let rollover=new Rollover();
-        let result=res;
-        if(result.status===200){
-          rollover.init(result.body);
+        if(res.status===200){
+          rollover.init(res.body);
         }
         return Promise.resolve(rollover);
       });
@@ -65,9 +67,8 @@ export class RolloverService{
     }).toPromise()
       .then((res)=>{
         let product=new Product();
-        let result=res;
-        if(result.status===200){
-          product.init(result.body);
+        if(res.status===200){
+          product.init(res.body);
         }
         return Promise.resolve(product);
       });

@@ -17,7 +17,6 @@ import {fadeInAnimation} from '../../../../animations/index';
   host: {'[@fadeInAnimation]': ''}
 })
 export class ProductDetailsComponent implements OnInit{
-  test=12345;
   product:Product=new Product();
   productConfigs:ProductConfig[]=[];
   resources: Resource[] = [];//渠道列表

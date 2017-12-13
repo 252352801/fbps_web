@@ -7,12 +7,10 @@ import {Loan} from '../../../../../services/entity/Loan.entity';
 import {RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
 import {fadeInAnimation} from '../../../../../animations/index';
 import {OauthService} from '../../../../../services/oauth/oauth.service';
-import {ParameterService} from "services/parameter/parameter.service";
 import {RepaymentNotify} from "services/entity/RepaymentNotify.entity";
 import {BankAccount} from "services/entity/BankAccount.entity";
-import {Paginator} from "services/entity/Paginator.entity";
 import {BankAccountFlow} from "../../../../../services/entity/BankAccountFlow.entity";
-import {api_file} from '../../../../../services/config/app.config';
+import {config} from '../../../../../services/config/app.config';
 import {Uploader} from 'dolphinng';
 import {CommonService} from '../../../../../services/common/common.service';
 import {BusinessService} from '../../../business.service';
@@ -27,27 +25,17 @@ import {AcceptRepaymentBody} from './shared/AcceptRepaymentBody';
   host: {'[@fadeInAnimation]': ''}
 })
 export class AcceptComponent implements OnInit {
-  id: string;
-  borrowApplyId: string;
-  isPassed: boolean = false;
   loan: Loan = new Loan();//贷款详情
   submitted: boolean = false;//是否在提交
   repaymentPlans: RepayPlan[]=[];//还款计划列表
-  currentPeriod: number|string;//还款期数
   repaymentDate: string = '';//还款日期
   totalRelAmount: number = null;//实际还款
   errorAmountRemarks:string='';//
-  curRepayment:RepayPlan;//当前还款计划
+  repayPlan:RepayPlan=new RepayPlan();//当前还款计划
   bankAccount:BankAccount=new BankAccount();
 
-  BAFPaginator:Paginator=new Paginator();
   repaymentNotify:RepaymentNotify=new RepaymentNotify();
   operator: string = this.oauthSvc.user.employeeName|| this.oauthSvc.user.mobile;//操作者
-  modalConfirm = {
-    visible: false,
-    data: null,
-    submitted: false
-  };
   bankAccountFlows:BankAccountFlow[]=[];//账户流水
 
   uploader: Uploader = new Uploader();
@@ -58,51 +46,50 @@ export class AcceptComponent implements OnInit {
               private repaymentSvc: RepaymentService,
               private actRoute: ActivatedRoute,
               private commonSvc: CommonService,
-              private businessSvc: BusinessService,
-              private paramSvc: ParameterService
+              private businessSvc: BusinessService
   ) {
     this.initUploader();
   }
 
   ngOnInit() {
-    this.id = this.actRoute.snapshot.params['id'];
-    let notify=this.paramSvc.get('/business/loan/repayment/accept');
-    this.BAFPaginator.size=5;
-    if(notify.repaymentNotifyId==this.id){
-      this.repaymentNotify=this.repaymentNotify.init(notify);
-      console.log(this.repaymentNotify);
-      this.borrowApplyId =this.repaymentNotify.borrowApplyId;
-      this.currentPeriod =this.repaymentNotify.currentPeriod;
-      this.businessSvc.getLoanById(this.borrowApplyId)
-        .then((res)=> {
-          this.loan = res;
-          return  this.commonSvc.bankAccount({
-            memberId:this.loan.memberId
-          });
+    this.repaymentSvc.getRepaymentNotifyById((this.actRoute.snapshot.params['id']))//还款通知详情
+      .then((res)=>{
+        this.repaymentNotify=res;
+        let type=this.actRoute.snapshot.params['type'];
+        if(type==='online'){
+          this.repaymentNotify.accountRepaymentWay=0;
+        }else if(type==='offline'){
+          this.repaymentNotify.accountRepaymentWay=1;
+        }
+        this.businessSvc.getLoanById(this.repaymentNotify.borrowApplyId)//借款单
+          .then((res)=> {
+            this.loan = res;
+          })
+          .catch((err)=>{});
+        this.commonSvc.bankAccount({//账户信息
+          memberId:this.repaymentNotify.memberId
         })
-        .then((res)=>{
-          if(res.ok){
-            this.bankAccount=res.data;
-          }
-        })
-        .catch((err)=>{
-        });
-      this.businessSvc.getRepayPlans(this.borrowApplyId)
-        .then((res)=> {
-          this.repaymentPlans = res;
-          for (let o of this.repaymentPlans) {
-            if (o.currentPeriod === this.currentPeriod) {
-              this.curRepayment = o;
-              break;
+          .then((res)=>{
+            if(res.ok){
+              this.bankAccount=res.data;
             }
-          }
+          })
+          .catch((err)=>{});
+        this.repaymentSvc.getRepayPlan({//还款计划详情
+          borrowApplyId:this.repaymentNotify.borrowApplyId,
+          currentPeriod:this.repaymentNotify.currentPeriod
         })
-        .catch((err)=>{
-        });
-
-    }else{
-
-    }
+          .then((res)=> {
+            this.repayPlan = res;
+          })
+          .catch((err)=>{});
+        this.businessSvc.getRepayPlans(this.repaymentNotify.borrowApplyId)//还款计划列表
+          .then((res)=> {
+            this.repaymentPlans = res;
+          })
+          .catch((err)=>{});
+      })
+      .catch((err)=>{});
   }
 
 
@@ -113,12 +100,9 @@ export class AcceptComponent implements OnInit {
 
   submit() {
     let repayAmount=this.totalRelAmount;//实际还款金额
+    let fileId=this.uploader.queue&&this.uploader.queue[0]&&this.uploader.queue[0].customData['fileId'];
     let  numRegExp=/^[0-9]+(\.[0-9]+)?$/;
-    if(!this.repaymentNotify.repaymentNotifyId){
-      this.pop.info({text: '还款通知信息有误，无法受理！'});
-    }else if (!this.curRepayment) {
-      this.pop.info({text: '还款通知与还款计划不匹配，无法受理！'});
-    }else if (this.repaymentDate === '') {
+    if (this.repaymentDate === '') {
       this.pop.info({text: '请选择实际还款日期！'});
     }else if (!repayAmount&&repayAmount!==0) {
       this.pop.info({text: '请输入实际还款金额！'});
@@ -126,7 +110,11 @@ export class AcceptComponent implements OnInit {
       this.pop.info({text: '实际还款金额输入有误！'});
     } else if (this.getErrorAmount()&&this.errorAmountRemarks==='') {
       this.pop.info({text: '请输入误差原因！'});
-    } else{
+    } else if(this.repaymentNotify.accountRepaymentWay ===0&&this.bankAccountFlows.length===0) {
+      this.pop.info('请选择电子账户流水！');
+    }else if(this.repaymentNotify.accountRepaymentWay ===1&&!fileId){
+      this.pop.info('请上传还款凭证！');
+    }else{
       let body :AcceptRepaymentBody= {
         repaymentNotifyId: this.repaymentNotify.repaymentNotifyId,
         borrowApplyId:this.loan.borrowApplyId,
@@ -146,7 +134,7 @@ export class AcceptComponent implements OnInit {
         }
         body.accountFlowIds=ids.join(',');
       }else if(this.repaymentNotify.accountRepaymentWay ===1){//线下还款参数填充
-        body.fileLoadId=this.uploader.queue[0].customData['fileId'];
+        body.fileLoadId=fileId;
       }
       this.submitted = true;
       this.acceptSvc.acceptRepayment(body)
@@ -175,14 +163,6 @@ export class AcceptComponent implements OnInit {
       }
   }
 
-  private formatDate(date:Date){
-    if(date instanceof  Date){
-      let m=date.getMonth()+1;
-      let d=date.getDate();
-      return date.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d>=10?d:'0'+d);
-    }
-  }
-
   /**
    * 获取当期还款计划
    */
@@ -203,9 +183,9 @@ export class AcceptComponent implements OnInit {
    * 获取误差金额
    */
   getErrorAmount(){
-    if(this.curRepayment&&this.curRepayment.repaymentAmount){
+    if(this.repayPlan&&this.repayPlan.repaymentAmount){
       if(this.totalRelAmount||this.totalRelAmount===0){
-        return this.totalRelAmount-this.curRepayment.repaymentAmount;
+        return this.totalRelAmount-this.repayPlan.repaymentAmount;
       }
     }
   }
@@ -223,7 +203,6 @@ export class AcceptComponent implements OnInit {
    * @param flowId
    */
   removeBankAccountFlow(flowId:string){
-    console.log(flowId);
     let newArr=[];
     for(let i=0,len=this.bankAccountFlows.length;i<len;i++){
       if(flowId!==this.bankAccountFlows[i].flowId){
@@ -235,10 +214,9 @@ export class AcceptComponent implements OnInit {
 
   initUploader() {
     // this.uploader=new Uploader();
-    this.uploader.url = api_file.upload;
+    this.uploader.url = config.api.uploadFile.url;
 
     this.uploader.onQueue((uploadFile)=> {
-      console.log(uploadFile);
       uploadFile.addSubmitData('businessType', '0504');
       uploadFile.addSubmitData('fileName', uploadFile.fileName);
       uploadFile.addSubmitData('fileType', uploadFile.fileExtension);
@@ -247,7 +225,10 @@ export class AcceptComponent implements OnInit {
       if (this.uploader.queue.length > 1) {
         this.uploader.queue = [uploadFile];
       }
-      console.log(uploadFile);
+      if(uploadFile.fileName.length>50){
+        this.pop.info('文件名不能大于50个字符！');
+        this.uploader.queue=[];
+      }
     });
     this.uploader.onQueueAll(()=> {
       this.uploader.upload();
@@ -285,5 +266,6 @@ export class AcceptComponent implements OnInit {
       this.uploader.queue = [];
     }
   }
+
 
 }

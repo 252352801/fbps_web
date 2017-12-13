@@ -2,7 +2,7 @@ import {Injectable}     from '@angular/core';
 import {HttpClient,HttpRequest,HttpHeaders,HttpParams}     from '@angular/common/http';
 
 
-import {API, host_api} from '../config/app.config';
+import {config} from '../config/app.config';
 import {Observable} from "rxjs/Observable";
 import {CookieService} from 'ng2-cookies';
 export interface MyHttpAPIOptions {
@@ -28,7 +28,7 @@ export interface MyHttpParameters {
 }
 @Injectable()
 export class MyHttpClient {
-  api = API;
+  api= config.api;
   constructor(private http: HttpClient) {
   }
 
@@ -57,7 +57,6 @@ export class MyHttpClient {
           url += '?' + urlParams;
         }
       }
-      url =host_api+ url;
       return url;
     }
   }

@@ -16,7 +16,7 @@ import {ReviewInfo} from "../../../../services/entity/ReviewInfo.entity";
 import {CommonService} from "../../../../services/common/common.service";
 import {BusinessService} from "../../business.service";
 import {LoanFlow} from '../../../../services/entity/LoanFlow.entity';
-import {api_file} from '../../../../services/config/app.config';
+import {config} from '../../../../services/config/app.config';
 import {SharedService} from '../../../shared/shared.service';
 import {BorrowService} from '../borrow.service';
 import {md5} from '../../../../services/encrypt/md5';
@@ -99,7 +99,9 @@ export class LoanComponent{
   }
 
   getLoanFlows() {
-    this.commonSvc.loanFlows(this.actRoute.snapshot.params['id'])
+    this.commonSvc.loanFlows({
+      borrowApplyId:this.actRoute.snapshot.params['id']
+    })
       .then((res)=> {
         this.loanFlows = res;
       })
@@ -128,7 +130,6 @@ export class LoanComponent{
     };
     this.commonSvc.querySystemLog(body1)
       .then((res)=> {
-        console.log(res);
         for (let o of res.items) {
           if (o.status == body1.status2) {
             this.firstReviewInfo.operator = o.createBy;
@@ -147,7 +148,6 @@ export class LoanComponent{
     };
     this.commonSvc.querySystemLog(body2)
       .then((res)=> {
-        console.log(res);
         for (let o of res.items) {
           if (o.status == body2.status2) {
             this.secondReviewInfo.operator = o.createBy;
@@ -336,8 +336,7 @@ export class LoanComponent{
   }
 
   initUploader() {
-    // this.uploader=new Uploader();
-    this.uploader.url = api_file.upload;
+    this.uploader.url = config.api.uploadFile.url;
     this.uploader.onQueue((uploadFile)=> {
       uploadFile.addSubmitData('businessType', '0504');
       uploadFile.addSubmitData('fileName', uploadFile.fileName);
@@ -347,7 +346,10 @@ export class LoanComponent{
       if (this.uploader.queue.length > 1) {
         this.uploader.queue = [uploadFile];
       }
-      console.log(uploadFile);
+      if(uploadFile.fileName.length>50){
+        this.pop.info('文件名不能大于50个字符！');
+        this.uploader.queue=[];
+      }
     });
     this.uploader.onQueueAll(()=> {
       this.uploader.upload();

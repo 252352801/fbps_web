@@ -224,7 +224,7 @@
               <td>{{flow.oppoAcctName}}</td>
               <td>{{flow.oppoAcctNo}}</td>
               <td class="text-right text-gold">{{flow.availableBalance}}</td>
-              <td>{{flow.tradeType|dictionary:'trade_type'}}</td>
+              <td>{{flow.tradeTypeDic}}</td>
             </tr>
             </tbody>
           </table>
@@ -319,7 +319,7 @@
   </div>
   <div class="text-center">
     <button class="btn-def  mar-r-sm" (click)="confirm()" [disabled]="submitted"
-    >{{submitted?'正在提交...':'提交'}}<i class="fa fa-check-circle-o"></i></button>
+    >{{submitted?'正在提交...':'放款'}}<i class="fa fa-check-circle-o"></i></button>
     <button class="btn-def " btnBack>放弃<i class="fa fa-arrow-circle-o-left"></i></button>
   </div>
 </div>
@@ -371,11 +371,11 @@
       </div>
       <div class="row pad-t-def" *ngIf="loan.toWhere==2">
         <div class="col-md-12 text-center">
-          <span class="bold">交易密码：</span>
+          <span class="bold">审核口令：</span>
           <input class="form-control inline-block" style="width: 175px"
-                 placeholder="请输入交易密码"
+                 placeholder="请输入审核口令"
                  [(ngModel)]="modalConfirm.auditPwd" name="auditPwd" required type="password"
-                 [HTML5Validate]="[!modalConfirm.auditPwd,'请输入交易密码！']"/>
+                 [HTML5Validate]="[!modalConfirm.auditPwd,'请输入审核口令！']"/>
         </div>
       </div>
     </modal-body>

@@ -5,6 +5,12 @@ export class RolloverUploadVoucherService{
   constructor(private myHttp:MyHttpClient){
 
   }
+
+  /**
+   * 上传凭证
+   * @param body
+   * @returns  Promise<{ok:boolean,message:string}>
+   */
   addProveData(body:{
     rolloverApplyId:string,
     fileLoadId:string,

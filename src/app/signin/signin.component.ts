@@ -17,13 +17,13 @@ export class SignInComponent {
   username: string = '';//dev
   password: string = '';//123456
 
-  systems=config.getSystems();
+  systems=config.systems;
   constructor(private router: Router, private signInService: SignInService,private oauth:OauthService) {
-
-
+    console.log(config.systems);
   }
-
-
+  /**
+   * 登录
+   */
   signIn() {
     this.submitted = false;
     this.msg = '';
@@ -41,7 +41,7 @@ export class SignInComponent {
       this.signInService.signIn(body)
         .then((res)=> {
           this.submitted = false;
-          if (res.status) {
+          if (res.ok) {
             this.oauth.saveToken(res.user.accessToken);
             this.oauth.saveUser(res.user);
             this.oauth.initRolesAndFns();

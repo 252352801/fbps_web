@@ -51,7 +51,7 @@
               还款期数
             </ng-template>
             <ng-template let-repayment="rowData" pTemplate="body" >
-              第{{repayment.repaymentPlan}}期
+              第{{repayment.currentPeriod}}期
             </ng-template>
           </p-column>
           <p-column  styleClass="text-center" [style]="{'width':'100px'}">
@@ -78,8 +78,8 @@
             </ng-template>
             <ng-template let-notify="rowData" pTemplate="body">
               <div class="table-btn-group">
-                <a class="table-btn" *ngIf="notify.status==1&&oauth.roleIn(['001','010'])"
-                   (click)="navigateWithData('/business/loan/repayment/accept',notify,['/business/loan/repayment/accept',notify.repaymentNotifyId])"
+                <a class="table-btn" *ngIf="notify.status==1&&oauth.roleIn(['003','010'])"
+                   (click)="lineSwitch.open(notify.repaymentNotifyId,notify.memberId)"
                    >受理</a>
                 <a class="table-btn" *ngIf="notify.status==2&&oauth.roleIn(['001','009','010'])"
                    (click)="navigateWithData('/business/loan/repayment/cav',notify,['/business/loan/repayment/cav',notify.repaymentNotifyId])">核销</a>
@@ -106,3 +106,4 @@
   </div>
 </div>
 
+<line-switch #lineSwitch type="1"></line-switch>

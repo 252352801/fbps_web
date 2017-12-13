@@ -148,8 +148,8 @@
               <td >{{contract.companyName}}</td>
               <td >{{matchResourceName(contract.resourceId)}}</td>
               <td class="text-center">
-                <span *ngIf="contract.isSign==0">是</span>
-                <span *ngIf="contract.isSign==1">否</span>
+                <span *ngIf="contract.isSign">是</span>
+                <span *ngIf="!contract.isSign">否</span>
               </td>
               <td class="text-center" style="width:10em" >
                 <div class="table-btn-group">
@@ -161,7 +161,7 @@
             </tr>
             <tr *ngIf="contracts.length>0">
               <td colspan="6" class="text-right" style="padding:8px;">
-                <a class="btn-def-outline text-primary pull-left" (click)="openContractEditor()">添加合同<i class="fa fa-plus" ></i></a>
+                <a class="btn-def-outline text-info pull-left" (click)="openContractEditor()">添加合同<i class="fa fa-plus" ></i></a>
                 <paginator [(index)]="contractsPaginator.index" styleClass="pull-right"
                            [count]="contractsPaginator.count" size="sm" [inputAble]="false"
                            [(pageSize)]="contractsPaginator.size" (onChangePage)="loadContracts()"></paginator>
@@ -236,4 +236,4 @@
 (complete)="loadContracts()"></contract-editor>
 <contract-details  [mode]="1" #contractDetails></contract-details>
 <previewer #previewer></previewer>
-<gallery #gallery size="md"></gallery>
+<gallery #gallery size="lg"></gallery>

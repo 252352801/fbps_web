@@ -3,7 +3,6 @@ import {User}   from '../entity/User.enity';
 import {CookieService} from 'ng2-cookies';
 import {MyHttp} from '../myHttp/myhttp.service';
 
-
 @Injectable()
 export class OauthService {
 

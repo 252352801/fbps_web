@@ -15,10 +15,14 @@ export class ProductDetailsService{
    * 查询产品详情
    */
   getProductById(id?:string):Promise<Product>{
-
     return this.prodSvc.getProductById(id);
   }
 
+  /**
+   * 加载资方/渠道
+   * @param query
+   * @returns Promise<Resource[]>
+   */
   loadResources(query?: any): Promise<Resource[]> {
     return this.myHttp.get({
       api: this.myHttp.api.resource,

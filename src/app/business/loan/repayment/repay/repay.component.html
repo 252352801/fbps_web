@@ -35,7 +35,7 @@
         </td>
         <td class="table-label">还款期数：</td>
         <td class="text-default">
-          {{repayPlan.currentPeriod|currencyFormat:[0,0,'xx/'+repayPlans.length+' 期']|nullReplace}}
+          {{repayPlan.currentPeriod|currencyFormat:[0,0,'xx/'+repayPlan.totalPeriod+' 期']|nullReplace}}
         </td>
       </tr>
 
@@ -43,7 +43,7 @@
     </table>
   </div>
   <div class="group clearfix mar-b-sm">
-    <div class="group-title">还款详情</div>
+    <div class="group-title">还款信息</div>
     <table class="table table-bordered bg-white mar-b-xs mar-t-xs">
       <thead class="bg-default">
       <tr>
@@ -64,7 +64,7 @@
         <td class="text-right">{{repayPlan.overdueInterest|currencyFormat|nullReplace}}</td>
         <td class="text-right">{{repayPlan.repaymentAmount|currencyFormat|nullReplace}}</td>
       </tr>
-      <tr>
+     <!-- <tr>
         <td class="text-center ver-mid">本期实际</td>
         <td class="text-center ver-mid" >
           {{submitData.repaymentRelDate|date:'yyyy-MM-dd hh:mm:ss'}}
@@ -81,7 +81,7 @@
         <td class="text-right ver-mid text-gold" >
           {{repayPlan.repaymentAmount|currencyFormat|nullReplace}}
         </td>
-      </tr>
+      </tr>-->
       </tbody>
     </table>
   </div>

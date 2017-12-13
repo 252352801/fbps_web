@@ -28,16 +28,19 @@ export class LoanDetailsComponent {
   proveData: ProveData[] = [];//证明材料
   firstReviewInfo: ReviewInfo = new ReviewInfo();//一审信息
   secondReviewInfo: ReviewInfo = new ReviewInfo();//二审信息
-  isApproved: boolean = false;//是否已经审批（放款）
   loanFlows: LoanFlow[] = [];//账户流水
 
 
-  isPlanList:boolean=false;
-  isContracts:boolean=false;
-  isProveData:boolean=false;
-  isFirstReviewInfo:boolean=false;
-  isSecondReviewInfo:boolean=false;
-  isLoanFlows:boolean=false;
+
+  progress={//进度
+    isPlanList:false,
+    isContracts:false,
+    isProveData:false,
+    isFirstReviewInfo:false,
+    isSecondReviewInfo:false,
+    isLoanFlows:false,
+    isApproved:false//是否已经审批（放款）
+  };
   constructor(private commonSvc: CommonService,
               private sharedSvc: SharedService,
               private businessSvc: BusinessService,
@@ -46,26 +49,26 @@ export class LoanDetailsComponent {
     this.getLoanById(this.borrowApplyId)
       .then((loan)=> {
         if([8,9,10].indexOf(parseInt(loan.status+''))>=0){
-          this.isApproved=true;
-          this.isPlanList=true;
+          this.progress.isApproved=true;
+          this.progress.isPlanList=true;
           this.loadRepayPlanList(this.borrowApplyId);
         }
         if([5,6,-6,7,8,9,10].indexOf(parseInt(loan.status+''))>=0){
-          this.isContracts=true;
+          this.progress.isContracts=true;
           this.loadContracts();
         }
         if([0,1].indexOf(parseInt(loan.status+''))==-1){
-          this.isProveData=true;
-          this.isFirstReviewInfo=true;
+          this.progress.isProveData=true;
+          this.progress.isFirstReviewInfo=true;
           this.loadProveData();
           this.loadFirstReviewInfo();
         }
-        if([8,9,10].indexOf(parseInt(loan.status+''))>=0){
-          this.isLoanFlows=true;
+        if([7,8,9,10].indexOf(parseInt(loan.status+''))>=0){
+          this.progress.isLoanFlows=true;
           this.loadLoanFlows();
         }
         if([0,1,2,-2].indexOf(parseInt(loan.status+''))==-1){
-          this.isSecondReviewInfo=true;
+          this.progress.isSecondReviewInfo=true;
           this.loadSecondReviewInfo();
         }
       })
@@ -137,7 +140,6 @@ export class LoanDetailsComponent {
     };
     this.commonSvc.querySystemLog(body1)
       .then((res)=> {
-        console.log(res);
         for (let o of res.items) {
           if (o.status == body1.status2) {
             this.firstReviewInfo.operator = o.createBy;
@@ -163,7 +165,6 @@ export class LoanDetailsComponent {
     };
     this.commonSvc.querySystemLog(body2)
       .then((res)=> {
-        console.log(res);
         for (let o of res.items) {
           if (o.status == body2.status2) {
             this.secondReviewInfo.operator = o.createBy;

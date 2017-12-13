@@ -4,7 +4,7 @@ import {Loan} from '../../services/entity/Loan.entity';
 import {Signatory} from '../../services/entity/Signatory.entity';
 import {Signature} from '../../services/entity/Signature.entity';
 import {Resource} from '../../services/entity/Resource.entity';
-import {api_file} from '../../services/config/app.config';
+import {config} from '../../services/config/app.config';
 import {Contract} from '../../services/entity/Contract.entity';
 import {CreateContractBody} from './shared/CreateContractBody';
 @Injectable()
@@ -69,9 +69,8 @@ export class ContractEditorService {
     }).toPromise()
       .then((res)=> {
         let loan = new Loan();
-        let result = res;
-        if (result.status === 200) {
-          loan=loan.init(result.body);
+        if (res.status === 200) {
+          loan=loan.init(res.body);
         }
         return Promise.resolve(loan);
       });
@@ -80,46 +79,45 @@ export class ContractEditorService {
 
 
   /*合同添加*/
-  createContract(body:CreateContractBody):Promise<{status:boolean,message:string}>{
+  createContract(body:CreateContractBody):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
       api: this.myHttp.api.createContract,
       body:body
     }).toPromise()
       .then((res)=> {
         let data = {
-          status:false,
+          ok:false,
           message:''
         };
-        let result = res
-        data.status=(result.status==200);
-        data.message=result.message||'';
+        data.ok=(res.status==200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }
 
-  deleteFile(fileId:string):Promise<{status:boolean,message:string}>{
+  deleteFile(fileId:string):Promise<{ok:boolean,message:string}>{
     return this.myHttp.post({
-      url:api_file.delete,
+      api:config.api.removeFile,
       body:{
         fileId:fileId
       }
     }).toPromise()
       .then((res)=> {
         let data = {
-          status:false,
+          ok:false,
           message:''
         };
-        let result = res;
-        if (result.status === 200) {
-        }
-        data.status=(result.status==200);
-        data.message=result.message||'';
+        data.ok=(res.status==200);
+        data.message=res.message||'';
         return Promise.resolve(data);
       });
   }
 
-
-
+  /**
+   *
+   * @param query
+   * @returns Promise<{count: number,items: Contract[]}>
+   */
   queryContracts(query: {
     companyName?:string,
     borrowApplyId?: string,

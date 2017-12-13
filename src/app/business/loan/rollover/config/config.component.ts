@@ -40,10 +40,6 @@ export class ConfigComponent implements OnInit{
     associateId: '',
     visible: false
   };
-
-  //firstReviewInfo:ReviewInfo=new ReviewInfo();//一审信息
-  //secondRevi/ewInfo:ReviewInfo=new ReviewInfo();//二审信息
-
   constructor(
     private pop:PopService,
     public commonSvc:CommonService,
@@ -73,54 +69,7 @@ export class ConfigComponent implements OnInit{
       .catch((err)=>{
       });
     this.loadContracts();
-    //this.getReviewInfo();
   }
-
-
-  /**
-   * 获取审核信息
-   */
- /* getReviewInfo(){
-    let applyId=this.actRoute.snapshot.params['id'];
-    let body1={//一审
-      type:2,
-      id:applyId,
-      status2:2
-    };
-    this.commonSvc.querySystemLog(body1)
-      .then((res)=>{
-        console.log(res);
-        for(let o of res.items){
-          if(o.status==body1.status2){
-            this.firstReviewInfo.operator=o.createBy;
-            this.firstReviewInfo.reviewTime=o.createTime;
-            this.firstReviewInfo.opinion=o.remarks;
-            break;
-          }
-        }
-      })
-      .catch((err)=>{});
-    let body2={//二审
-      type:2,
-      id:applyId,
-      status2:3
-    };
-    this.commonSvc.querySystemLog(body2)
-      .then((res)=>{
-        console.log(res);
-        for(let o of res.items){
-          if(o.status==body2.status2){
-            this.secondReviewInfo.operator=o.createBy;
-            this.secondReviewInfo.reviewTime=o.createTime;
-            this.secondReviewInfo.opinion=o.remarks;
-            break;
-          }
-        }
-      })
-      .catch((err)=>{});
-
-  }*/
-
 
   openConfirmModal(){
     this.modalConfirm.submitted=false;
@@ -181,8 +130,7 @@ export class ConfigComponent implements OnInit{
   }
 
   openContractEditor() {
-    let id=(this.rollover&&this.rollover.rolloverApplyId)|| this.actRoute.snapshot.params['id'];
-    this.contractEditor.associateId =id;//关联ID
+    this.contractEditor.associateId =(this.rollover&&this.rollover.rolloverApplyId)|| this.actRoute.snapshot.params['id'];//关联ID
     this.contractEditor.borrowApplyId = this.loan.borrowApplyId;
     this.contractEditor.visible = true;
   }
@@ -209,7 +157,7 @@ export class ConfigComponent implements OnInit{
     }).onConfirm(()=>{
       this.configSvc.removeContract(id)
         .then((res)=>{
-          if(res.status) {
+          if(res.ok) {
             this.pop.info({text: '删除成功！'});
             this.loadContracts();
           }else{

@@ -59,7 +59,6 @@ export class BusinessService{
         }
         return Promise.resolve(loan);
       });
-
   }
 
   /**

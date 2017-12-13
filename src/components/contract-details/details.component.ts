@@ -7,6 +7,8 @@ import {Resource} from '../../services/entity/Resource.entity';
 import { Contract} from '../../services/entity/Contract.entity';
 import { Signature} from '../../services/entity/Signature.entity';
 import { FileInfo} from '../../services/entity/FileInfo.entity';
+import { PreviewerComponent} from '../../components/previewer/previewer.component';
+import { GalleryComponent} from 'dolphinng';
 
 
 import { ModalComponent} from 'dolphinng';
@@ -33,6 +35,8 @@ export class ContractDetailsComponent implements OnInit,OnChanges{
   @Input() data:any;
   @ViewChild('fileModal') fileModal:ModalComponent;
   @ViewChild('contentModal') contentModal:ModalComponent;
+  @ViewChild('previewer') previewer:PreviewerComponent;
+  @ViewChild('gallery') gallery:GalleryComponent;
   constructor(
     private contractDtSvc:ContractDetailsService,
     private commonSvc:CommonService,
@@ -50,6 +54,9 @@ export class ContractDetailsComponent implements OnInit,OnChanges{
     }
   }
   init(){
+    this.contract=new Contract();
+    this.signatures=[];
+    this.fileInfo=null;
     try {
       let inputData=this.data;//JSON.parse(this.actRoute.snapshot.params['data']);
       let data;
@@ -70,10 +77,9 @@ export class ContractDetailsComponent implements OnInit,OnChanges{
           this.signatures=res;
           this.loadingSignatures=false;
         })
-       /* .catch((err)=>{
-          console.log(err);
+        .catch((err)=>{
           this.loadingSignatures=false;
-        });*/
+        });
 
     }
 
@@ -115,4 +121,13 @@ export class ContractDetailsComponent implements OnInit,OnChanges{
     return '';
   }
 
+  preview(data:any){
+    if(this.mode==1){
+      this.contentModal.close();
+    }
+    this.previewer.open(data);
+  }
+  previewImg(data:any){
+    this.gallery.open(data);
+  }
 }

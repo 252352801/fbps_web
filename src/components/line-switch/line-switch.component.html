@@ -1,0 +1,21 @@
+<modal #modal>
+  <modal-header *ngIf="type==0">请选择放款方式</modal-header>
+  <modal-header *ngIf="type==1">请选择还款方式</modal-header>
+  <modal-body>
+    <div class="mar-b-sm text-center mar-t-sm">
+      <span class="pad-r-xs bold">方式一：</span>
+      <a  class="btn  btn-primary" *ngIf="type==0" (click)="navigate('/business/borrow/applyLoan/online/'+id)"
+      [style.cursor]="loading?'wait':null" title="{{loading?'正在验证是否开户...':''}}">线上放款</a>
+      <a  class="btn  btn-primary" *ngIf="type==1" (click)="navigate('/business/loan/repayment/accept/online/'+id)"
+          [style.cursor]="loading?'wait':null" title="{{loading?'正在验证是否开户...':''}}">线上还款</a>
+    </div>
+    <div class="text-center">
+      <span class="pad-r-xs bold">方式二：</span>
+      <a  class="btn  btn-default" *ngIf="type==0" routerLink="/business/borrow/applyLoan/offline/{{id}}">线下放款</a>
+      <a  class="btn  btn-default" *ngIf="type==1" routerLink="/business/loan/repayment/accept/offline/{{id}}">线下还款</a>
+    </div>
+  </modal-body>
+  <modal-footer>
+  </modal-footer>
+</modal>
+

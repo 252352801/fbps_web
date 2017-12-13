@@ -33,6 +33,7 @@ export class Contract{
       instance.eSignatureTime=obj.eSignatureTime;
       instance.eSignatureStatus=obj.eSignatureStatus;
       instance.eSignatureStatusDic=obj.eSignatureStatusDic;
+      instance.isSign=!(instance.eSignatureStatus==2);
       return instance;
     }
   }

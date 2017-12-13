@@ -119,7 +119,7 @@ export class RepayComponent {
     this.repaySvc.createRepaymentNotify(body)
       .then((res)=> {
         this.submitted = false;
-        if (res.status) {
+        if (res.ok) {
           this.pop.info({text: '提交还款成功！'})
             .onConfirm(()=>{
               history.back();

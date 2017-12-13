@@ -4,7 +4,6 @@ import {Paginator} from '../../../services/entity/Paginator.entity';
 import {ContractService} from './contract.service';
 import {ActivatedRoute,Params,Router} from '@angular/router';
 import {fadeInAnimation} from '../../../animations/index';
-import {api_file} from '../../../services/config/app.config';
 import {SharedService} from '../../shared/shared.service';
 import {QueryContractBody} from '../../shared/shared.interfaces';
 import {Resource} from '../../../services/entity/Resource.entity';
@@ -118,6 +117,9 @@ export class ContractComponent {
     this.params.eSignatureStatus='';
   }
   query() {
+    if(this.loading){
+      return;
+    }
     let body :QueryContractBody= {
       page: this.paginator.index + 1,
       rows: this.paginator.size

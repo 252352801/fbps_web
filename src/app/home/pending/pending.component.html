@@ -29,7 +29,7 @@
           <p class="h3 pad-t-def text-danger">{{notifyData.loanConfirmResponse.count}}</p>
         </div>
       </a>
-      <a class="col-xs-6 text-center mar-b-def no-padding"  (click)="go('business/loan/rollover',{tab:1})">
+      <a class="col-xs-6 text-center mar-b-def no-padding"  (click)="go('business/loan/rollover',{status:3})">
         <div class="pad-def pending-box">
           <h4 class="h4">{{notifyData.rolloverReviewResponse.text}}</h4>
           <p class="h3 pad-t-def text-danger">{{notifyData.rolloverReviewResponse.count}}</p>
@@ -154,7 +154,7 @@
           还款期数
         </ng-template>
         <ng-template  let-repayment="rowData" pTemplate="body" >
-          第{{repayment.repaymentPlan}}期
+          第{{repayment.currentPeriod}}期
         </ng-template>
       </p-column>
       <p-column  styleClass="text-center" [style]="{'width':'100px'}">
@@ -175,14 +175,15 @@
           <span >{{repayment.statusName}}</span>
         </ng-template>
       </p-column>
-      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['001','010'])">
+      <p-column  [style]="{'width':'100px'}" *ngIf="oauth.roleIn(['003','010'])">
         <ng-template pTemplate="header" >
           操作
         </ng-template>
         <ng-template  let-notify="rowData" pTemplate="body" >
           <div class="table-btn-group">
-            <a  class="table-btn"
-                (click)="navigateWithData('/business/loan/repayment/accept',notify,['/business/loan/repayment/accept',notify.repaymentNotifyId])">受理</a>
+            <a  class="table-btn" *ngIf="notify.status==1"
+                (click)="lineSwitch.open(notify.repaymentNotifyId,notify.memberId)"
+            >受理</a>
           </div>
         </ng-template>
       </p-column>
@@ -195,7 +196,8 @@
       <p-header *ngIf="tableData[2].paginator.count>0">
         <div class="ui-helper-clearfix text-right">
           当前有<span class="text-danger">{{tableData[2].paginator.count}}</span>笔展期申请，请尽快处理！
-          <a routerLink="/business/loan/rollover" class="text-info ">去处理<i class="pad-l-min fa fa-angle-right"></i></a>
+          <a (click)="go('/business/loan/rollover',{status:3})"
+             class="text-info ">去处理<i class="pad-l-min fa fa-angle-right"></i></a>
         </div>
       </p-header>
 
@@ -215,7 +217,7 @@
           展期金额(元)
         </ng-template>
         <ng-template  let-rollover="rowData" pTemplate="body" >
-          {{rollover.repaymentPrinciple}}
+          {{rollover.repaymentCapital}}
         </ng-template>
       </p-column>
       <p-column  styleClass="text-center" [style]="{'width':'120px'}">
@@ -223,7 +225,7 @@
           还款期数
         </ng-template>
         <ng-template  let-rollover="rowData" pTemplate="body" >
-          第{{rollover.repaymentPlan}}期
+          {{rollover.currentPeriodStr}}
         </ng-template>
       </p-column>
       <p-column  styleClass="text-center" [style]="{'width':'120px'}">
@@ -246,5 +248,4 @@
   </div>
 </div>
 
-
-
+<line-switch #lineSwitch type="1"></line-switch>

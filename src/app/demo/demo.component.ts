@@ -67,7 +67,6 @@ export class DemoComponent {
       },500);
     };
     this.areaPicker1.done=(values)=>{
-      console.log(values);
     };
 
 
@@ -130,7 +129,6 @@ export class DemoComponent {
       }]);
     };
     this.areaPicker2.done=(values)=>{
-      console.log(values);
       this.address2=values[0].name.test+'/'+values[1].name+'/'+values[2].name;
     };
   }
