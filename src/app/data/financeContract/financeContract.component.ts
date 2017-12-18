@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {Contract} from '../../../services/entity/Contract.entity';
-import {Paginator} from '../../../services/entity/Paginator.entity';
-import {SharedService} from '../../shared/shared.service';
+import {Contract} from '../../core/entity/Contract.entity';
+import {Paginator} from '../../core/entity/Paginator.entity';
+import {CommonService} from '../../core/services/common/common.service';
 import {FinanceContractService} from './financeContract.service';
 @Component({
   selector: 'finance-ontract',
@@ -22,7 +22,7 @@ export class FinanceContractComponent {
   paginator: Paginator = new Paginator;
 
   constructor(
-    private sharedSvc: SharedService,
+    private commonSvc: CommonService,
     private contractSvc: FinanceContractService
   ) {
   }
@@ -40,7 +40,7 @@ export class FinanceContractComponent {
       rows: this.paginator.size
     };
     this.loading = true;
-    this.sharedSvc.queryContracts(query)
+    this.commonSvc.queryContracts(query)
       .then((data)=> {
         this.tableData = data.items;
         this.paginator.count = data.count;

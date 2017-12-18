@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import  {SettingService}  from '../../services/setting/setting.service';
-import {OauthService} from '../../services/oauth/oauth.service';
-import {User} from '../../services/entity/User.enity';
-import {AsideMenu} from '../../services/entity/AsideMenu.entity';
+import  {SettingService}  from '../core/services/setting/setting.service';
+import {OauthService} from '../core/services/oauth/oauth.service';
+import {User} from '../core/entity/User.enity';
+import {AsideMenu} from '../core/entity/AsideMenu.entity';
 import {PopService} from 'dolphinng';
-import {SharedService} from '../shared/shared.service';
+import {CommonService} from '../core/services/common/common.service';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class IndexComponent implements OnInit {
   constructor(private settingService: SettingService,
               public oauth: OauthService,
               private pop: PopService,
-              private sharedSvc: SharedService,
+              private commonSvc: CommonService,
               private router: Router) {
     this.setting = this.settingService.getSetting();
     this.setting.asideFolded=false;
@@ -117,7 +117,7 @@ export class IndexComponent implements OnInit {
       }
     }
     this.asideMenus=menus;
-    this.sharedSvc.asideMenus=menus;
+    this.commonSvc.asideMenus=menus;
   }
 
   toggleAsideFolded() {
@@ -166,7 +166,7 @@ export class IndexComponent implements OnInit {
     this.pop.confirm({
       text: '确定要退出登录吗？'
     }).onConfirm(()=> {
-      this.sharedSvc.signOut({
+      this.commonSvc.signOut({
         employeeId:this.oauth.user.employeeId
       }).then((res)=>{
         if(res.ok) {

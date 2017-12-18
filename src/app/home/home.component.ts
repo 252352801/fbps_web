@@ -1,6 +1,6 @@
 import { Component,OnInit} from '@angular/core';
 import { Router} from '@angular/router';
-import { SharedService} from '../shared/shared.service';
+import { CommonService} from '../core/services/common/common.service';
 import { Toaster} from 'dolphinng';
 @Component({
     selector: 'home',
@@ -10,7 +10,7 @@ import { Toaster} from 'dolphinng';
 export class HomeComponent implements OnInit{
 
   constructor(
-    private sharedSvc:SharedService,
+    private commonSvc:CommonService,
     private toaster:Toaster,
     private router:Router
   ){
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit{
   ngOnInit(){
     let permission=false;
     loop:
-      for(let fMenu of this.sharedSvc.asideMenus){
+      for(let fMenu of this.commonSvc.asideMenus){
         if(fMenu.link){
           permission=true;
           this.router.navigate([fMenu.link]);

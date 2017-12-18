@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Resource} from '../../../../services/entity/Resource.entity';
-import {MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
+import {Resource} from '../../../core/entity/Resource.entity';
+import {MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
 import { BorrowService} from '../borrow.service';
 @Injectable()
 export class BorrowConfigureService {

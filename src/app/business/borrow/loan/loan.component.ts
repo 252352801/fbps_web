@@ -3,23 +3,22 @@ import {ActivatedRoute} from '@angular/router';
 import {PopService, Toaster} from 'dolphinng';
 import {LoanService} from './loan.service';
 import {Uploader} from 'dolphinng';
-import {Loan} from '../../../../services/entity/Loan.entity';
-import {Contract} from "../../../../services/entity/Contract.entity";
-import {Resource} from '../../../../services/entity/Resource.entity';
-import {fadeInAnimation} from '../../../../animations/index';
-import {OauthService} from '../../../../services/oauth/oauth.service';
-import {BankCard} from '../../../../services/entity/BankCard.entity';
-import {BankAccount} from '../../../../services/entity/BankAccount.entity';
-import {RepayPlanPreview} from '../../../../services/entity/RepayPlanPreview.entity';
-import {ProveData} from "../../../../services/entity/ProveData.entity";
-import {ReviewInfo} from "../../../../services/entity/ReviewInfo.entity";
-import {CommonService} from "../../../../services/common/common.service";
+import {Loan} from '../../../core/entity/Loan.entity';
+import {Contract} from "../../../core/entity/Contract.entity";
+import {Resource} from '../../../core/entity/Resource.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
+import {BankCard} from '../../../core/entity/BankCard.entity';
+import {BankAccount} from '../../../core/entity/BankAccount.entity';
+import {RepayPlanPreview} from '../../../core/entity/RepayPlanPreview.entity';
+import {ProveData} from "../../../core/entity/ProveData.entity";
+import {ReviewInfo} from "../../../core/entity/ReviewInfo.entity";
+import {CommonService} from "../../../core/services/common/common.service";
 import {BusinessService} from "../../business.service";
-import {LoanFlow} from '../../../../services/entity/LoanFlow.entity';
-import {config} from '../../../../services/config/app.config';
-import {SharedService} from '../../../shared/shared.service';
+import {LoanFlow} from '../../../core/entity/LoanFlow.entity';
+import {config} from '../../../core/config/app.config';
 import {BorrowService} from '../borrow.service';
-import {md5} from '../../../../services/encrypt/md5';
+import {md5} from '../../../core/services/encrypt/md5';
 @Component({
   selector: 'loan',
   templateUrl: './loan.component.html',
@@ -62,7 +61,6 @@ export class LoanComponent{
               private businessSvc: BusinessService,
               private BorrowSvc: BorrowService,
               private loanSvc: LoanService,
-              private sharedSvc: SharedService,
               private commonSvc: CommonService,
               private toaster: Toaster,
               private pop: PopService) {
@@ -163,7 +161,7 @@ export class LoanComponent{
   }
 
   getContracts() {
-    this.sharedSvc.queryContracts({
+    this.commonSvc.queryContracts({
       borrowApplyId: this.actRoute.snapshot.params['id'],
       page: 1,
       rows: 100000
@@ -208,7 +206,7 @@ export class LoanComponent{
   }
 
   getBankAccount() {
-    this.sharedSvc.bankAccount({
+    this.commonSvc.bankAccount({
       memberId: this.loan.memberId
     })
       .then((res)=> {

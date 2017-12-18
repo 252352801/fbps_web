@@ -4,7 +4,7 @@ import {Title} from '@angular/platform-browser';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
-import {MyInjector} from "./shared/myInjector.service";
+import {MyInjector} from "./core/services/myInjector/myInjector.service";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

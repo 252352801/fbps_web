@@ -1,8 +1,8 @@
 import {Component,ViewChild} from '@angular/core';
 import {ContractDetailsService} from './details.service';
 import {ActivatedRoute,Params,Router} from '@angular/router';
-import {fadeInAnimation} from '../../../../animations/index';
-import { Contract} from '../../../../services/entity/Contract.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import { Contract} from '../../../core/entity/Contract.entity';
 
 import { ModalComponent} from 'dolphinng';
 @Component({

@@ -56,7 +56,7 @@
         申请日期
       </ng-template>
       <ng-template  let-rollover="rowData" pTemplate="body" >
-        {{rollover.rolloverDate|date:'yyyy-MM-dd'}}
+        {{rollover.createTime|date:'yyyy-MM-dd'}}
       </ng-template>
     </p-column>
     <p-column field="" header="状态" styleClass="text-center" [style]="{'width':'120px'}">

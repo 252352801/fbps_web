@@ -2,15 +2,14 @@ import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DetailsService} from './details.service';
 import {BusinessService} from '../business.service';
-import {Loan} from '../../../services/entity/Loan.entity';
-import {RepayPlan} from '../../../services/entity/RepayPlan.entity';
-import {ProveData} from '../../../services/entity/ProveData.entity';
-import {LoanFlow} from '../../../services/entity/LoanFlow.entity';
-import {Contract} from '../../../services/entity/Contract.entity';
-import {fadeInAnimation} from '../../../animations/index';
-import {ReviewInfo} from "../../../services/entity/ReviewInfo.entity";
-import {CommonService} from "../../../services/common/common.service";
-import {SharedService} from "../../shared/shared.service";
+import {Loan} from '../../core/entity/Loan.entity';
+import {RepayPlan} from '../../core/entity/RepayPlan.entity';
+import {ProveData} from '../../core/entity/ProveData.entity';
+import {LoanFlow} from '../../core/entity/LoanFlow.entity';
+import {Contract} from '../../core/entity/Contract.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {ReviewInfo} from "../../core/entity/ReviewInfo.entity";
+import {CommonService} from "../../core/services/common/common.service";
 @Component({
   selector: 'loan-details',
   templateUrl: './details.component.html',
@@ -42,7 +41,6 @@ export class LoanDetailsComponent {
     isApproved:false//是否已经审批（放款）
   };
   constructor(private commonSvc: CommonService,
-              private sharedSvc: SharedService,
               private businessSvc: BusinessService,
               private detailsSvc: DetailsService,
               private actRoute: ActivatedRoute) {
@@ -106,7 +104,7 @@ export class LoanDetailsComponent {
    * 加载合同
    */
   loadContracts() {
-    this.sharedSvc.queryContracts({
+    this.commonSvc.queryContracts({
       borrowApplyId: this.borrowApplyId,
       page: 1,
       rows: 100000
@@ -132,11 +130,12 @@ export class LoanDetailsComponent {
    * 获取一审审核信息
    */
   loadFirstReviewInfo() {
+    let status=(this.loan.status==-2?-2:2);
     let borrowApplyId = this.actRoute.snapshot.params['id'];
     let body1 = {//一审
       type: 0,
       id: borrowApplyId,
-      status2: 2
+      status2: status
     };
     this.commonSvc.querySystemLog(body1)
       .then((res)=> {
@@ -157,11 +156,12 @@ export class LoanDetailsComponent {
    * 获取二审审核信息
    */
   loadSecondReviewInfo() {
+    let status=(this.loan.status==-3?-3:3);
     let borrowApplyId = this.actRoute.snapshot.params['id'];
     let body2 = {//二审
       type: 0,
       id: borrowApplyId,
-      status2: 3
+      status2: status
     };
     this.commonSvc.querySystemLog(body2)
       .then((res)=> {

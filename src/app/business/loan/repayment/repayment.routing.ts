@@ -3,7 +3,7 @@ import {RepaymentComponent}   from './repayment.component';
 import {RepayComponent}   from './repay/repay.component';
 import {AcceptComponent}   from './accept/accept.component';
 import { CAVComponent }   from './cav/cav.component';
-import {OauthGuard} from '../../../../services/guard/oauth.guard';
+import {OauthGuard} from '../../../core/services/guard/oauth.guard';
 import {RepaymentDetailsComponent}   from './details/details.component';
 const routes: Routes = <Routes>[
   {

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import { RepaymentNotify} from '../../../../services/entity/RepaymentNotify.entity';
-import { RepayPlan} from '../../../../services/entity/RepayPlan.entity';
-import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
-import { BankAccount} from '../../../../services/entity/BankAccount.entity';
-import { RepaymentFlow} from '../../../../services/entity/RepaymentFlow.entity';
+import { RepaymentNotify} from '../../../core/entity/RepaymentNotify.entity';
+import { RepayPlan} from '../../../core/entity/RepayPlan.entity';
+import { MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
+import { BankAccount} from '../../../core/entity/BankAccount.entity';
+import { RepaymentFlow} from '../../../core/entity/RepaymentFlow.entity';
 @Injectable()
 export class RepaymentService{
   constructor(private myHttp:MyHttpClient){

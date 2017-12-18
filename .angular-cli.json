@@ -6,9 +6,10 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "fbps/dist",
       "assets": [
         "assets",
+        "config",
         "favicon.ico"
       ],
       "index": "index.html",

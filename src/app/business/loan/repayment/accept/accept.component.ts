@@ -3,16 +3,16 @@ import {ActivatedRoute} from '@angular/router';
 import {PopService,Toaster} from 'dolphinng';
 import {AcceptService} from './accept.service';
 import {RepaymentService} from '../repayment.service';
-import {Loan} from '../../../../../services/entity/Loan.entity';
-import {RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
-import {fadeInAnimation} from '../../../../../animations/index';
-import {OauthService} from '../../../../../services/oauth/oauth.service';
-import {RepaymentNotify} from "services/entity/RepaymentNotify.entity";
-import {BankAccount} from "services/entity/BankAccount.entity";
-import {BankAccountFlow} from "../../../../../services/entity/BankAccountFlow.entity";
-import {config} from '../../../../../services/config/app.config';
+import {Loan} from '../../../../core/entity/Loan.entity';
+import {RepayPlan} from '../../../../core/entity/RepayPlan.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../../../core/services/oauth/oauth.service';
+import {RepaymentNotify} from "../../../../core/entity/RepaymentNotify.entity";
+import {BankAccount} from "../../../../core/entity/BankAccount.entity";
+import {BankAccountFlow} from "../../../../core/entity/BankAccountFlow.entity";
+import {config} from '../../../../core/config/app.config';
 import {Uploader} from 'dolphinng';
-import {CommonService} from '../../../../../services/common/common.service';
+import {CommonService} from '../../../../core/services/common/common.service';
 import {BusinessService} from '../../../business.service';
 import {AcceptRepaymentBody} from './shared/AcceptRepaymentBody';
 @Component({
@@ -75,14 +75,7 @@ export class AcceptComponent implements OnInit {
             }
           })
           .catch((err)=>{});
-        this.repaymentSvc.getRepayPlan({//还款计划详情
-          borrowApplyId:this.repaymentNotify.borrowApplyId,
-          currentPeriod:this.repaymentNotify.currentPeriod
-        })
-          .then((res)=> {
-            this.repayPlan = res;
-          })
-          .catch((err)=>{});
+       this.loadRepayPlan(this.repaymentNotify.borrowApplyId,this.repaymentNotify.currentPeriod);
         this.businessSvc.getRepayPlans(this.repaymentNotify.borrowApplyId)//还款计划列表
           .then((res)=> {
             this.repaymentPlans = res;
@@ -120,7 +113,7 @@ export class AcceptComponent implements OnInit {
         borrowApplyId:this.loan.borrowApplyId,
         currentPeriod:this.repaymentNotify.currentPeriod,
         accountRepaymentWay: this.repaymentNotify.accountRepaymentWay + '',
-        repaymentRelDate: this.repaymentDate+':01',
+        repaymentRelDate: this.repaymentDate.replace('00:00:00','00:00:01'),
         operator: this.operator,
         totalRelAmount:parseFloat(repayAmount+'')
       };
@@ -164,17 +157,30 @@ export class AcceptComponent implements OnInit {
   }
 
   /**
-   * 获取当期还款计划
+   * 加载还款计划详情/预览
+   * @param borrowApplyId
+   * @param currentPeriod
    */
-  getCurrentRepayPlan(){
-    if(this.repaymentNotify&&this.repaymentNotify.currentPeriod){
-      if(this.repaymentPlans.length){
-        for(let o of this.repaymentPlans){
-          if(this.repaymentNotify.currentPeriod==o.currentPeriod){
-            return o;
-          }
-        }
-      }
+  loadRepayPlan(borrowApplyId:string,currentPeriod:string|number,repayDate?:string){
+    if(repayDate){
+      this.repaymentSvc.getRepayPlanPreview({
+        borrowApplyId:borrowApplyId,
+        currentPeriod:currentPeriod,
+        repayDate:repayDate
+      })
+        .then((res)=> {
+          this.repayPlan = res;
+        })
+        .catch((err)=>{});
+    }else{
+      this.repaymentSvc.getRepayPlan({//还款计划详情
+        borrowApplyId:borrowApplyId,
+        currentPeriod:currentPeriod
+      })
+        .then((res)=> {
+          this.repayPlan = res;
+        })
+        .catch((err)=>{});
     }
   }
 
@@ -185,7 +191,7 @@ export class AcceptComponent implements OnInit {
   getErrorAmount(){
     if(this.repayPlan&&this.repayPlan.repaymentAmount){
       if(this.totalRelAmount||this.totalRelAmount===0){
-        return this.totalRelAmount-this.repayPlan.repaymentAmount;
+        return +(this.totalRelAmount-this.repayPlan.repaymentAmount).toFixed(2);
       }
     }
   }

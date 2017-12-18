@@ -3,10 +3,10 @@ import { ActivatedRoute} from '@angular/router';
 import { ProductService} from '../product.service';
 import { PublishProductService} from './publish.service';
 import { ProductBody} from '../product.service';
-import { DictionaryService,Dictionary} from '../../../../services/dictionary/dictionary.service';
-import {Product} from "../../../../services/entity/Product.entity";
+import { DictionaryService,Dictionary} from '../../../core/services/dictionary/dictionary.service';
+import {Product} from "../../../core/entity/Product.entity";
 import {PopService} from 'dolphinng';
-import {fadeInAnimation} from '../../../../animations/index';
+import {fadeInAnimation} from 'app/shared/animations/index';
 @Component({
   selector: 'publish-product',
   templateUrl: './publish.component.html',

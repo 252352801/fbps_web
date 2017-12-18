@@ -1,12 +1,12 @@
 import { Component,OnInit} from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { ProductDetailsService} from './details.service';
-import { Product} from '../../../../services/entity/Product.entity';
-import {ProductConfig} from '../../../../services/entity/ProductConfig.entity';
-import {Resource} from '../../../../services/entity/Resource.entity';
+import { Product} from '../../../core/entity/Product.entity';
+import {ProductConfig} from '../../../core/entity/ProductConfig.entity';
+import {Resource} from '../../../core/entity/Resource.entity';
 import { ProductService} from '../product.service';
-import {ProveData} from '../../../../services/entity/ProveData.entity';
-import {fadeInAnimation} from '../../../../animations/index';
+import {ProveData} from '../../../core/entity/ProveData.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
 @Component({
     selector: 'product-details',
     templateUrl: './details.component.html',

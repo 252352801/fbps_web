@@ -1,8 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {SignInService} from './signin.service';
-import {OauthService} from '../../services/oauth/oauth.service';
-import {config} from '../../services/config/app.config';
+import {OauthService} from '../core/services/oauth/oauth.service';
+import {config} from '../core/config/app.config';
 
 @Component({
   selector: 'signin',

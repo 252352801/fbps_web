@@ -15,6 +15,7 @@ import {
   DateFormatModule,
   NullReplaceModule,
   DropDownModule,
+  AreaPickerModule,
 }   from 'dolphinng';
 //primeng
 import {
@@ -27,19 +28,18 @@ import {
   PaginatorModule
 } from 'primeng/primeng';
 //local
-import {DictionaryPipe} from '../../pipes/dictionary/dictionary.pipe';
-import {ContentModelDirective} from '../../directives/contentModel/contentModel.directive';
-import {MySrcDirective} from '../../directives/mySrc/mySrc.directive';
-import {AreaPickerDirective} from '../../directives/areaPicker/areaPicker.directive';
-import {ContractEditorComponent}   from '../../components/contract-editor/contract-editor.component';
-import {SystemLogsComponent}   from '../../components/system-logs/system-logs.component';
-import {FileButtonsComponent}   from '../../components/file-btns/file-btns.component';
-import {PreviewerComponent}   from '../../components/previewer/previewer.component';
-import {ContractDetailsComponent}   from '../../components/contract-details/details.component';
-import {FlowDetailsComponent}   from '../../components/flow-details/details.component';
-import {RepayPlansComponent}   from '../../components/repay-plans/repay-plans.component';
-import { AccountFlowComponent} from '../../components/account-flow/account-flow.component';
-import { LineSwitchComponent} from '../../components/line-switch/line-switch.component';
+import {DictionaryPipe} from './pipes/dictionary/dictionary.pipe';
+import {ContentModelDirective} from './directives/contentModel/contentModel.directive';
+import {MySrcDirective} from './directives/mySrc/mySrc.directive';
+import {ContractEditorComponent}   from './components/contract-editor/contract-editor.component';
+import {SystemLogsComponent}   from './components/system-logs/system-logs.component';
+import {FileButtonsComponent}   from './components/file-btns/file-btns.component';
+import {PreviewerComponent}   from './components/previewer/previewer.component';
+import {ContractDetailsComponent}   from './components/contract-details/details.component';
+import {FlowDetailsComponent}   from './components/flow-details/details.component';
+import {RepayPlansComponent}   from './components/repay-plans/repay-plans.component';
+import { AccountFlowComponent} from './components/account-flow/account-flow.component';
+import { LineSwitchComponent} from './components/line-switch/line-switch.component';
 @NgModule({
   imports:[
     //ng
@@ -65,12 +65,12 @@ import { LineSwitchComponent} from '../../components/line-switch/line-switch.com
     SliderModule,
     DropdownModule,
     ContextMenuModule,
-    PaginatorModule
+    PaginatorModule,
+    AreaPickerModule
   ],
   declarations: [
     DictionaryPipe,
     ContentModelDirective,
-    AreaPickerDirective,
     MySrcDirective,
     ContractEditorComponent,
     SystemLogsComponent,
@@ -99,6 +99,7 @@ import { LineSwitchComponent} from '../../components/line-switch/line-switch.com
     DatetimePickerModule,
     UploaderModule,
     DropDownModule,
+    AreaPickerModule,
     //primeng
     PDataTableModule,
     PSharedModule,
@@ -110,7 +111,6 @@ import { LineSwitchComponent} from '../../components/line-switch/line-switch.com
     //local
     DictionaryPipe,
     ContentModelDirective,
-    AreaPickerDirective,
     MySrcDirective,
     ContractEditorComponent,
     SystemLogsComponent,

@@ -1,17 +1,14 @@
 import {RouterModule, Routes, Data} from '@angular/router';
-import {AppComponent} from './app.component';
 import {SignInComponent} from './signin/signin.component';
 import {IndexComponent} from './index/index.component';
-import {DemoComponent} from './demo/demo.component';
 import {ModifyPasswordComponent} from './modifyPassword/modifyPassword.component';
-import {ContractDetailsPageComponent} from './data/contract/details/details.component';
 
-import {LoginGuard} from '../services/guard/login.guard';
-import {OauthGuard} from '../services/guard/oauth.guard';
+
+import {LoginGuard} from './core/services/guard/login.guard';
+import {OauthGuard} from './core/services/guard/oauth.guard';
 const routes: Routes = [
   {path: '', redirectTo: 'signin', pathMatch: 'full', data: {title: '登录'}},
   {path: 'signin', component: SignInComponent, data: {title: '登录'}},
-  {path: 'demo', component: DemoComponent, data: {title: 'demo'}},
   {
     path: '', component: IndexComponent, data: {title: '控制台'}, canActivate: [LoginGuard],
     children: [{
@@ -42,12 +39,6 @@ const routes: Routes = [
       loadChildren: './data/data.module#DataModule',
       data: {title: '数据中心',fnIn:['16']},
       canActivate: [OauthGuard]
-    },
-      //融资合同详情
-     {
-      path:'data/contract/details/:data',
-      component: ContractDetailsPageComponent,
-      data: {title: '合同详情'}
     }]
   }
 ];

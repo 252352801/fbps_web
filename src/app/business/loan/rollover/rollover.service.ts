@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Rollover} from '../../../../services/entity/Rollover.entity';
-import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
-import { Product} from '../../../../services/entity/Product.entity';
+import {Rollover} from '../../../core/entity/Rollover.entity';
+import { MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
+import { Product} from '../../../core/entity/Product.entity';
 @Injectable()
 export class RolloverService{
   constructor(private myHttp:MyHttpClient){

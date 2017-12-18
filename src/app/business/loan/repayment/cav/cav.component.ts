@@ -2,18 +2,18 @@ import { Component,OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { PopService} from 'dolphinng';
 import { CAVService} from './cav.service';
-import { Loan} from '../../../../../services/entity/Loan.entity';
-import { RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
-import {fadeInAnimation} from '../../../../../animations/index';
-import {OauthService} from '../../../../../services/oauth/oauth.service';
-import {RepaymentNotify} from "services/entity/RepaymentNotify.entity";
-import {CommonService} from '../../../../../services/common/common.service';
+import { Loan} from '../../../../core/entity/Loan.entity';
+import { RepayPlan} from '../../../../core/entity/RepayPlan.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../../../core/services/oauth/oauth.service';
+import {RepaymentNotify} from "../../../../core/entity/RepaymentNotify.entity";
+import {CommonService} from '../../../../core/services/common/common.service';
 import {RepaymentService} from '../repayment.service';
 import {BusinessService} from "../../../business.service";
-import {RepaymentFlow} from "../../../../../services/entity/RepaymentFlow.entity";
+import {RepaymentFlow} from "../../../../core/entity/RepaymentFlow.entity";
 import {ConfirmCheckModal} from './shared/ConfirmCheckModal';
 import {CheckRepaymentBody} from './shared/CheckRepaymentBody.interface';
-import {patterns} from '../../../../../services/config/patterns.config';
+import {patterns} from '../../../../core/config/patterns.config';
 
 interface ToAccount{
   toAccountId:string;

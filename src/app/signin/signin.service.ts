@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {User} from '../../services/entity/User.enity';
-import {MyHttpClient} from '../../services/myHttp/myhttpClient.service';
+import {User} from '../core/entity/User.enity';
+import {MyHttpClient} from '../core/services/myHttp/myhttpClient.service';
 
 @Injectable()
 export class SignInService {

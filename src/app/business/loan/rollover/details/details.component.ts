@@ -2,14 +2,14 @@ import { Component,OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { PopService} from 'dolphinng';
 import { RolloverDetailsService} from './details.service';
-import { Rollover} from '../../../../../services/entity/Rollover.entity';
-import { Loan} from '../../../../../services/entity/Loan.entity';
+import { Rollover} from '../../../../core/entity/Rollover.entity';
+import { Loan} from '../../../../core/entity/Loan.entity';
 import {BusinessService} from '../../../business.service';
 import {RolloverService} from '../rollover.service';
-import { RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
-import {fadeInAnimation} from '../../../../../animations/index';
-import { Contract} from '../../../../../services/entity/Contract.entity';
-import { SharedService} from '../../../../shared/shared.service';
+import { RepayPlan} from '../../../../core/entity/RepayPlan.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import { Contract} from '../../../../core/entity/Contract.entity';
+import { CommonService} from '../../../../core/services/common/common.service';
 @Component({
     selector: 'rollover-details',
     templateUrl: './details.component.html',
@@ -34,7 +34,7 @@ export class RolloverDetailsComponent implements OnInit{
   };
   constructor(
     public rolloverSvc:RolloverService,
-    private sharedSvc:SharedService,
+    private commonSvc:CommonService,
     private rolloverDtSvc:RolloverDetailsService,
     private businessSvc:BusinessService,
     private actRoute:ActivatedRoute
@@ -78,8 +78,8 @@ export class RolloverDetailsComponent implements OnInit{
    * 加载合同
    */
   loadContracts(){
-    this.sharedSvc.queryContracts({
-      borrowApplyId:this.actRoute.snapshot.params['id'],
+    this.commonSvc.queryContracts({
+      rolloverApplyId:this.actRoute.snapshot.params['id'],
       page:1,
       rows:100000
     }).then((res)=>{

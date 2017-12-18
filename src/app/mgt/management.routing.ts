@@ -1,6 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 import { ManagementComponent } from './management.component';
-import {OauthGuard} from '../../services/guard/oauth.guard';
+import {OauthGuard} from '../core/services/guard/oauth.guard';
 const routes: Routes = <Routes>[{
   path: '',
   component: ManagementComponent

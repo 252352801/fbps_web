@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import { Product} from '../../../../services/entity/Product.entity';
+import { Product} from '../../../core/entity/Product.entity';
 import { ProductService} from '../product.service';
-import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
-import { Resource} from '../../../../services/entity/Resource.entity';
+import { MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
+import { Resource} from '../../../core/entity/Resource.entity';
 @Injectable()
 export class ProductDetailsService{
   constructor(

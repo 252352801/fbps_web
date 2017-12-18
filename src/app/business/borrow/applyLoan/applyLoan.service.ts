@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
+import { MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
 import { BorrowService} from '../borrow.service';
-import {Contract} from "../../../../services/entity/Contract.entity";
-import {Resource} from '../../../../services/entity/Resource.entity';
-import {BankCard} from '../../../../services/entity/BankCard.entity';
-import {RepayPlanPreview} from '../../../../services/entity/RepayPlanPreview.entity';
+import {Contract} from "../../../core/entity/Contract.entity";
+import {Resource} from '../../../core/entity/Resource.entity';
+import {BankCard} from '../../../core/entity/BankCard.entity';
+import {RepayPlanPreview} from '../../../core/entity/RepayPlanPreview.entity';
 @Injectable()
 export class ApplyLoanService{
   constructor(

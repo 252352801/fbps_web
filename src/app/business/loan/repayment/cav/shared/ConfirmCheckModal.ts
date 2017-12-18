@@ -1,11 +1,11 @@
-import {BankAccount} from '../../../../../../services/entity/BankAccount.entity';
-import {CommonService} from '../../../../../../services/common/common.service';
-import {myInjector} from '../../../../../shared/myInjector.service';
-import {md5} from '../../../../../../services/encrypt/md5';
+import {BankAccount} from '../../../../../core/entity/BankAccount.entity';
+import {CommonService} from '../../../../../core/services/common/common.service';
+import {myInjector} from '../../../../../core/services/myInjector/myInjector.service';
+import {md5} from '../../../../../core/services/encrypt/md5';
 import {CapitalBankCardPicker} from './CapitalBankCardPicker';
 import {SubmitBankCard} from './SubmitBankCard.interface';
 import {CheckRepaymentBody} from './CheckRepaymentBody.interface';
-import {MyHttpClient} from '../../../../../../services/myHttp/myhttpClient.service';
+import {MyHttpClient} from '../../../../../core/services/myHttp/myhttpClient.service';
 import {PopService,Toaster} from 'dolphinng';
 export class ConfirmCheckModal{
   type:number=0;//还款方式  0:线上  1:线下

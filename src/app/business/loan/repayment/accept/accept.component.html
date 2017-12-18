@@ -95,7 +95,7 @@
           <label class="required no-margin">实际还款时间：</label>
         </div>
         <div class="v-table-cell text-default">
-          <datetime-picker [(value)]="repaymentDate" format="yyyy-MM-dd HH:mm" >
+          <datetime-picker [(value)]="repaymentDate" format="yyyy-MM-dd hh:mm:ss"  (complete)="loadRepayPlan(repaymentNotify.borrowApplyId,repaymentNotify.currentPeriod,$event)">
             <input placeholder="请选择" class="form-control"  style="max-width: 175px;"
                    [(ngModel)]="repaymentDate" name="repaymentDate" />
           </datetime-picker>

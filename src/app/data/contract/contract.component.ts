@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
-import {Contract} from '../../../services/entity/Contract.entity';
-import {Paginator} from '../../../services/entity/Paginator.entity';
+import {Contract} from '../../core/entity/Contract.entity';
+import {Paginator} from '../../core/entity/Paginator.entity';
 import {ContractService} from './contract.service';
 import {ActivatedRoute,Params,Router} from '@angular/router';
-import {fadeInAnimation} from '../../../animations/index';
-import {SharedService} from '../../shared/shared.service';
-import {QueryContractBody} from '../../shared/shared.interfaces';
-import {Resource} from '../../../services/entity/Resource.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {QueryContractBody} from '../../core/services/common/shared/QueryContractBody.interface';
+import {Resource} from '../../core/entity/Resource.entity';
 import {DatePipe} from 'dolphinng';
-import {Dictionary,DictionaryService} from '../../../services/dictionary/dictionary.service';
+import {Dictionary,DictionaryService} from '../../core/services/dictionary/dictionary.service';
+import {CommonService} from '../../core/services/common/common.service';
 @Component({
   selector: 'contract',
   templateUrl: './contract.component.html',
@@ -29,10 +29,10 @@ export class ContractComponent {
 
   currentTime:string|Date=new Date();
   constructor(
+    private commonSvc:CommonService,
     private contractSvc:ContractService,
     private actRoute:ActivatedRoute,
     private dictionarySvc:DictionaryService,
-    private sharedSvc:SharedService,
     private router:Router
   ) {
     this.path=this.router.url.split(';')[0];
@@ -61,7 +61,7 @@ export class ContractComponent {
       eSignatureStatus:''//合同状态（空或者-1表示全部）
     };
 
-    this.sharedSvc.getCapitals()
+    this.commonSvc.getCapitals()
       .then((res)=>{
         this.capitals=res;
       });
@@ -140,7 +140,7 @@ export class ContractComponent {
       body.eSignatureStatus=this.params.eSignatureStatus;
     }
     this.loading=true;
-    this.sharedSvc.queryContracts(body)
+    this.commonSvc.queryContracts(body)
       .then((data)=>{
         this.tableData=data.items;
         this.paginator.count=data.count;

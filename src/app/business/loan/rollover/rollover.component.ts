@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute,Params,Router } from '@angular/router';
-import {Rollover} from '../../../../services/entity/Rollover.entity';
-import {Paginator} from '../../../../services/entity/Paginator.entity';
+import {Rollover} from '../../../core/entity/Rollover.entity';
+import {Paginator} from '../../../core/entity/Paginator.entity';
 import {RolloverService} from './rollover.service';
-import {OauthService} from '../../../../services/oauth/oauth.service';
-import {DictionaryService,Dictionary} from '../../../../services/dictionary/dictionary.service';
-import {fadeInAnimation} from '../../../../animations/index';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
+import {DictionaryService,Dictionary} from '../../../core/services/dictionary/dictionary.service';
+import {fadeInAnimation} from 'app/shared/animations/index';
 import 'rxjs/add/operator/switchMap';
 @Component({
   selector: 'loan-rollover',

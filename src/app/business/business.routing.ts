@@ -1,6 +1,6 @@
 import {Routes, RouterModule} from '@angular/router';
 import {BusinessComponent} from './business.component';
-import {OauthGuard} from '../../services/guard/oauth.guard';
+import {OauthGuard} from '../core/services/guard/oauth.guard';
 import {LoanDetailsComponent} from './loan-details/details.component';
 const routes: Routes = <Routes>[
   {

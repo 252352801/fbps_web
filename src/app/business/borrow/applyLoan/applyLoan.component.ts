@@ -2,20 +2,19 @@ import {Component,OnInit,OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PopService} from 'dolphinng';
 import {ApplyLoanService} from './applyLoan.service';
-import {Loan} from '../../../../services/entity/Loan.entity';
-import {Contract} from "../../../../services/entity/Contract.entity";
-import {Resource} from '../../../../services/entity/Resource.entity';
-import {fadeInAnimation} from '../../../../animations/index';
-import {OauthService} from '../../../../services/oauth/oauth.service';
-import {BankCard} from '../../../../services/entity/BankCard.entity';
-import {RepayPlanPreview} from '../../../../services/entity/RepayPlanPreview.entity';
-import {ProveData} from "../../../../services/entity/ProveData.entity";
-import {ReviewInfo} from "../../../../services/entity/ReviewInfo.entity";
-import {BankAccountFlow} from "../../../../services/entity/BankAccountFlow.entity";
-import {CommonService} from "../../../../services/common/common.service";
+import {Loan} from '../../../core/entity/Loan.entity';
+import {Contract} from "../../../core/entity/Contract.entity";
+import {Resource} from '../../../core/entity/Resource.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
+import {BankCard} from '../../../core/entity/BankCard.entity';
+import {RepayPlanPreview} from '../../../core/entity/RepayPlanPreview.entity';
+import {ProveData} from "../../../core/entity/ProveData.entity";
+import {ReviewInfo} from "../../../core/entity/ReviewInfo.entity";
+import {BankAccountFlow} from "../../../core/entity/BankAccountFlow.entity";
+import {CommonService} from "../../../core/services/common/common.service";
 import {BusinessService} from "../../business.service";
 import {BorrowService} from "../borrow.service";
-import {SharedService} from "../../../shared/shared.service";
 @Component({
   selector: 'apply-loan',
   templateUrl: './applyLoan.component.html',
@@ -44,7 +43,6 @@ export class ApplyLoanComponent implements OnInit,OnDestroy{
   bankAccountFlows:BankAccountFlow[]=[];//账户流水
   constructor(private actRoute: ActivatedRoute,
               private oauthSvc: OauthService,
-              private sharedSvc: SharedService,
               private businessSvc: BusinessService,
               private borrowSvc: BorrowService,
               private applyLoanSvc: ApplyLoanService,
@@ -133,7 +131,7 @@ export class ApplyLoanComponent implements OnInit,OnDestroy{
   }
 
   getContracts(){
-    this.sharedSvc.queryContracts({
+    this.commonSvc.queryContracts({
       borrowApplyId:this.actRoute.snapshot.params['id'],
       page:1,
       rows:100000

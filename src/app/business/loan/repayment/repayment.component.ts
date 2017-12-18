@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
-import {RepaymentNotify} from '../../../../services/entity/RepaymentNotify.entity';
+import {RepaymentNotify} from '../../../core/entity/RepaymentNotify.entity';
 import {RepaymentService} from './repayment.service';
-import {Paginator} from '../../../../services/entity/Paginator.entity';
+import {Paginator} from '../../../core/entity/Paginator.entity';
 import {ActivatedRoute,Params,Router} from '@angular/router';
-import {fadeInAnimation} from '../../../../animations/index';
-import {ParameterService} from 'services/parameter/parameter.service';
-import {OauthService} from '../../../../services/oauth/oauth.service';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {ParameterService} from '../../../core/services/parameter/parameter.service';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
 @Component({
   selector: 'loan-repayment',
   templateUrl: './repayment.component.html',

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AcceptRepaymentBody} from './shared/AcceptRepaymentBody';
-import {MyHttpClient} from '../../../../../services/myHttp/myhttpClient.service';
+import {MyHttpClient} from '../../../../core/services/myHttp/myhttpClient.service';
 @Injectable()
 export class AcceptService {
   constructor(private myHttp: MyHttpClient) {

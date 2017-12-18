@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {OauthService} from '../../services/oauth/oauth.service';
+import {OauthService} from '../core/services/oauth/oauth.service';
 import {ModifyPasswordService} from './modifyPassword.service';
 import {PopService} from 'dolphinng';
 @Component({

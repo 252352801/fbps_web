@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {RolloverUploadVoucherService} from './upload-voucher.service';
-import {Rollover} from '../../../../../services/entity/Rollover.entity';
-import {Loan} from '../../../../../services/entity/Loan.entity';
+import {Rollover} from '../../../../core/entity/Rollover.entity';
+import {Loan} from '../../../../core/entity/Loan.entity';
 import {RolloverService} from '../rollover.service';
-import {RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
-import {OauthService} from '../../../../../services/oauth/oauth.service';
-import {fadeInAnimation} from '../../../../../animations/index';
-import {ReviewInfo} from "../../../../../services/entity/ReviewInfo.entity";
-import {CommonService} from '../../../../../services/common/common.service';
+import {RepayPlan} from '../../../../core/entity/RepayPlan.entity';
+import {OauthService} from '../../../../core/services/oauth/oauth.service';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {ReviewInfo} from "../../../../core/entity/ReviewInfo.entity";
+import {CommonService} from '../../../../core/services/common/common.service';
 import {BusinessService} from '../../../business.service';
-import {config} from '../../../../../services/config/app.config';
-import {patterns} from '../../../../../services/config/patterns.config';
-import {SharedService} from '../../../../shared/shared.service';
+import {config} from '../../../../core/config/app.config';
+import {patterns} from '../../../../core/config/patterns.config';
 import {Uploader, Toaster, PopService} from 'dolphinng';
 @Component({
   selector: 'rollover-upload-voucher',
@@ -41,7 +40,6 @@ export class RolloverUploadVoucherComponent implements OnInit {
               private commonSvc: CommonService,
               private businessSvc: BusinessService,
               private oauth: OauthService,
-              private sharedSvc: SharedService,
               private actRoute: ActivatedRoute) {
     this.initUploader();
   }

@@ -1,0 +1,92 @@
+<modal [(visible)]="modalVisible" size="lg">
+  <modal-header>{{title}}</modal-header>
+  <modal-body *ngIf="data.length>0||loading">
+    <div *ngTemplateOutlet="systemLogs"></div>
+  </modal-body>
+  <modal-body *ngIf="data.length===0&&!loading">
+    <div class="pad-def  text-center">暂无记录</div>
+  </modal-body>
+  <modal-footer styleClass="no-t-padding">
+    <button class="btn btn-default" (click)="close()">关闭</button>
+  </modal-footer>
+</modal>
+<div *ngIf="mode==0">
+  <ng-container *ngTemplateOutlet="systemLogs">
+
+  </ng-container>
+</div>
+
+<ng-template #systemLogs>
+  <form class="form-inline " *ngIf="isShowSearchBox">
+    <div class="form-group">
+      <label class="control-label">类型：</label>
+      <select class="form-control" [(ngModel)]="params.type" name="type">
+        <option *ngFor="let opt of typeOptions" [value]="opt.value">{{opt.label}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">ID：</label>
+      <input class="form-control " placeholder="相关ID" [(ngModel)]="params.id" name="id"/>
+    </div>
+    <div class="form-group">
+      <button type="button"  class="btn-def"
+              (click)="search()" >搜索<i class="fa fa-search"></i></button>
+<!--      <button type="button"  class="btn btn-primary" [ngClass]="{'cursor-wait':loading}"
+              (click)="search()" ><i class="fa fa-search"></i>搜索</button>
+      <button type="button"  class="btn btn-default" (click)="resetParams()" >
+        <i class="fa fa-minus-circle"></i>重置</button>-->
+    </div>
+  </form>
+
+  <p-dataTable #dt [value]="data"
+               emptyMessage="{{loading?'':'没有查询到符合条件的记录'}}" [loading]="loading" #table
+                scrollable="true" scrollHeight="375px">
+
+    <p-column field="createTime" header="操作时间" styleClass="text-center"
+              [style]="{'width':'150px'}"></p-column>
+    <p-column field="createBy" header="操作者" [style]="{'width':'150px'}" >
+      <ng-template  let-sysLog="rowData" pTemplate="body">
+        <div textMaxLength="150px" title="{{sysLog.createBy}}">
+          {{sysLog.createBy}}
+        </div>
+      </ng-template>
+    </p-column>
+
+    <p-column field="id" header="ID" [style]="{'width':'150px'}" *ngIf="isShowId"></p-column>
+    <p-column field="title" header="标题" [style]="{'width':'250px'}">
+      <ng-template  let-sysLog="rowData" pTemplate="body">
+        <div textMaxLength="250px" title="{{sysLog.title}}">
+          {{sysLog.title}}
+        </div>
+      </ng-template>
+    </p-column>
+    <p-column styleClass="text-center" *ngIf="isShowType" [style]="{'width':'120px'}">
+      <ng-template pTemplate="header">
+        类型
+      </ng-template>
+      <ng-template  let-sysLog="rowData" pTemplate="body">
+        {{sysLog.type|dictionary:'log_type'}}
+      </ng-template>
+    </p-column>
+    <p-column field="remarks" header="备注" [style]="{'width':'220px'}">
+      <ng-template  let-sysLog="rowData" pTemplate="body">
+        <div textMaxLength="220px" title="{{sysLog.remarks}}">
+          {{sysLog.remarks}}
+        </div>
+      </ng-template>
+    </p-column>
+
+    <p-footer>
+      <div class="clearfix">
+        <div class="pull-right">
+          <paginator [(index)]="paginator.index"
+                     [count]="paginator.count"
+                     [showTotal]="true"
+                     [changePageSizeAble]="true"
+                     [(pageSize)]="paginator.size"
+                     (onChangePage)="query()" size="sm"></paginator>
+        </div>
+      </div>
+    </p-footer>
+  </p-dataTable>
+</ng-template>

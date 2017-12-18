@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {BankCard} from '../../../../../../services/entity/BankCard.entity';
-import {Resource} from '../../../../../../services/entity/Resource.entity';
+import {BankCard} from '../../../../../core/entity/BankCard.entity';
+import {Resource} from '../../../../../core/entity/Resource.entity';
 import {SubmitBankCard} from './SubmitBankCard.interface';
-import {CommonService} from '../../../../../../services/common/common.service';
-import {myInjector} from '../../../../../shared/myInjector.service';
-import {Capital} from "../../../../../../services/entity/Capital.entity";
+import {CommonService} from '../../../../../core/services/common/common.service';
+import {myInjector} from '../../../../../core/services/myInjector/myInjector.service';
+import {Capital} from "../../../../../core/entity/Capital.entity";
 @Injectable()
 export class CapitalBankCardPicker{
   capitalOptions:Resource[]=[];//资方选项

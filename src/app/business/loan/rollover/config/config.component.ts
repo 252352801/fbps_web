@@ -2,16 +2,15 @@ import { Component,OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { PopService} from 'dolphinng';
 import { ConfigService} from './config.service';
-import { Rollover} from '../../../../../services/entity/Rollover.entity';
-import { Loan} from '../../../../../services/entity/Loan.entity';
-import { OauthService} from '../../../../../services/oauth/oauth.service';
+import { Rollover} from '../../../../core/entity/Rollover.entity';
+import { Loan} from '../../../../core/entity/Loan.entity';
+import { OauthService} from '../../../../core/services/oauth/oauth.service';
 import {RolloverService} from '../rollover.service';
-import { RepayPlan} from '../../../../../services/entity/RepayPlan.entity';
-import { Contract} from '../../../../../services/entity/Contract.entity';
-import {fadeInAnimation} from '../../../../../animations/index';
+import { RepayPlan} from '../../../../core/entity/RepayPlan.entity';
+import { Contract} from '../../../../core/entity/Contract.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
 import {BusinessService} from '../../../business.service';
-import { CommonService} from '../../../../../services/common/common.service';
-import { SharedService} from '../../../../shared/shared.service';
+import { CommonService} from '../../../../core/services/common/common.service';
 @Component({
   selector: 'rollover-config',
   templateUrl: './config.component.html',
@@ -43,7 +42,6 @@ export class ConfigComponent implements OnInit{
   constructor(
     private pop:PopService,
     public commonSvc:CommonService,
-    public sharedSvc:SharedService,
     public businessSvc:BusinessService,
     public rolloverSvc:RolloverService,
     private configSvc:ConfigService,
@@ -139,8 +137,8 @@ export class ConfigComponent implements OnInit{
    * 加载合同
    */
   loadContracts(){
-    this.sharedSvc.queryContracts({
-      borrowApplyId:this.actRoute.snapshot.params['id'],
+    this.commonSvc.queryContracts({
+      rolloverApplyId:this.actRoute.snapshot.params['id'],
       page:1,
       rows:100000
     }).then((res)=>{

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import { MyHttpClient} from '../../../services/myHttp/myhttpClient.service';
-import {Resource} from '../../../services/entity/Resource.entity';
-import {RepayPlanPreview} from '../../../services/entity/RepayPlanPreview.entity';
+import { MyHttpClient} from '../../core/services/myHttp/myhttpClient.service';
+import {Resource} from '../../core/entity/Resource.entity';
+import {RepayPlanPreview} from '../../core/entity/RepayPlanPreview.entity';
 @Injectable()
 export class BorrowService{
   constructor(private myHttp:MyHttpClient){

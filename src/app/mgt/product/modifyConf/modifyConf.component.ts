@@ -1,13 +1,13 @@
 import { Component,OnInit} from '@angular/core';
-import {Resource} from '../../../../services/entity/Resource.entity';
+import {Resource} from '../../../core/entity/Resource.entity';
 import {ModifyProductConfService} from './modifyConf.service';
 import { ActivatedRoute} from '@angular/router';
 import { ProductService} from '../product.service';
-import { DictionaryService,Dictionary} from '../../../../services/dictionary/dictionary.service';
-import {Product} from "../../../../services/entity/Product.entity";
+import { DictionaryService,Dictionary} from '../../../core/services/dictionary/dictionary.service';
+import {Product} from "../../../core/entity/Product.entity";
 import {PopService} from 'dolphinng';
-import {ProductConfig} from '../../../../services/entity/ProductConfig.entity';
-import {fadeInAnimation} from '../../../../animations/index';
+import {ProductConfig} from '../../../core/entity/ProductConfig.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
 @Component({
   selector: 'modify-product-conf',
   templateUrl: './modifyConf.component.html',

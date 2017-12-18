@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import { Product} from '../../../../services/entity/Product.entity';
+import { Product} from '../../../core/entity/Product.entity';
 import { ProductBody} from '../product.service';
-import { MyHttpClient} from '../../../../services/myHttp/myhttpClient.service';
+import { MyHttpClient} from '../../../core/services/myHttp/myhttpClient.service';
 @Injectable()
 export class PublishProductService{
   constructor(private myHttp:MyHttpClient){

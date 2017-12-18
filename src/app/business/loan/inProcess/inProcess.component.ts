@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Loan} from '../../../../services/entity/Loan.entity';
-import {Paginator} from '../../../../services/entity/Paginator.entity';
-import {OauthService} from '../../../../services/oauth/oauth.service';
+import {Loan} from '../../../core/entity/Loan.entity';
+import {Paginator} from '../../../core/entity/Paginator.entity';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
 import {BusinessService} from '../../business.service';
 import {QueryLoansBody} from '../../shared/QueryLoansBody';
 import {InProcessService} from './inProcess.service';
-import {RepayPlan} from '../../../../services/entity/RepayPlan.entity';
-import {fadeInAnimation} from '../../../../animations/index';
+import {RepayPlan} from '../../../core/entity/RepayPlan.entity';
+import {fadeInAnimation} from 'app/shared/animations/index';
 @Component({
   selector: 'loan-in-process',
   templateUrl: './inProcess.component.html',

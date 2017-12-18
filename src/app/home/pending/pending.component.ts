@@ -1,13 +1,13 @@
 import {Component, Injectable,OnDestroy,OnInit} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
-import {Rollover} from '../../../services/entity/Rollover.entity';
-import {Loan} from '../../../services/entity/Loan.entity';
-import {RepaymentNotify} from '../../../services/entity/RepaymentNotify.entity';
-import {Paginator} from '../../../services/entity/Paginator.entity';
+import {Rollover} from '../../core/entity/Rollover.entity';
+import {Loan} from '../../core/entity/Loan.entity';
+import {RepaymentNotify} from '../../core/entity/RepaymentNotify.entity';
+import {Paginator} from '../../core/entity/Paginator.entity';
 import {PendingService} from './pending.service';
-import { fadeInAnimation } from '../../../animations/index';
-import {ParameterService} from 'services/parameter/parameter.service'
-import {OauthService} from '../../../services/oauth/oauth.service'
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {ParameterService} from '../../core/services/parameter/parameter.service'
+import {OauthService} from '../../core/services/oauth/oauth.service'
 @Component({
   selector: 'pending',
   templateUrl: './pending.component.html',

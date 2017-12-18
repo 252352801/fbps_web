@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import { Product} from '../../../services/entity/Product.entity';
-import { MyHttpClient} from '../../../services/myHttp/myhttpClient.service';
-import {ProductConfig} from '../../../services/entity/ProductConfig.entity';
-import {ProveData} from '../../../services/entity/ProveData.entity';
+import { Product} from '../../core/entity/Product.entity';
+import { MyHttpClient} from '../../core/services/myHttp/myhttpClient.service';
+import {ProductConfig} from '../../core/entity/ProductConfig.entity';
+import {ProveData} from '../../core/entity/ProveData.entity';
 export interface ProductBody{
   productId?:string,
   productName:string,

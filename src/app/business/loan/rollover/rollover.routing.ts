@@ -2,7 +2,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {RolloverComponent}   from './rollover.component';
 import {RolloverDetailsComponent}   from './details/details.component';
 import { ConfigComponent }   from './config/config.component';
-import {OauthGuard} from '../../../../services/guard/oauth.guard';
+import {OauthGuard} from '../../../core/services/guard/oauth.guard';
 import {RolloverUploadVoucherComponent}   from './upload-voucher/upload-voucher.component';
 const routes: Routes = <Routes>[
   {

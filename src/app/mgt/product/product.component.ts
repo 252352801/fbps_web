@@ -1,11 +1,11 @@
 import {Component,Injectable} from '@angular/core';
-import {Paginator} from '../../../services/entity/Paginator.entity';
-import {Product} from '../../../services/entity/Product.entity';
+import {Paginator} from '../../core/entity/Paginator.entity';
+import {Product} from '../../core/entity/Product.entity';
 import {ProductService} from './product.service';
 import {Toaster,PopService} from 'dolphinng';
 import {ActivatedRoute,Params,Router} from '@angular/router';
-import {fadeInAnimation} from '../../../animations/index';
-import {OauthService} from '../../../services/oauth/oauth.service';
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../core/services/oauth/oauth.service';
 @Component({
   selector: 'product',
   templateUrl: './product.component.html',

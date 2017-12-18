@@ -3,16 +3,15 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {PopService} from 'dolphinng';
 import {BorrowConfigureService} from './configure.service';
 import {BorrowService} from '../borrow.service';
-import {Loan} from '../../../../services/entity/Loan.entity';
-import {Resource} from '../../../../services/entity/Resource.entity';
-import {Contract} from "../../../../services/entity/Contract.entity";
-import {Paginator} from "../../../../services/entity/Paginator.entity";
-import {fadeInAnimation} from '../../../../animations/index';
-import {OauthService} from '../../../../services/oauth/oauth.service';
-import {ProveData} from "../../../../services/entity/ProveData.entity";
-import {ReviewInfo} from "../../../../services/entity/ReviewInfo.entity";
-import {CommonService} from "../../../../services/common/common.service";
-import {SharedService} from "../../../shared/shared.service";
+import {Loan} from '../../../core/entity/Loan.entity';
+import {Resource} from '../../../core/entity/Resource.entity';
+import {Contract} from "../../../core/entity/Contract.entity";
+import {Paginator} from "../../../core/entity/Paginator.entity";
+import {fadeInAnimation} from 'app/shared/animations/index';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
+import {ProveData} from "../../../core/entity/ProveData.entity";
+import {ReviewInfo} from "../../../core/entity/ReviewInfo.entity";
+import {CommonService} from "../../../core/services/common/common.service";
 import {BusinessService} from "../../business.service";
 @Component({
   selector: 'borrow-configure',
@@ -49,7 +48,6 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
   secondReviewInfo:ReviewInfo=new ReviewInfo();//二审信息
   constructor(private oauthSvc: OauthService,
               private commonSvc: CommonService,
-              private sharedSvc: SharedService,
               private businessSvc: BusinessService,
               private router: Router,
               private pop: PopService,
@@ -257,7 +255,7 @@ export class BorrowConfigureComponent implements OnInit,OnDestroy {
    * 加载贷款单合同
    */
   loadContracts() {
-    this.sharedSvc.queryContracts({
+    this.commonSvc.queryContracts({
       borrowApplyId: this.actRoute.snapshot.params['id'],
       page: this.contractsPaginator.index + 1,
       rows: this.contractsPaginator.size

@@ -4,7 +4,7 @@ import {AcceptComponent}   from './accept/accept.component';
 import {BorrowConfigureComponent}   from './configure/configure.component';
 import { ApplyLoanComponent }   from './applyLoan/applyLoan.component';
 import {LoanComponent}   from './loan/loan.component';
-import {OauthGuard} from '../../../services/guard/oauth.guard';
+import {OauthGuard} from '../../core/services/guard/oauth.guard';
 const routes: Routes = <Routes>[
   {
     path: '',

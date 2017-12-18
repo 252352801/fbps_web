@@ -1,24 +1,21 @@
 import {Injectable} from '@angular/core';
 import {Uploader} from "dolphinng";
-import {config} from 'services/config/app.config';
-import {myInjector} from '../../../../shared/myInjector.service';
-import {ProveData} from 'services/entity/ProveData.entity';
-import {SharedService} from '../../../../shared/shared.service';
-import {CommonService} from '../../../../../services/common/common.service';
+import {config} from '../../../../core/config/app.config';
+import {myInjector} from '../../../../core/services/myInjector/myInjector.service';
+import {ProveData} from '../../../../core/entity/ProveData.entity';
+import {CommonService} from '../../../../core/services/common/common.service';
 import {Toaster,PopService} from 'dolphinng';
 @Injectable()
 export class ProveDataUploader{
   fileId: string=null;
   uploader: Uploader;
   proveData: ProveData;
-  private sharedSvc:SharedService;
   private commonSvc:CommonService;
   private toaster:Toaster;
   private pop:PopService;
   constructor(
 
   ) {
-    this.sharedSvc=myInjector.get(SharedService);
     this.commonSvc=myInjector.get(CommonService);
     this.toaster=myInjector.get(Toaster);
     this.pop=myInjector.get(PopService);

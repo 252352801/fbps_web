@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import { Loan} from '../../../services/entity/Loan.entity';
-import { RepaymentNotify} from '../../../services/entity/RepaymentNotify.entity';
-import { MyHttpClient} from '../../../services/myHttp/myhttpClient.service';
-import { Rollover} from '../../../services/entity/Rollover.entity';
+import { Loan} from '../../core/entity/Loan.entity';
+import { RepaymentNotify} from '../../core/entity/RepaymentNotify.entity';
+import { MyHttpClient} from '../../core/services/myHttp/myhttpClient.service';
+import { Rollover} from '../../core/entity/Rollover.entity';
 @Injectable()
 export class PendingService{
   constructor(private myHttp:MyHttpClient){

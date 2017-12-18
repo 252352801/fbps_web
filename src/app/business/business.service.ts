@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import { Loan} from '../../services/entity/Loan.entity';
-import { RepayPlan} from '../../services/entity/RepayPlan.entity';
-import { ProveData} from '../../services/entity/ProveData.entity';
-import { LoanFlow} from '../../services/entity/LoanFlow.entity';
-import { MyHttpClient} from '../../services/myHttp/myhttpClient.service';
+import { Loan} from '../core/entity/Loan.entity';
+import { RepayPlan} from '../core/entity/RepayPlan.entity';
+import { ProveData} from '../core/entity/ProveData.entity';
+import { LoanFlow} from '../core/entity/LoanFlow.entity';
+import { MyHttpClient} from '../core/services/myHttp/myhttpClient.service';
 import { QueryLoansBody} from './shared/QueryLoansBody';
 
 @Injectable()

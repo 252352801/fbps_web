@@ -1,11 +1,11 @@
 import {Component,ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {Loan} from '../../../services/entity/Loan.entity';
-import {OauthService} from '../../../services/oauth/oauth.service';
-import {Paginator} from '../../../services/entity/Paginator.entity';
+import {Loan} from '../../core/entity/Loan.entity';
+import {OauthService} from '../../core/services/oauth/oauth.service';
+import {Paginator} from '../../core/entity/Paginator.entity';
 import {BorrowService} from './borrow.service';
 import {BusinessService} from '../business.service';
-import {fadeInAnimation} from '../../../animations/index';
+import {fadeInAnimation} from 'app/shared/animations/index';
 import {PopService,ModalComponent} from 'dolphinng';
 @Component({
   selector: 'borrow',

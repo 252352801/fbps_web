@@ -1,6 +1,6 @@
 import {Routes, RouterModule} from '@angular/router';
 import {DataComponent}   from './data.component';
-import {OauthGuard} from '../../services/guard/oauth.guard';
+import {OauthGuard} from '../core/services/guard/oauth.guard';
 const routes: Routes = <Routes>[{
   path: '',
   component: DataComponent

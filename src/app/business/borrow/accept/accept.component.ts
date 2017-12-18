@@ -3,11 +3,11 @@ import {ActivatedRoute} from '@angular/router';
 import {PopService,Toaster} from 'dolphinng';
 import {AcceptService} from './accept.service';
 import {BusinessService} from '../../business.service';
-import {Loan} from '../../../../services/entity/Loan.entity';
-import {SharedService} from '../../../shared/shared.service';
-import {ProveData} from '../../../../services/entity/ProveData.entity';
-import {OauthService} from '../../../../services/oauth/oauth.service';
-import {fadeInAnimation} from '../../../../animations/index';
+import {Loan} from '../../../core/entity/Loan.entity';
+import {ProveData} from '../../../core/entity/ProveData.entity';
+import {OauthService} from '../../../core/services/oauth/oauth.service';
+import {CommonService} from '../../../core/services/common/common.service';
+import {fadeInAnimation} from 'app/shared/animations/index';
 import {AcceptBody} from './shared/AcceptBody';
 import {ProveDataUploader} from './shared/ProveDataUploader';
 @Component({
@@ -27,7 +27,7 @@ export class AcceptComponent {
   submitted: boolean = false;
   proveDataOptions: ProveDataUploader[] = [];//产品证明材料列表
   constructor(private pop: PopService,
-              private sharedSvc: SharedService,
+              private commonSvc: CommonService,
               private acceptSvc: AcceptService,
               protected businessSvc: BusinessService,
               private actRoute: ActivatedRoute,
@@ -62,7 +62,7 @@ export class AcceptComponent {
    */
   getProdProveData(productId?: string) {
     let prodId = productId || this.loan.productId;
-    this.sharedSvc.prodProveData(prodId)
+    this.commonSvc.prodProveData(prodId)
       .then((data: ProveData[])=> {
         if (data instanceof Array) {
           this.proveDataOptions = [];
